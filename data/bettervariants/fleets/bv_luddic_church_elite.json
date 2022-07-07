@@ -1,0 +1,73 @@
+{
+	"fleetDataId":"bv_luddic_church_elite",
+	"spawnWeight":100,
+	"minDP":40,
+	"maxDP":400,
+	"defaultFleetWidePersonality":"reckless",
+	"targetFleetTypes": ["%boss"],
+	
+	"fleetPartitions": [
+		{
+			"partitionWeight":28,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"legion_FS1_bv", "weight":10},
+				{"id":"legion_FS2_bv", "weight":10},
+				{"id":"legion_FS3_bv", "weight":10},
+				{"id":"legion_StrikeE_bv", "weight":70},
+			]
+		},
+		{
+			"partitionWeight":28,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"eradicator_Support_bv", "weight":30},
+				{"id":"eradicator_Strike_bv", "weight":30},
+				{"id":"eradicator_Support_bv", "weight":10},
+				{"id":"venture_Rocket_bv", "weight":10},
+				{"id":"mora_StrikeE_bv", "weight":10},
+				{"id":"mora_Strike_bv", "weight":10},
+			]
+		},
+		{
+			"partitionWeight":27,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"enforcer_Elite_bv", "weight":40},
+				{"id":"enforcer_Overdriven2_bv", "weight":40},
+				{"id":"condor_Strike1_bv", "weight":20},
+			]
+		},
+		{
+			"partitionWeight":9,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"hound_luddic_church_Standard", "weight":15},
+				{"id":"lasher_luddic_church_Standard_bv", "weight":10},
+				{"id":"lasher_Standard2_bv", "weight":15},
+				{"id":"buffalo2_Bomber_Support_bv", "weight":25},
+				{"id":"buffalo2_Fighter_Support_bv", "weight":25},
+				{"id":"vanguard_Attack", "weight":10},
+				{"id":"vanguard_Strike", "weight":15},
+			]
+		},
+		{
+			"partitionWeight":5,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"colossus_Standard_bv", "weight":100},
+				{"id":"atlas_Standard_bv", "weight":1000},
+				{"id":"buffalo_luddic_church_Standard_bv", "weight":1},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"dram_Light_bv", "weight":1},
+				{"id":"phaeton_Standard_bv", "weight":10},
+				{"id":"prometheus_Super_bv", "weight":100},
+			]
+		},
+	]
+}

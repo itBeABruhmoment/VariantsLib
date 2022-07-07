@@ -1,0 +1,184 @@
+this is a log of changed variants
+
+testing commands:
+spawnfleet luddic_church 200;spawnfleet tritachyon 200
+spawnfleet hedgemony 200;spawnfleet tritachyon 200
+spawnfleet hedgemony 200;luddic_church 200
+
+apogee:
+rm "apogee_Balanced":10,
+add "apogee_Elite_bv":5,"apogee_Standard_bv":5,
+
+afflictor:
+rm "afflictor_d_pirates_Strike":10,"afflictor_Strike":10,
+add "afflictor_d_pirates_Strike_bv":10,"afflictor_Strike_bv":10,
+
+astral:
+rm "astral_Attack":2, "astral_Strike":4,"astral_Elite":4,
+add "astral_Strike_bv":6,"astral_Elite_bv":4,
+
+atlas2:
+rm "atlas2_Standard":10,
+
+aurora:
+rm "aurora_Escort":1, "aurora_FS":1, "aurora_Strike":2, "aurora_Assault_Support":3,
+add "aurora_Strike_bv":2, 
+
+cerbres:
+rm "cerberus_Hardened":2.5, "cerberus_d_pirates_Shielded":4, "cerberus_luddic_path_Attack":10,
+add "cerberus_Hardened_bv":2.5, "cerberus_d_pirates_Overdriven_bv":4, "cerberus_luddic_path_Attack_bv":10,
+
+colossus2_Pather:
+rm "colossus2_Pather":10,
+add "colossus2_Pather_bv":10,
+
+brawler:
+rm "brawler_Assault":7,"brawler_Elite":3,"brawler_tritachyon_Standard":10,"brawler_pather_Raider":10,
+add "brawler_Assault_bv":7,"brawler_Elite_bv":3,"brawler_tritachyon_Standard1_bv":5,"brawler_tritachyon_Standard2_bv":5,"brawler_pather_Raider_bv":10,
+
+"brawler_Assault_bv":7,"brawler_Elite_bv":3,"brawler_tritachyon_Standard1_bv":3,"brawler_tritachyon_Standard2_bv":3,"brawler_tritachyon_Support_bv":4,"brawler_pather_Raider_bv":10,
+brilliant:
+rm "brilliant_Standard":10,
+add "brilliant_Elite_bv":3,"brilliant_Standard_bv":3,"brilliant_Strike_bv":4,
+
+buffalo2:
+rm "buffalo2_FS":10,
+add "buffalo2_Bomber_Support_bv":5,"buffalo2_Fighter_Support_bv":5,
+
+centurion_Assault:
+rm "centurion_Assault":10,
+add "centurion_Assault_bv":10,
+
+champion:
+rm "champion_Assault":4,"champion_Elite":3,"champion_Support":2,"champion_Escort":1,
+add "champion_Overdriven_bv":2,"champion_Elite_bv":4,"champion_Support_bv":4,
+
+condor:
+rm "condor_Strike":4,"condor_Attack":3,"condor_Support":3,
+add "condor_Strike1_bv":7,"condor_Attack_bv":3
++changes to luddic_church.faction
+
+conquest:
+rm "conquest_Standard":5,"conquest_Elite":5,
+add "conquest_Standard_bv":5,"conquest_Elite_bv":3,"conquest_Elite2_bv":2,
+
+dominator:
+rm "dominator_AntiCV":2.5,"dominator_Assault":2.5,"dominator_Support":2.5,"dominator_Outdated":2.5,"dominator_XIV_Elite":10,
+add "dominator_AntiCV_bv":2.5,"dominator_Assault_bv":2.5,"dominator_Shield_Breaker_bv":2.5,"dominator_Outdated_bv":2.5,"dominator_XIV_Elite_bv":10,
+
+doom:
+rm "doom_Strike":5,"doom_Support":5,
+add "doom_Overdriven_bv":3,"doom_Support_bv":7,
+
+drover:
+rm "drover_Strike":10,
+add "drover_Strike_bv":5,"drover_Standard_bv":5,
+
+eagle:
+rm "eagle_Assault":5,"eagle_Balanced":5,"eagle_xiv_Elite":10,
+add "eagle_Standard_bv":2,"eagle_Balanced_bv":2,"eagle_Overdriven_bv":6,"eagle_xiv_Standard_bv":3,"eagle_xiv_Overdriven_bv":7,
+
+enforcer:
+rm "enforcer_Overdriven":1.43,"enforcer_Assault":1.43,"enforcer_d_pirates_Strike_bv":10,"enforcer_XIV_Elite":10,
+add "enforcer_Assault_bv":1.43,"enforcer_Overdriven_bv":0.71,"enforcer_Overdriven2_bv":0.71,"enforcer_d_pirates_Strike_bv":10,"enforcer_XIV_Elite":5,"enforcer_XIV_Overdriven_bv":5,
+
+eradicator:
+rm "eradicator_Assault":4,"eradicator_Strike":3,"eradicator_Support":2,"eradicator_Overdriven":1,"eradicator_pirates_Attack":8,"eradicator_pirates_Overdriven":2,
+add "eradicator_Assault_bv":4,"eradicator_Strike_bv":3,"eradicator_Support_bv":2,"eradicator_Overdriven_bv":1,"eradicator_pirates_Attack_bv":8,"eradicator_pirates_Overdriven_bv":2,
+
+gemeni:
+rm "gemini_Standard":10,
+add "gemini_Standard":5, "gemini_Strike_bv":5
+gryphon:
+rm "gryphon_Standard":7,"gryphon_FS":3,
+add "gryphon_Standard_bv":7,"gryphon_Strike_bv":3,
+
+falcon:
+rm "falcon_Attack":5,"falcon_p_Strike":10,
+add "falcon_Overdriven_bv":5,"falcon_p_Strike_bv":10,
+
+fulgent:
+rm "fulgent_Assault":5,"fulgent_Support":5,
+add "fulgent_Overdriven_bv":5,"fulgent_Strike_bv":5,
+
+fury:
+rm "fury_Attack":5,"fury_Support":5,
+add "fury_Attack1_bv":2.5,"fury_Attack2_bv":2.5,"fury_Strike_bv":5,
+
+hammerhead:
+rm "hammerhead_Balanced":3,"hammerhead_Elite":3,"hammerhead_Overdriven":2
+add "hammerhead_Balanced_bv":3,"hammerhead_Elite_bv":3,"hammerhead_Overdriven_bv":2,
+
+harbinger:
+rm "harbinger_Strike":10,
+add "harbinger_Overdriven1_bv":5,"harbinger_Overdriven2_bv":5,
+hyperion:
+rm "hyperion_Attack":3,"hyperion_Strike":3,
+add "hyperion_Assault_bv":3,"hyperion_Support_bv":3,
+moved to medium
+I'm sure meta hyperion builds will be "fun" to fight
+
+lasher:
+rm "lasher_CS":2,"lasher_Assault":2,"lasher_Overdriven":2,"lasher_PD":1,"lasher_Standard":2,"lasher_Strike":1,"lasher_luddic_church_Standard":10,"lasher_luddic_path_Raider":10,
+add "lasher_Standard1_bv":5,"lasher_Standard2_bv":5,"lasher_luddic_church_Standard_bv":10,"lasher_luddic_path_Raider_bv":10,
+
+legion:
+rm "legion_Assault":2.5,"legion_Escort":2.5,"legion_FS":2.5,"legion_Strike":2.5,
+add "legion_Assault_bv":2,"legion_FS1_bv":4,"legion_Strike_bv":4,
++changes to luddic_church.faction
+
+medusa:
+rm "medusa_Attack":4,"medusa_PD":3,"medusa_CS":3,
+add "medusa_Attack_bv":6,"medusa_Overdriven_bv":4,
+
+monitor:
+rm "monitor_Escort":10,
+add "monitor_Standard_bv":10,
+
+mora:
+rm "mora_Assault":3,"mora_Support":3,"mora_Strike":4,
+add "mora_Assault_bv":5,"mora_Strike_bv":5,
+
+omen:
+rm "omen_PD":10,
+add omen_Ew_bv.variant
+
+onslaught:
+rm "onslaught_Standard":4,"onslaught_Outdated":4, "onslaught_xiv_Elite":10,
+add "onslaught_Standard_bv":3, "onslaught_Outdated_bv":3,"onslaught_Brawler_bv":3,"onslaught_Elite":2,"onslaught_xiv_Elite_bv":10,
+
+paragon:
+rm "paragon_Escort":3,
+add "paragon_Escort_bv":3,
+
+radiant:
+rm "radiant_Strike":3, "radiant_Standard":4,
+add "radiant_Strike_bv":3, "radiant_Standard_bv":4,
+
+scarab:
+rm "scarab_Experimental":10,
+add "scarab_Emp_bv":5,"scarab_Strike_bv":5,
+
+shade:
+rm "shade_d_pirates_Assault":10,"shade_Assault":10,
+add "shade_d_pirates_Assault_bv":10,"shade_Assault_bv":10,
+
+shrike:
+rm "shrike_Support":3,"shrike_Attack":7,"shrike_p_Attack":10,
+add "shrike_Support_bv":3,"shrike_Attack_bv":7,"shrike_p_Attack_bv":10,
+
+sunder:
+rm "sunder_Assault":4,"sunder_CS":4,"sunder_Overdriven":2,
+add "sunder_Assault_bv":4,"sunder_Support_bv":4,"sunder_Overdriven_bv":2,
+
+tarsus:
+rm "tarsus_Standard":10,
+add "tarsus_Standard":5, "tarsus_Carrier_bv":5,
+
+tempest:
+rm "tempest_Attack":10,
+add "tempest_Attack1_bv":3,"tempest_Attack2_bv":3,"tempest_Attack3_bv":4,
+
+venture:
+rm "venture_Outdated":4,
+add "venture_Rocket_bv":4,

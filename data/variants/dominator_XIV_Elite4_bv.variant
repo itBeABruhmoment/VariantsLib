@@ -1,0 +1,46 @@
+{
+    "displayName": "Elite4",
+    "fluxCapacitors": 4,
+    "fluxVents": 30,
+    "hullId": "dominator_xiv",
+    "hullMods": [
+        "fluxdistributor",
+        "missleracks",
+        "targetingunit",
+        "fluxbreakers"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "dominator_XIV_Elite4_bv",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 012": "gauss",
+                "WS 013": "gauss"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 001": "vulcan",
+                "WS 007": "vulcan",
+                "WS 008": "vulcan",
+                "WS 009": "vulcan",
+                "WS 010": "dualflak",
+                "WS 011": "dualflak"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 014": "harpoonpod",
+                "WS 015": "harpoonpod",
+                "WS 016": "harpoonpod"
+            }
+        }
+    ]
+}

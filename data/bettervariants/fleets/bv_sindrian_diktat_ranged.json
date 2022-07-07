@@ -1,0 +1,79 @@
+{
+	"fleetDataId":"bv_sindrian_diktat_ranged",
+	"spawnWeight":10,
+	"minDP":200,
+	"maxDP":400,
+	"targetFleetTypes": ["%combatplus"],
+	
+	"fleetPartitions": [
+		{
+			"partitionWeight":35,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"conquest_Elite_bv", "weight":10},
+				{"id":"conquest_Elite2_bv", "weight":10},
+				{"id":"doom_Support_bv", "weight":5},
+			]
+		},
+		{
+			"partitionWeight":30,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"dominator_Outdated_bv", "weight":20},
+				{"id":"eagle_Balanced_bv", "weight":20},
+				{"id":"fury_Strike_bv", "weight":10},
+				{"id":"falcon_CS_bv", "weight":20},
+				{"id":"heron_Strike", "weight":15},
+				{"id":"drover_Strike_bv", "weight":15},
+			]
+		},
+		{
+			"partitionWeight":10,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"falcon_Overdriven_bv", "weight":20},
+				{"id":"eagle_Overdriven_bv", "weight":30},
+				{"id":"enforcer_Overdriven_bv", "weight":25},
+				{"id":"sunder_Overdriven_bv", "weight":25},
+			]
+		},
+		{
+			"partitionWeight":15,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"sunder_Support_bv", "weight":50},
+				{"id":"hammerhead_Support", "weight":20},
+				{"id":"enforcer_Elite_bv", "weight":30},
+			]
+		},
+		{
+			"partitionWeight":5,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"brawler_Elite_bv", "weight":60},
+				{"id":"monitor_Escort", "weight":20},
+				{"id":"vigilance_AP", "weight":5},
+				{"id":"vigilance_AP", "weight":5},
+				{"id":"vigilance_Standard", "weight":5},
+				{"id":"vigilance_Strike", "weight":5},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"colossus_Standard_bv", "weight":100},
+				{"id":"atlas_Standard_bv", "weight":1000},
+				{"id":"buffalo_Standard_bv", "weight":1},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"phaeton_Standard_bv", "weight":1},
+				{"id":"prometheus_Super_bv", "weight":100},
+			]
+		},
+	]
+}

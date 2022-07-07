@@ -1,0 +1,69 @@
+{
+	"fleetDataId":"bv_persian_ranged",
+	"spawnWeight":10,
+	"minDP":40,
+	"maxDP":400,
+	
+	"targetFleetTypes": ["%combatplus"],
+	
+	"fleetPartitions": [
+		{
+			"partitionWeight":35,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"conquest_Standard_bv", "weight":10},
+				{"id":"conquest_Elite_bv", "weight":10},
+				{"id":"conquest_Elite2_bv", "weight":10},
+				{"id":"doom_Support_bv", "weight":5},
+			]
+		},
+		{
+			"partitionWeight":30,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"champion_Support_bv", "weight":20},
+				{"id":"champion_Elite_bv", "weight":20},
+				{"id":"eagle_Standard_bv", "weight":10},
+				{"id":"eagle_Balanced_bv", "weight":10},
+				{"id":"apogee_Elite_bv", "weight":5},
+				{"id":"apogee_Standard_bv", "weight":5},
+				{"id":"falcon_CS", "weight":5},
+				{"id":"heron_Strike", "weight":10},
+				{"id":"mora_Assault_bv", "weight":5},
+				{"id":"mora_Strike_bv", "weight":10},
+			]
+		},
+		{
+			"partitionWeight":20,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"sunder_Support_bv", "weight":60},
+				{"id":"hammerhead_Support", "weight":40},
+			]
+		},
+		{
+			"partitionWeight":10,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"brawler_Elite_bv", "weight":33},
+				{"id":"omen_Ew_bv", "weight":33},
+				{"id":"tempest_Attack1_bv", "weight":33},
+			]
+		},
+		{
+			"partitionWeight":5,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"gemini_Strike_bv", "weight":100},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"phaeton_Standard_bv", "weight":1},
+				{"id":"prometheus_Super_bv", "weight":100},
+			]
+		},
+	]
+}

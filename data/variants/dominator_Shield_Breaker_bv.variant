@@ -1,0 +1,58 @@
+{
+    "displayName": "Shield Breaker",
+    "fluxCapacitors": 24,
+    "fluxVents": 30,
+    "hullId": "dominator",
+    "hullMods": [
+        "targetingunit",
+        "ballistic_rangefinder",
+        "heavyarmor"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "dominator_Shield_Breaker_bv",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 012": "mark9",
+                "WS 013": "mark9"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS 014": "annihilatorpod",
+                "WS 015": "annihilatorpod",
+                "WS 016": "annihilatorpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 003": "lightmortar",
+                "WS 005": "lightmortar"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 010": "heavymortar",
+                "WS 011": "heavymortar"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 001": "vulcan",
+                "WS 004": "vulcan",
+                "WS 007": "vulcan"
+            }
+        }
+    ]
+}

@@ -1,0 +1,66 @@
+{
+	"fleetDataId":"bv_persian_so",
+	"spawnWeight":10,
+	"minDP":40,
+	"maxDP":400,
+	"defaultFleetWidePersonality":"reckless",
+	"targetFleetTypes": ["%notinvasion"],
+	
+	"fleetPartitions": [
+		{
+			"partitionWeight":27,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"conquest_Elite_bv", "weight":50},
+				{"id":"conquest_Elite2_bv", "weight":50},
+			]
+		},
+		{
+			"partitionWeight":40,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"eagle_Overdriven_bv", "weight":25},
+				{"id":"falcon_Overdriven_bv", "weight":25},
+				{"id":"champion_Overdriven_bv", "weight":30},
+				{"id":"heron_Strike", "weight":10},
+				{"id":"mora_Strike_bv", "weight":10},
+			]
+		},
+		{
+			"partitionWeight":27,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"enforcer_Overdriven_bv", "weight":20},
+				{"id":"enforcer_Overdriven2_bv", "weight":15},
+				{"id":"hammerhead_Overdriven_bv", "weight":20},
+				{"id":"sunder_Overdriven_bv", "weight":25},
+				{"id":"condor_Strike1_bv", "weight":5},
+				{"id":"drover_Strike_bv", "weight":15},
+			]
+		},
+		{
+			"partitionWeight":8,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"omen_Ew_bv", "weight":15},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"colossus_Standard_bv", "weight":100},
+				{"id":"atlas_Standard_bv", "weight":1000},
+				{"id":"buffalo_Standard_bv", "weight":1},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"phaeton_Standard_bv", "weight":1},
+				{"id":"prometheus_Super_bv", "weight":100},
+			]
+		},
+	]
+}

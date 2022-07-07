@@ -1,0 +1,43 @@
+{
+    "displayName": "Overdriven",
+    "fluxCapacitors": 9,
+    "fluxVents": 20,
+    "hullId": "enforcer_xiv",
+    "hullMods": [
+        "fluxdistributor",
+        "targetingunit"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "enforcer_XIV_Elite3_bv",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 002": "hveldriver",
+                "WS 005": "hveldriver"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS 006": "heatseeker",
+                "WS 007": "heatseeker",
+                "WS 008": "heatseeker",
+                "WS 009": "heatseeker"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS 004": "heavymauler"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS 003": "dualflak"}
+        }
+    ]
+}

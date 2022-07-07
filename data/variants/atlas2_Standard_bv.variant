@@ -1,0 +1,47 @@
+{
+    "displayName": "Combat",
+    "fluxCapacitors": 4,
+    "fluxVents": 50,
+    "hullId": "atlas2",
+    "hullMods": [
+        "dedicated_targeting_core",
+        "missleracks"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "atlas2_Standard_bv",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS 012": "squall"}
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS 013": "hurricane"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS 009": "hellbore"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS 008": "mark9"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 001": "vulcan",
+                "WS 002": "vulcan",
+                "WS 010": "vulcan",
+                "WS 011": "vulcan",
+                "WS 015": "flak",
+                "WS 018": "flak"
+            }
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+    "displayName": "Attack",
+    "fluxCapacitors": 2,
+    "fluxVents": 10,
+    "hullId": "cerberus_luddic_path",
+    "hullMods": [
+        "hardened_subsystems",
+        "heavyarmor"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "cerberus_luddic_path_Attack_bv",
+    "weaponGroups": [{
+        "autofire": true,
+        "mode": "LINKED",
+        "weapons": {
+            "WS 001": "lightdualmg",
+            "WS 002": "lightdualmg",
+            "WS 003": "lightdualmg",
+            "WS 004": "chaingun"
+        }
+    }]
+}

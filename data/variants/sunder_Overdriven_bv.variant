@@ -1,0 +1,30 @@
+{
+    "displayName": "Overdriven",
+    "fluxCapacitors": 20,
+    "fluxVents": 4,
+    "goalVariant": true,
+    "hullId": "sunder",
+    "hullMods": [
+        "safetyoverrides",
+        "magazines"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "sunder_Overdriven_bv",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 002": "ionpulser",
+                "WS 003": "autopulse",
+                "WS 004": "ionpulser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS 008": "vulcan"}
+        }
+    ]
+}

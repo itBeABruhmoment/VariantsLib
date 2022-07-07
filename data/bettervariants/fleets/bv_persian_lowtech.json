@@ -1,0 +1,75 @@
+{
+	"fleetDataId":"bv_persian_lowtech",
+	"spawnWeight":10,
+	"minDP":40,
+	"maxDP":400,
+	
+	"targetFleetTypes": ["%combatplus"],
+	
+	"fleetPartitions": [
+		{
+			"partitionWeight":35,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"conquest_Standard_bv", "weight":10},
+				{"id":"conquest_Elite_bv", "weight":10},
+				{"id":"conquest_Elite2_bv", "weight":10},
+				{"id":"doom_Support_bv", "weight":5},
+			]
+		},
+		{
+			"partitionWeight":30,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"dominator_Outdated_bv", "weight":40},
+				{"id":"dominator_Assault_bv", "weight":10},
+				{"id":"dominator_Standard_bv", "weight":40},
+				{"id":"dominator_StandardReaper_bv", "weight":10},
+			]
+		},
+		{
+			"partitionWeight":10,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"condor_StrikeE1_bv", "weight":5},
+				{"id":"condor_Strike2_bv", "weight":5},
+				{"id":"heron_Strike", "weight":10},
+				{"id":"mora_Assault_bv", "weight":40},
+				{"id":"mora_Strike_bv", "weight":40},
+			]
+		},
+		{
+			"partitionWeight":15,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"enforcer_Elite_bv", "weight":70},
+				{"id":"enforcer_Overdriven_bv", "weight":15},
+				{"id":"sunder_Overdriven_bv", "weight":15},
+			]
+		},
+		{
+			"partitionWeight":10,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"brawler_Elite_bv", "weight":33},
+				{"id":"omen_Ew_bv", "weight":33},
+				{"id":"tempest_Attack1_bv", "weight":33},
+			]
+		},
+		{
+			"partitionWeight":5,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"gemini_Strike_bv", "weight":100},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"phaeton_Standard_bv", "weight":1},
+				{"id":"prometheus_Super_bv", "weight":100},
+			]
+		},
+	]
+}

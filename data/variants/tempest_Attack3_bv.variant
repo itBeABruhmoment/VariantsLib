@@ -1,0 +1,27 @@
+{
+    "displayName": "Attack3",
+    "fluxCapacitors": 9,
+    "fluxVents": 10,
+    "goalVariant": true,
+    "hullId": "tempest",
+    "hullMods": [
+        "hardened_subsystems",
+        "fluxdistributor"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "tempest_Attack3_bv",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS 001": "pulselaser"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS 002": "ionbeam"}
+        }
+    ],
+    "wings": []
+}

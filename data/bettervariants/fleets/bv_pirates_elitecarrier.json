@@ -1,0 +1,77 @@
+{
+	"fleetDataId":"bv_pirates_elitecarrier",
+	"spawnWeight":100,
+	"minDP":40,
+	"maxDP":300,
+	"defaultFleetWidePersonality":"reckless",
+	"alwaysInclude":[{"id":"ox_Standard", "amount":2}],
+	"additionalCommanderSkills":["support_doctrine", "derelict_contingent"],
+	"targetFleetTypes": ["%boss"],
+	
+	"fleetPartitions": [
+		{
+			"partitionWeight":40,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"atlas2_Standard_bv", "weight":35},
+				{"id":"atlas2_Standard2_bv", "weight":30},
+				{"id":"atlas2_Standard3_bv", "weight":30},
+			]
+		},
+		{
+			"partitionWeight":20,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"eradicator_pirates_Attack_bv", "weight":20},
+				{"id":"eradicator_pirates_Overdriven_bv", "weight":20},
+				{"id":"venture_Rocket_bv", "weight":10},
+				{"id":"falcon_p_StrikeE1_bv", "weight":20},
+				{"id":"falcon_p_StrikeE2_bv", "weight":20},
+			]
+		},
+		{
+			"partitionWeight":15,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"enforcer_d_pirates_Elite_bv", "weight":40},
+				{"id":"enforcer_d_pirates_Overdriven2_bv", "weight":7},
+				{"id":"enforcer_d_pirates_Overdriven_bv", "weight":8},
+				{"id":"manticore_pirates_Support", "weight":5},
+				{"id":"sunder_Overdriven_bv", "weight":10},
+				{"id":"shrike_p_Attack_bv", "weight":5},
+			]
+		},
+		{
+			"partitionWeight":15,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"colossus3_PirateStrike1_bv", "weight":40},
+				{"id":"colossus3_PirateStrike2_bv", "weight":30},
+				{"id":"condor_Strike1_bv", "weight":15},
+				{"id":"condor_Attack_bv", "weight":15},
+			]
+		},
+		{
+			"partitionWeight":5,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"hound_d_pirates_Shielded", "weight":3},
+				{"id":"hound_d_pirates_Standard", "weight":3},
+				{"id":"hound_d_pirates_Overdriven", "weight":4},
+				{"id":"vanguard_pirates_Attack", "weight":10},
+				{"id":"vanguard_pirates_Strike", "weight":10},
+				{"id":"buffalo2_Bomber_Support_bv", "weight":30},
+				{"id":"buffalo2_Fighter_Support_bv", "weight":30},
+				{"id":"lasher_Standard1_bv", "weight":10},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"phaeton_Standard_bv", "weight":1000},
+				{"id":"dram_Light_bv", "weight":1},
+			]
+		},
+	]
+}

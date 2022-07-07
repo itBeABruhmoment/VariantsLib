@@ -1,0 +1,63 @@
+This document provides an explanation of tags used in faction_tags.csv and variant_tags.csv.
+variant_tags.csv
+note that variants not included in this file will not be modified by this mod
+
+no - do not modify officer of ships with this variant
+nr - do not remove ships with this variant from fleets
+ca - officers of ships with this variant will be changed to cautious
+ti - officers of ships with this variant will be changed to timid
+st - officers of ships with this variant will be changed to steady
+ag - officers of ships with this variant will be changed to aggressive
+re - officers of ships with this variant will be changed to reckless
+hs - officers of this ship variant are more likely to have helmsmanship
+ce - officers of this ship variant are more likely to have combat endurance
+im - officers of this ship variant are more likely to have impact mitigation
+dc - officers of this ship variant are more likely to have damage control
+fm - officers of this ship variant are more likely to have field modulation
+pd - officers of this ship variant are more likely to have point defense
+ta - officers of this ship variant are more likely to have target analysis
+bm - officers of this ship variant are more likely to have ballistic mastery
+se - officers of this ship variant are more likely to have systems expertise
+ms - officers of this ship variant are more likely to have missile specialization
+gi - officers of this ship variant are more likely to have gunnery implants
+ew - officers of this ship variant are more likely to have energy weapon mastery
+oe - officers of this ship variant are more likely to have ordinance expert
+pa - officers of this ship variant are more likely to have polarized armour
+sof - identifies variants to put in safety overrides fleets
+psf - identifies variants to put in phase fleets
+csf - identifies variants to put in carrier fleets. Generally meant for dedicated carriers
+cmf - identifies variants to put in carrier fleets. Generally meant for battle carriers and missile boats
+wmf - identifies variants to put in wolf pack fleets. Generally meant for small ships that make up the bulk of a wolfpack
+wsf - identifies variants to put in wolf pack fleets. Generally meant for support ships in wolf pack fleets.
+lsf - identifies variants that are line ships
+ssf - identifies variants that are support ships
+
+faction_tags.csv
+note that fleets from factions not in this file will not be modified by this mod (aside from receiving a tag)
+
+nm - fleets from this faction will never be modified by this mod (aside from receiving a tag)
+no - officers from fleets with this faction will not be modified
+wf - some fleets from this faction will spawn as wolfpack fleets
+pf - some fleets from this faction will spawn as phase fleets
+sf - some fleets from this faction will spawn as safety overrides heavy fleets
+cf - some fleets from this faction will spawn loaded with cariers and missile boats
+
+nex vengance: vengeanceFleet
+nex mining: exerelinMiningFleet
+nex invasion fleet: exerelinInvasionFleet
+nex strike/invasion support: exerelinInvasionSupportFleet
+nex supress: nex_suppressionFleet
+nex special forces: nex_specialForces
+nex colony: nex_colonyFleet
+nex vulture scav. : nex_vultureFleet
+nex relief: nex_reliefFleet
+nex response: exerelinResponseFleet
+smuggler: tradeSmuggler
+patrol small and station: patrolSmall
+med patrol: patrolMedium
+large patrol: patrolLarge
+trader: trade
+small trader: smallTrader
+pirate scout: mercScout
+merc patrol: mercPatrol
+bounty: personBounty

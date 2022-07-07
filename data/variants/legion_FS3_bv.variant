@@ -1,0 +1,41 @@
+{
+    "displayName": "Fire Support3",
+    "fluxCapacitors": 0,
+    "fluxVents": 50,
+    "hullId": "legion",
+    "hullMods": [
+        "eccm",
+        "fluxdistributor",
+        "targetingunit"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "legion_FS3_bv",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 000": "gauss",
+                "WS 001": "gauss"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 002": "pilum",
+                "WS 003": "pilum",
+                "WS 004": "pilum",
+                "WS 005": "pilum",
+                "WS 007": "pilum"
+            }
+        }
+    ],
+    "wings": [
+        "broadsword_wing",
+        "hoplon_wing",
+        "perdition_wing",
+        "perdition_wing"
+    ]
+}

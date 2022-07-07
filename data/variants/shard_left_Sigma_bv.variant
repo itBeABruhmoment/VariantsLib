@@ -1,0 +1,34 @@
+{
+    "displayName": "Sigma Miner",
+    "fluxCapacitors": 0,
+    "fluxVents": 0,
+    "goalVariant": true,
+    "hullId": "shard_left",
+    "hullMods": [
+        "shield_shunt",
+        "pointdefenseai",
+        "missleracks",
+        "magazines",
+        "augmentedengines",
+        "additional_berthing",
+        "eccm"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "shard_left_Sigma_bv",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {"WS 000": "miningblaster"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 001": "mininglaser",
+                "WS 002": "mininglaser"
+            }
+        }
+    ]
+}

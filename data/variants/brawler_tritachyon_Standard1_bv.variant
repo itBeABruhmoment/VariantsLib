@@ -1,0 +1,32 @@
+{
+    "displayName": "Support1",
+    "fluxCapacitors": 10,
+    "fluxVents": 10,
+    "hullId": "brawler_tritachyon",
+    "hullMods": [
+        "fluxcoil",
+        "hardenedshieldemitter",
+        "hardened_subsystems"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "brawler_tritachyon_Standard1_bv",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 001": "ionpulser",
+                "WS 002": "ionpulser"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS 003": "reaper",
+                "WS 004": "reaper"
+            }
+        }
+    ]
+}

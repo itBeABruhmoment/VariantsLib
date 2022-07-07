@@ -1,0 +1,25 @@
+{
+    "displayName": "EMP",
+    "fluxCapacitors": 10,
+    "fluxVents": 10,
+    "goalVariant": true,
+    "hullId": "scarab",
+    "hullMods": [
+        "frontemitter",
+        "fluxdistributor"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "scarab_Emp_bv",
+    "weaponGroups": [{
+        "autofire": true,
+        "mode": "LINKED",
+        "weapons": {
+            "WS 001": "ioncannon",
+            "WS 002": "ioncannon",
+            "WS 003": "ioncannon",
+            "WS 005": "irpulse",
+            "WS 010": "irpulse"
+        }
+    }]
+}

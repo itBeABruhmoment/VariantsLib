@@ -1,0 +1,24 @@
+{
+    "displayName": "Overdriven",
+    "fluxCapacitors": 20,
+    "fluxVents": 6,
+    "hullId": "enforcer_d_pirates",
+    "hullMods": [
+        "safetyoverrides",
+        "hardened_subsystems"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "enforcer_d_pirates_Overdriven_bv",
+    "weaponGroups": [{
+        "autofire": true,
+        "mode": "LINKED",
+        "weapons": {
+            "WS 001": "shredder",
+            "WS 002": "heavymg",
+            "WS 003": "chaingun",
+            "WS 004": "heavymg",
+            "WS 005": "shredder"
+        }
+    }]
+}

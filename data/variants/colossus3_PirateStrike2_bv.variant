@@ -1,0 +1,15 @@
+{
+    "displayName": "Pirate",
+    "fluxCapacitors": 5,
+    "fluxVents": 0,
+    "hullId": "colossus3",
+    "hullMods": [],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "colossus3_PirateStrike2_bv",
+    "weaponGroups": [],
+    "wings": [
+        "trident_wing",
+        "trident_wing"
+    ]
+}

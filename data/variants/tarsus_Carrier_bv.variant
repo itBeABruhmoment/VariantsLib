@@ -1,0 +1,17 @@
+{
+    "displayName": "Carrier",
+    "fluxCapacitors": 0,
+    "fluxVents": 2,
+    "goalVariant": true,
+    "hullId": "tarsus",
+    "hullMods": ["converted_hangar"],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "tarsus_Carrier_bv",
+    "weaponGroups": [{
+        "autofire": true,
+        "mode": "LINKED",
+        "weapons": {"WS 003": "lightac"}
+    }],
+    "wings": ["hoplon_wing"]
+}

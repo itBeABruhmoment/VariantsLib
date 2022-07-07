@@ -1,0 +1,22 @@
+{
+    "displayName": "Standard",
+    "fluxCapacitors": 1,
+    "fluxVents": 0,
+    "hullId": "phaeton",
+    "hullMods": [
+        "militarized_subsystems",
+        "augmentedengines",
+        "unstable_injector"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "phaeton_Standard_bv",
+    "weaponGroups": [{
+        "autofire": true,
+        "mode": "LINKED",
+        "weapons": {
+            "WS 001": "vulcan",
+            "WS 004": "vulcan"
+        }
+    }]
+}

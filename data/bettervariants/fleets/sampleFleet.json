@@ -1,0 +1,108 @@
+{
+	# WARNING: set min dp to a sensible value. (Eg. don't make the min dp of the fleet 1 
+	# if no ships that can spawn in this fleet are 1 dp or under) I did not code 
+	# failsafes for this
+
+	# unique id used to identify fleet type
+	"fleetDataId":"sampleFleet",
+	# how often this fleet will be picked as a random special fleet, probability based
+	# on sum of total weights (ie. if this fleet is spawned by a faction with a 20 and 
+	# 30 weight fleet this fleet will spawn 10 / (10 + 20 + 30) percent of the time a 
+	# special fleet spawns. Can be float
+	"spawnWeight":10,
+	# minimum dp a fleet must contain to spawn as this fleet type. Is int
+	"minDP":100,
+	# max dp a fleet can contain to spawn as this fleet type. Is int
+	"maxDP":400,
+	# personality that unofficered ships and officered ships with variants with 
+	# unspecified personalities will get
+	"defaultFleetWidePersonality":"reckless",
+	
+	# specify ships that will always spawn in fleets of this type
+	"alwaysSpawn": [
+		{"id":"doom_Support_bv", "amount":2},
+	],
+	
+	# specify what portion of the fleet will contain what ships
+	# generally it's best to order the partitions so that the partitions with the lowest dp ships are last
+	"fleetPartitions": [
+		{
+			# percentage of fleet's dp filled with ships from this partition equals (this 
+			# parition weight) / (sum of all partition weights). So this partition will make 
+			# up 25 / (25 + 45 + 20 + 10 + 3 + 3) percent of dp in the fleet
+			# if DP is left over after assigning ships for this partition the remaining dp is 
+			# given to the next partition down. Is a float field
+			"partitionWeight":25,
+			# does nothing for now, set it to some positive number. Is a float field
+			"partitionWeightVariance":5,
+			# what variants can be added in this partition
+			"variants": [
+				# weights for the variants behave the same as partition weights. So a paragon_Elite 
+				# spawns 10 / (10 + 10 + 10 + 10 + 10) percent of the time. Note that lower dp ships 
+				# may spawn slightly more often than higher dp ships in the same partition due to 
+				# how this mod is written. To minimize the effects of this put ships with similar 
+				# dp in the same partition. Weight is a float field
+				{"id":"paragon_Elite", "weight":10},
+				{"id":"paragon_Escort_bv", "weight":10},
+				{"id":"astral_Strike_bv", "weight":10},
+				{"id":"astral_Elite_bv", "weight":10},
+				{"id":"doom_Support_bv", "weight":10},
+			]
+		},
+		{
+			"partitionWeight":45,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"doom_Overdriven_bv", "weight":15},
+				{"id":"aurora_Overdriven_bv", "weight":15},
+				{"id":"eagle_Overdriven_bv", "weight":10},
+				{"id":"fury_Attack1_bv", "weight":4},
+				{"id":"fury_Attack2_bv", "weight":4},
+				{"id":"fury_Strike_bv", "weight":4},
+			]
+		},
+		{
+			"partitionWeight":20,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"harbinger_Overdriven1_bv", "weight":5},
+				{"id":"harbinger_Overdriven2_bv", "weight":5},
+				{"id":"sunder_Assault_bv", "weight":10},
+				{"id":"sunder_Overdriven_bv", "weight":10},
+				{"id":"medusa_Overdriven_bv", "weight":10},
+				{"id":"hyperion_Assault_bv", "weight":10},
+			]
+		},
+		{
+			"partitionWeight":10,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"omen_Ew_bv", "weight":15},
+				{"id":"tempest_Attack1_bv", "weight":10},
+				{"id":"tempest_Attack2_bv", "weight":10},
+				{"id":"tempest_Attack3_bv", "weight":10},
+				{"id":"brawler_tritachyon_Standard1_bv", "weight":5},
+				{"id":"brawler_tritachyon_Standard2_bv", "weight":5},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				# some trick to properly spawn logistical ships based on fleet size
+				# if enough dp spawn altas, else if enough dp to spawn colossus spawn colossus, else spawn buffalo
+				{"id":"colossus_Standard_bv", "weight":100},
+				{"id":"atlas_Standard_bv", "weight":1000},
+				{"id":"buffalo_tritachyon_Standard_bv", "weight":1},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"phaeton_Standard_bv", "weight":1},
+				{"id":"prometheus_Super_bv", "weight":100},
+			]
+		},
+	]
+}

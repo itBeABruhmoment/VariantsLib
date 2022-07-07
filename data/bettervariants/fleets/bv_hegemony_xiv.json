@@ -1,0 +1,70 @@
+{
+	"fleetDataId":"bv_hegemony_xiv",
+	"spawnWeight":100,
+	"minDP":40,
+	"maxDP":400,
+	"defaultFleetWidePersonality":"aggressive",
+	"alwaysInclude":[{"id":"ox_Standard", "amount":2}],
+	"additionalCommanderSkills":["support_doctrine"],
+	"targetFleetTypes": ["%boss"],
+	
+	"fleetPartitions": [
+		{
+			"partitionWeight":35,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"onslaught_xiv_Standard_bv", "weight":3.3},
+				{"id":"onslaught_xiv_Elite2_bv", "weight":3.3},
+			]
+		},
+		{
+			"partitionWeight":40,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"dominator_XIV_Elite_bv", "weight":2.5},
+				{"id":"dominator_XIV_Elite2_bv", "weight":2.5},
+				{"id":"dominator_XIV_Elite3_bv", "weight":2.5},
+				{"id":"dominator_XIV_Elite4_bv", "weight":2.5},
+				{"id":"eagle_xiv_Standard_bv", "weight":1.5},
+				{"id":"eagle_xiv_Overdriven_bv", "weight":3.5},
+				{"id":"mora_Assault_bv", "weight":2},
+				{"id":"mora_Strike_bv", "weight":2},
+			]
+		},
+		{
+			"partitionWeight":25,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"falcon_xiv_Overdriven_bv", "weight":5},
+				{"id":"falcon_xiv_Support_bv", "weight":5},
+				{"id":"enforcer_XIV_Elite3_bv", "weight":5},
+				{"id":"enforcer_XIV_Elite2_bv", "weight":5},
+				{"id":"enforcer_XIV_Overdriven_bv", "weight":5},
+			]
+		},
+		{
+			"partitionWeight":2,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"hound_Standard", "weight":15},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"colossus_Standard_bv", "weight":100},
+				{"id":"atlas_Standard_bv", "weight":1000},
+				{"id":"buffalo_hegemony_Standard_bv", "weight":1},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"phaeton_Standard_bv", "weight":1},
+				{"id":"prometheus_Super_bv", "weight":100},
+			]
+		},
+	]
+}

@@ -1,0 +1,11 @@
+{
+    "id": "variants_lib",
+    "name": "Variants Lib",
+    "author": "itBeABruhmoment",
+    "utility": "false",
+    "version": "0.1.0",
+    "description": "Make variants better",
+    "gameVersion": "0.95.1a-RC6",
+    "jars":["jars/VariantsLib/VariantsLib.jar"],
+    "modPlugin":"variants_lib.scripts.VariantsLibModPlugin",
+}

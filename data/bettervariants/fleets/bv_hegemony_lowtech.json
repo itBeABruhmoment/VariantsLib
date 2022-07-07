@@ -1,0 +1,77 @@
+{
+	"fleetDataId":"bv_hegemony_lowtech",
+	"spawnWeight":40,
+	"minDP":40,
+	"maxDP":400,
+	"targetFleetTypes": ["%combatplus"],
+	
+	"fleetPartitions": [
+		{
+			"partitionWeight":40,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"onslaught_Standard_bv", "weight":3.3},
+				{"id":"onslaught_Outdated_bv", "weight":3.3},
+				{"id":"onslaught_Brawler_bv", "weight":3.3},
+				{"id":"onslaught_Elite", "weight":2.5},
+				{"id":"onslaught_xiv_Elite2_bv", "weight":2.5},
+				{"id":"legion_Assault_bv", "weight":1},
+				{"id":"legion_FS1_bv", "weight":2},
+				{"id":"legion_Strike_bv", "weight":2},
+			]
+		},
+		{
+			"partitionWeight":40,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"dominator_AntiCV_bv", "weight":2},
+				{"id":"dominator_Assault_bv", "weight":2},
+				{"id":"dominator_Shield_Breaker_bv", "weight":2},
+				{"id":"dominator_Outdated_bv", "weight":2},
+				{"id":"dominator_Standard_bv", "weight":2},
+				{"id":"dominator_XIV_Elite_bv", "weight":2.5},
+				{"id":"dominator_XIV_Elite2_bv", "weight":2.5},
+				{"id":"mora_Assault_bv", "weight":2},
+				{"id":"mora_Strike_bv", "weight":2},
+			]
+		},
+		{
+			"partitionWeight":18,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"manticore_Support", "weight":7},
+				{"id":"manticore_Support2_bv", "weight":7},
+				{"id":"enforcer_XIV_Elite", "weight":5},
+				{"id":"enforcer_Elite", "weight":2},
+				{"id":"enforcer_Escort", "weight":2},
+				{"id":"enforcer_Assault_bv", "weight":2},
+				{"id":"enforcer_Balanced", "weight":2},
+				{"id":"enforcer_CS", "weight":2},
+			]
+		},
+		{
+			"partitionWeight":2,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"hound_Standard", "weight":15},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"colossus_Standard_bv", "weight":100},
+				{"id":"atlas_Standard_bv", "weight":1000},
+				{"id":"buffalo_hegemony_Standard_bv", "weight":1},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"phaeton_Standard_bv", "weight":1},
+				{"id":"prometheus_Super_bv", "weight":100},
+			]
+		},
+	]
+}

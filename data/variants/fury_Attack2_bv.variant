@@ -1,0 +1,36 @@
+{
+    "displayName": "Attack2",
+    "fluxCapacitors": 14,
+    "fluxVents": 0,
+    "hullId": "fury",
+    "hullMods": [
+        "hardened_subsystems",
+        "safetyoverrides"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "fury_Attack2_bv",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 000": "heavyblaster",
+                "WS 001": "heavyblaster"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS 002": "sabotpod"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 003": "ioncannon",
+                "WS 004": "ioncannon"
+            }
+        }
+    ]
+}

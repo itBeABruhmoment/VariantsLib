@@ -1,0 +1,12 @@
+factionID,fleets,specialFleetSpawnRate,tags,specialFleetSpawnRateOverrides
+hegemony,"bv_hegemony_lowtech, bv_hegemony_xiv, bv_hegemony_so, bv_hegemony_eliteso",0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “inspectionFleet”:0.7, “taskForce”:0.6"
+independent,"bv_independent_so1, bv_independent_ranged, bv_independent_explore",0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “taskForce”:0.6"
+knights_of_ludd,bv_luddic_church_carrier,0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “taskForce”:0.6"
+lions_guard,"bv_sindrian_diktat_ranged, bv_sindrian_diktat_so",0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “taskForce”:0.6"
+luddic_church,"bv_luddic_church_carrier, bv_luddic_church_elite",0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “taskForce”:0.6"
+luddic_path,,0.3,no_autofit,
+mercenary,"bv_independent_so1, bv_independent_ranged, bv_independent_explore",0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “taskForce”:0.6"
+persean,"bv_persian_ranged, bv_persian_so",0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “taskForce”:0.6"
+pirates,"bv_pirates_salvage, bv_pirates_elite, bv_pirates_elitecarrier",0.5,"no_autofit, bounty","“vengeanceFleet”:0.6, “taskForce”:0.8"
+sindrian_diktat,"bv_sindrian_diktat_ranged, bv_sindrian_diktat_so, bv_sindrian_diktat_rangedSmall",0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “taskForce”:0.6"
+tritachyon,"bv_tritachyon_wolfpack1, bv_tritachyon_ranged, bv_tritachyon_so, bv_tritachyon_regular, bv_tritachyon_elite_wolfpack, bv_tritachyon_phase",0.6,"no_autofit, bounty","“vengeanceFleet”:0.8, “taskForce”:0.8"

@@ -1,0 +1,80 @@
+{
+    "displayName": "Escort",
+    "fluxCapacitors": 45,
+    "fluxVents": 50,
+    "hullId": "paragon",
+    "hullMods": [
+        "fluxdistributor",
+        "frontemitter",
+        "stabilizedshieldemitter"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "paragon_Escort_bv",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 001": "plasma",
+                "WS 002": "plasma"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "ALTERNATING",
+            "weapons": {
+                "WS 012": "heatseeker",
+                "WS 014": "heatseeker",
+                "WS 018": "heatseeker",
+                "WS 020": "heatseeker"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 013": "taclaser",
+                "WS 015": "taclaser",
+                "WS 016": "taclaser",
+                "WS 019": "taclaser",
+                "WS 021": "taclaser",
+                "WS 022": "taclaser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 005": "ionbeam",
+                "WS 006": "ionbeam",
+                "WS 011": "taclaser",
+                "WS 017": "taclaser"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 009": "phasebeam",
+                "WS 010": "phasebeam"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 007": "heavyneedler",
+                "WS 008": "heavyneedler"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 003": "guardian",
+                "WS 004": "guardian"
+            }
+        }
+    ]
+}

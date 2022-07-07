@@ -1,0 +1,29 @@
+{
+    "displayName": "Overdriven1",
+    "fluxCapacitors": 18,
+    "fluxVents": 0,
+    "hullId": "harbinger",
+    "hullMods": [
+        "adaptive_coils",
+        "safetyoverrides",
+        "hardened_subsystems"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "harbinger_Overdriven1_bv",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS 001": "ionpulser"}
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 002": "phasebeam",
+                "WS 003": "phasebeam"
+            }
+        }
+    ]
+}

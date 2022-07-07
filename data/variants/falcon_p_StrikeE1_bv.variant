@@ -1,0 +1,48 @@
+{
+    "displayName": "StrikeE1",
+    "fluxCapacitors": 13,
+    "fluxVents": 0,
+    "hullId": "falcon_p",
+    "hullMods": [
+        "missleracks",
+        "converted_hangar"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "falcon_p_StrikeE1_bv",
+    "weaponGroups": [
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 007": "sabotpod",
+                "WS 008": "sabotpod"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 001": "atropos",
+                "WS 002": "atropos"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 005": "annihilatorpod",
+                "WS 006": "annihilatorpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 009": "mininglaser",
+                "WS 010": "mininglaser"
+            }
+        }
+    ],
+    "wings": ["xyphos_wing"]
+}

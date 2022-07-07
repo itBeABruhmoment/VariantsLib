@@ -1,0 +1,53 @@
+{
+    "displayName": "StrikeE",
+    "fluxCapacitors": 0,
+    "fluxVents": 5,
+    "hullId": "legion",
+    "hullMods": [
+        "heavyarmor",
+        "missleracks",
+        "targetingunit"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "legion_StrikeE_bv",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 000": "hellbore",
+                "WS 001": "hellbore"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 002": "sabotpod",
+                "WS 003": "sabotpod",
+                "WS 004": "sabotpod",
+                "WS 005": "sabotpod",
+                "WS 007": "sabotpod"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 008": "vulcan",
+                "WS 009": "vulcan",
+                "WS 018": "vulcan",
+                "WS 019": "vulcan",
+                "WS 020": "vulcan",
+                "WS 021": "vulcan"
+            }
+        }
+    ],
+    "wings": [
+        "broadsword_wing",
+        "thunder_wing",
+        "xyphos_wing",
+        "xyphos_wing"
+    ]
+}

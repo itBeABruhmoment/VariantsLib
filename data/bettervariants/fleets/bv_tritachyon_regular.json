@@ -1,0 +1,82 @@
+{
+	"fleetDataId":"bv_tritachyon_regular",
+	"spawnWeight":10,
+	"minDP":40,
+	"maxDP":400,
+	"targetFleetTypes": ["%combatplus"],
+	
+	"fleetPartitions": [
+		{
+			"partitionWeight":40,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"paragon_Elite", "weight":10},
+				{"id":"paragon_Escort_bv", "weight":10},
+				{"id":"astral_Strike_bv", "weight":3},
+				{"id":"astral_Elite_bv", "weight":3},
+				{"id":"doom_Support_bv", "weight":5},
+			]
+		},
+		{
+			"partitionWeight":40,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"aurora_Assault", "weight":2.5},
+				{"id":"aurora_Balanced", "weight":2.5},
+				{"id":"aurora_Strike_bv", "weight":2.5},
+				{"id":"aurora_Overdriven_bv", "weight":2.5},
+				{"id":"apogee_Elite_bv", "weight":4},
+				{"id":"apogee_Standard_bv", "weight":4},
+				{"id":"eagle_Standard_bv", "weight":5},
+				{"id":"falcon_CS", "weight":5},
+				{"id":"fury_Attack1_bv", "weight":3},
+				{"id":"fury_Attack2_bv", "weight":3},
+				{"id":"fury_Strike_bv", "weight":3},
+			]
+		},
+		{
+			"partitionWeight":10,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"harbinger_Overdriven1_bv", "weight":5},
+				{"id":"harbinger_Overdriven2_bv", "weight":5},
+				{"id":"sunder_Support_bv", "weight":3},
+				{"id":"sunder_Assault_bv", "weight":3},
+				{"id":"sunder_Overdriven_bv", "weight":3},
+				{"id":"medusa_Attack_bv", "weight":10},
+				{"id":"hyperion_Assault_bv", "weight":5},
+			]
+		},
+		{
+			"partitionWeight":10,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"omen_Ew_bv", "weight":15},
+				{"id":"tempest_Attack1_bv", "weight":10},
+				{"id":"tempest_Attack2_bv", "weight":10},
+				{"id":"tempest_Attack3_bv", "weight":10},
+				{"id":"brawler_tritachyon_Standard1_bv", "weight":5},
+				{"id":"brawler_tritachyon_Standard2_bv", "weight":5},
+				{"id":"shrike_Attack_bv", "weight":10},
+				{"id":"shrike_Support_bv", "weight":10},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"colossus_Standard_bv", "weight":100},
+				{"id":"atlas_Standard_bv", "weight":1000},
+				{"id":"buffalo_tritachyon_Standard_bv", "weight":1},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"phaeton_Standard_bv", "weight":1},
+				{"id":"prometheus_Super_bv", "weight":100},
+			]
+		},
+	]
+}

@@ -1,0 +1,24 @@
+{
+    "displayName": "Overdriven",
+    "fluxCapacitors": 20,
+    "fluxVents": 7,
+    "hullId": "enforcer_xiv",
+    "hullMods": [
+        "hardened_subsystems",
+        "hardenedshieldemitter",
+        "fluxcoil",
+        "safetyoverrides"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "enforcer_XIV_Overdriven_bv",
+    "weaponGroups": [{
+        "autofire": true,
+        "mode": "LINKED",
+        "weapons": {
+            "WS 002": "heavymg",
+            "WS 003": "chaingun",
+            "WS 004": "heavymg"
+        }
+    }]
+}

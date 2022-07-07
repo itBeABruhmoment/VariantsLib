@@ -1,0 +1,5 @@
+{
+	"plugins":{
+		"VariantsLibUnofficeredPersonalitySetPlugin":"variants_lib.scripts.UnofficeredPersonalitySetPlugin",
+	},
+}

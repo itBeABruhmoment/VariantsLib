@@ -1,0 +1,64 @@
+{
+    "displayName": "Elite",
+    "fluxCapacitors": 26,
+    "fluxVents": 50,
+    "hullId": "onslaught_xiv",
+    "hullMods": [
+        "targetingunit",
+        "fluxdistributor",
+        "missleracks",
+        "armoredweapons",
+        "heavyarmor"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "onslaught_xiv_Elite2_bv",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 016": "tpc",
+                "WS 017": "tpc"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 021": "typhoon",
+                "WS 022": "typhoon",
+                "WS 023": "typhoon",
+                "WS 024": "typhoon"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 001": "heavyac",
+                "WS 003": "heavyac",
+                "WS 012": "heavymortar",
+                "WS 013": "heavymortar",
+                "WS 019": "multineedler"
+            }
+        },
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 002": "vulcan",
+                "WS 004": "vulcan",
+                "WS 005": "vulcan",
+                "WS 006": "vulcan",
+                "WS 007": "dualflak",
+                "WS 008": "vulcan",
+                "WS 009": "vulcan",
+                "WS 014": "flak",
+                "WS 015": "flak",
+                "WS 018": "devastator",
+                "WS 020": "devastator"
+            }
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "displayName": "Light",
+    "fluxCapacitors": 0,
+    "fluxVents": 0,
+    "hullId": "dram",
+    "hullMods": [
+        "augmentedengines",
+        "unstable_injector",
+        "militarized_subsystems"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "dram_Light_bv",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 001": "lightmg",
+                "WS 002": "vulcan"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS 003": "heatseeker"}
+        }
+    ]
+}

@@ -1,0 +1,22 @@
+{
+    "displayName": "Standard",
+    "fluxCapacitors": 0,
+    "fluxVents": 2,
+    "hullId": "tarsus",
+    "hullMods": [
+        "augmentedengines",
+        "militarized_subsystems"
+    ],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "tarsus_Standard_bv",
+    "weaponGroups": [{
+        "autofire": true,
+        "mode": "LINKED",
+        "weapons": {
+            "WS 001": "vulcan",
+            "WS 002": "vulcan",
+            "WS 004": "vulcan"
+        }
+    }]
+}

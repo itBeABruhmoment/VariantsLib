@@ -1,0 +1,78 @@
+{
+	"fleetDataId":"bv_sindrian_diktat_rangedSmall",
+	"spawnWeight":10,
+	"minDP":30,
+	"maxDP":250,
+	"targetFleetTypes": ["%combatplus"],
+	
+	"fleetPartitions": [
+		{
+			"partitionWeight":25,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"dominator_AntiCV_bv", "weight":10},
+				{"id":"dominator_Assault_bv", "weight":20},
+				{"id":"dominator_Outdated_bv", "weight":20},
+				{"id":"eagle_Balanced_bv", "weight":20},
+				{"id":"fury_Strike_bv", "weight":10},
+				{"id":"falcon_CS", "weight":20},
+			]
+		},
+		{
+			"partitionWeight":15,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"mora_Assault_bv", "weight":10},
+				{"id":"mora_Strike_bv", "weight":10},
+				{"id":"mora_StrikeE_bv", "weight":20},
+				{"id":"condor_Strike1_bv", "weight":10},
+				{"id":"heron_Strike", "weight":25},
+				{"id":"drover_Strike_bv", "weight":25},
+			]
+		},
+		{
+			"partitionWeight":10,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"falcon_Overdriven_bv", "weight":20},
+				{"id":"eagle_Overdriven_bv", "weight":30},
+				{"id":"enforcer_Overdriven_bv", "weight":25},
+				{"id":"sunder_Overdriven_bv", "weight":25},
+			]
+		},
+		{
+			"partitionWeight":30,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"sunder_Support_bv", "weight":50},
+				{"id":"enforcer_Elite_bv", "weight":50},
+			]
+		},
+		{
+			"partitionWeight":10,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"brawler_Elite_bv", "weight":30},
+				{"id":"monitor_Escort", "weight":70},
+			]
+		},
+		{
+			"partitionWeight":7,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"colossus_Standard_bv", "weight":100},
+				{"id":"atlas_Standard_bv", "weight":1000},
+				{"id":"buffalo_Standard_bv", "weight":1},
+			]
+		},
+		{
+			"partitionWeight":3,
+			"partitionWeightVariance":5,
+			"variants": [
+				{"id":"phaeton_Standard_bv", "weight":100},
+				{"id":"dram_Light_bv", "weight":1},
+				{"id":"prometheus_Super_bv", "weight":10000},
+			]
+		},
+	]
+}

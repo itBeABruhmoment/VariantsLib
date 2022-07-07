@@ -1,0 +1,30 @@
+{
+    "displayName": "Pather",
+    "fluxCapacitors": 20,
+    "fluxVents": 11,
+    "goalVariant": true,
+    "hullId": "colossus2",
+    "hullMods": [],
+    "permaMods": [],
+    "sMods": [],
+    "variantId": "colossus2_Pather_bv",
+    "weaponGroups": [
+        {
+            "autofire": true,
+            "mode": "LINKED",
+            "weapons": {
+                "WS 011": "lightmortar",
+                "WS 012": "lightmortar",
+                "WS 013": "lightdualac",
+                "WS 014": "lightdualac",
+                "WS 015": "lightdualac",
+                "WS 016": "lightdualac"
+            }
+        },
+        {
+            "autofire": false,
+            "mode": "LINKED",
+            "weapons": {"WS 017": "hammerrack"}
+        }
+    ]
+}
