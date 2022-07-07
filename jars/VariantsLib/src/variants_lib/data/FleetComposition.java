@@ -84,8 +84,7 @@ public class FleetComposition {
     {
         String str = "";
         for(int i = 0; i < partitions.length; i++) {
-            str += "part " + i + " weight: " + partitions[i].partitionWeight + " variance: " +
-            partitions[i].partitionVariance + " maxDP: " + maxDP + " minDP: " + minDP + "\n";
+            str += "part " + i + " weight: " + partitions[i].partitionWeight + " maxDP: " + maxDP + " minDP: " + minDP + "\n";
 
             for(int j = 0; j < partitions[i].members.length; j++) {
                 str += partitions[i].members[j].id + " " + partitions[i].members[j].weight + "\n";
@@ -236,7 +235,6 @@ public class FleetComposition {
         // make partiton weights a percentage (number between 0 and 1)
         for(FleetPartition part : partitions) {
             part.makePartitionWeightPercentage(partitionWeightSum);
-            part.makePartitionVariancePercentage(partitionWeightSum);
         }
 
         // load always include variants

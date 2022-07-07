@@ -16,17 +16,12 @@ public class FleetPartition {
 
     public FleetPartitionMember[] members;
     public double partitionWeight; // should be percentage after processing
-    public double partitionVariance; // percentage
 
     public void makePartitionWeightPercentage(double outOf)
     {
         partitionWeight = partitionWeight / outOf;
     }
 
-    public void makePartitionVariancePercentage(double outOf)
-    {
-        partitionVariance = partitionVariance / outOf;
-    }
     // loadedFileInfo and index is just data for throwing descriptive error messages
     public FleetPartition(JSONObject partitionData, String loadedFileInfo, int index) throws Exception
     {
@@ -38,16 +33,6 @@ public class FleetPartition {
         }
         if(partitionWeight < 0) {
             throw new Exception(loadedFileInfo + " fleet partion " + index + " has negative \"partitionWeight\" field");
-        }
-
-        // read "partitionWeightVariance"
-        try {
-            partitionVariance = partitionData.getDouble("partitionWeightVariance");
-        } catch(Exception e) {
-            throw new Exception(loadedFileInfo + " fleet partion " + index + " has missing or invalid \"partitionWeightVariance\" field");
-        }
-        if(partitionVariance < 0) {
-            throw new Exception(loadedFileInfo + " fleet partion " + index + " has negative \"partitionWeightVariance\" field");
         }
 
         // read "variants"
