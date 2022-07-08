@@ -5,6 +5,9 @@ import com.fs.starfarer.api.Global;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Iterator;
+import java.util.Vector;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -14,10 +17,13 @@ public class FleetPartition {
         log.setLevel(Level.ALL);
     }
 
-    public FleetPartitionMember[] members;
-    public double partitionWeight; // should be percentage after processing
+    public Vector<FleetPartitionMember> members;
+    public float partitionWeight; // should be percentage after processing
 
-    public void makePartitionWeightPercentage(double outOf)
+    private static final String PARTITION_WEIGHT = "partitionWeight";
+    private static final String VARIANTS = "variants";
+
+    public void makePartitionWeightPercentage(float outOf)
     {
         partitionWeight = partitionWeight / outOf;
     }
@@ -27,7 +33,7 @@ public class FleetPartition {
     {
         // read "partitionWeight"
         try {
-            partitionWeight = partitionData.getDouble("partitionWeight");
+            partitionWeight = (float) partitionData.getDouble(PARTITION_WEIGHT);
         } catch(Exception e) {
             throw new Exception(loadedFileInfo + " fleet partion " + index + " has missing or invalid \"partitionWeight\" field");
         }
@@ -36,56 +42,44 @@ public class FleetPartition {
         }
 
         // read "variants"
-        JSONArray partitionMembersData = null;
+        JSONObject variants = null;
         try {
-            partitionMembersData = partitionData.getJSONArray("variants");
+            variants = partitionData.getJSONObject(VARIANTS);
         } catch(Exception e) {
             throw new Exception(loadedFileInfo + " fleet partion " + index + " has missing or invalid \"variants\" field");
         }
-        if(partitionMembersData.length() == 0) {
-            throw new Exception(loadedFileInfo + " fleet partion " + index + " has empty \"variants\" field");
-        }
 
         // construct "members field"
-        double variantWeightSum = 0;
-        members = new FleetPartitionMember[partitionMembersData.length()];
-        int i = 0;
-        int length = partitionMembersData.length();
-        while(i < length) {
-            JSONObject partitionMemberData = partitionMembersData.getJSONObject(i);
-            // read and check id
-            String id = null;
-            try {
-                id = partitionMemberData.optString("id");               
-            } catch (Exception e) {
-                throw new Exception(loadedFileInfo + " fleet partion " + index + " variant " + i + " could not have its \"id\" field read");
-            }
-            if(id.length() == 0) {
-                throw new Exception(loadedFileInfo + " fleet partion " + index + " variant " + i + " could not have its \"id\" field read");
-            }
-            if(!Global.getSettings().doesVariantExist(id)) {
-                throw new Exception(loadedFileInfo + " fleet partion " + index + " variant " + i + ": " + id + " is not a recognized variant");
-            }
+        float variantWeightSum = 0.0f;
+        members = new Vector<FleetPartitionMember>();
+        Iterator keys = partitionData.keys();
+        while(keys.hasNext()) {
+            String key = (String) keys.next();
+            if(!key.equals(PARTITION_WEIGHT) && !key.equals(VARIANTS)) {
+                if(Global.getSettings().getVariant(key) == null) {
+                    throw new Exception(loadedFileInfo + " fleet partion " + index + " has unrecognised variant \"" + key + "\"");
+                }
 
-            // read and check weight
-            double weight = 0;
-            try {
-                weight = partitionMemberData.getDouble("weight");
-            } catch(Exception e) {
-                throw new Exception(loadedFileInfo + " fleet partion " + index + " variant " + i + " could not have its \"weight\" field read");
-            }
-            if(weight <= 0) {
-                throw new Exception(loadedFileInfo + " fleet partion " + index + " variant " + i + " has \"weight\" field that is less than or equal to 0");
-            }
-            variantWeightSum += weight;
-            members[i] = new FleetPartitionMember(id, weight);
-            i++;
-            length = partitionMembersData.length();
+                float variantWeight = 0.0f;
+                try {
+                    variantWeight = (float) partitionData.getDouble(key);
+                } catch(Exception e) {
+                    throw new Exception(loadedFileInfo + " fleet partion " + index + " failed to read the weight of the variant \"" + key + "\"");
+                }
 
+                if(variantWeight < 0.0f) {
+                    throw new Exception(loadedFileInfo + " fleet partion " + index + " the weight of the variant \"" + key + "\" is less than zero");
+                }
+
+                members.add(new FleetPartitionMember(key, variantWeight));
+                variantWeightSum += variantWeight;
+            }
         }
+        members.trimToSize();
         
-        for(FleetPartitionMember mem : members) {
-            mem.makeWeightPercentage(variantWeightSum);
+        
+        for(FleetPartitionMember member : members) {
+            member.makeWeightPercentage(variantWeightSum);
         }
     }
 }

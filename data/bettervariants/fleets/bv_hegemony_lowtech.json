@@ -8,70 +8,64 @@
 	"fleetPartitions": [
 		{
 			"partitionWeight":40,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"onslaught_Standard_bv", "weight":3.3},
-				{"id":"onslaught_Outdated_bv", "weight":3.3},
-				{"id":"onslaught_Brawler_bv", "weight":3.3},
-				{"id":"onslaught_Elite", "weight":2.5},
-				{"id":"onslaught_xiv_Elite2_bv", "weight":2.5},
-				{"id":"legion_Assault_bv", "weight":1},
-				{"id":"legion_FS1_bv", "weight":2},
-				{"id":"legion_Strike_bv", "weight":2},
-			]
+			"variants": {
+				"onslaught_Standard_bv":3.3,
+				"onslaught_Outdated_bv":3.3,
+				"onslaught_Brawler_bv":3.3,
+				"onslaught_Elite":2.5,
+				"onslaught_xiv_Elite2_bv":2.5,
+				"legion_Assault_bv":1,
+				"legion_FS1_bv":2,
+				"legion_Strike_bv":2
+			}
 		},
 		{
 			"partitionWeight":40,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"dominator_AntiCV_bv", "weight":2},
-				{"id":"dominator_Assault_bv", "weight":2},
-				{"id":"dominator_Shield_Breaker_bv", "weight":2},
-				{"id":"dominator_Outdated_bv", "weight":2},
-				{"id":"dominator_Standard_bv", "weight":2},
-				{"id":"dominator_XIV_Elite_bv", "weight":2.5},
-				{"id":"dominator_XIV_Elite2_bv", "weight":2.5},
-				{"id":"mora_Assault_bv", "weight":2},
-				{"id":"mora_Strike_bv", "weight":2},
-			]
+			"variants": {
+				"dominator_AntiCV_bv":2,
+				"dominator_Assault_bv":2,
+				"dominator_Shield_Breaker_bv":2,
+				"dominator_Outdated_bv":2,
+				"dominator_Standard_bv":2,
+				"dominator_XIV_Elite_bv":2.5,
+				"dominator_XIV_Elite2_bv":2.5,
+				"mora_Assault_bv":2,
+				"mora_Strike_bv":2
+			}
 		},
 		{
 			"partitionWeight":18,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"manticore_Support", "weight":7},
-				{"id":"manticore_Support2_bv", "weight":7},
-				{"id":"enforcer_XIV_Elite", "weight":5},
-				{"id":"enforcer_Elite", "weight":2},
-				{"id":"enforcer_Escort", "weight":2},
-				{"id":"enforcer_Assault_bv", "weight":2},
-				{"id":"enforcer_Balanced", "weight":2},
-				{"id":"enforcer_CS", "weight":2},
-			]
+			"variants": {
+				"manticore_Support":7,
+				"manticore_Support2_bv":7,
+				"enforcer_XIV_Elite":5,
+				"enforcer_Elite":2,
+				"enforcer_Escort":2,
+				"enforcer_Assault_bv":2,
+				"enforcer_Balanced":2,
+				"enforcer_CS":2
+			}
 		},
 		{
 			"partitionWeight":2,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"hound_Standard", "weight":15},
-			]
+			"variants": {
+				"hound_Standard":15
+			}
 		},
 		{
 			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"colossus_Standard_bv", "weight":100},
-				{"id":"atlas_Standard_bv", "weight":1000},
-				{"id":"buffalo_hegemony_Standard_bv", "weight":1},
-			]
+			"variants": {
+				"colossus_Standard_bv":100,
+				"atlas_Standard_bv":1000,
+				"buffalo_hegemony_Standard_bv":1
+			}
 		},
 		{
 			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"phaeton_Standard_bv", "weight":1},
-				{"id":"prometheus_Super_bv", "weight":100},
-			]
-		},
+			"variants": {
+				"phaeton_Standard_bv":1,
+				"prometheus_Super_bv":100
+			}
+		}
 	]
 }

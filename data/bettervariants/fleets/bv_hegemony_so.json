@@ -9,67 +9,60 @@
 	"fleetPartitions": [
 		{
 			"partitionWeight":30,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"onslaught_Brawler_bv", "weight":3},
-				{"id":"onslaught_Elite", "weight":3},
-				{"id":"onslaught_xiv_Elite2_bv", "weight":4},
-				{"id":"legion_Strike_bv", "weight":10},
-			]
+			"variants": {
+				"onslaught_Brawler_bv":3,
+				"onslaught_Elite":3,
+				"onslaught_xiv_Elite2_bv":4,
+				"legion_Strike_bv":10
+			}
 		},
 		{
 			"partitionWeight":30,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"eagle_Overdriven_bv", "weight":30},
-				{"id":"eagle_xiv_Overdriven_bv", "weight":10},
-				{"id":"falcon_Overdriven_bv", "weight":30},
-				{"id":"falcon_xiv_Overdriven_bv", "weight":10},
-			]
+			"variants": {
+				"eagle_Overdriven_bv":30,
+				"eagle_xiv_Overdriven_bv":10,
+				"falcon_Overdriven_bv":30,
+				"falcon_xiv_Overdriven_bv":10
+			}
 		},
 		{
 			"partitionWeight":15,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"gryphon_Overdriven_bv", "weight":60},
-				{"id":"mora_Assault_bv", "weight":20},
-				{"id":"condor_Strike1_bv", "weight":20},
-			]
+			"variants": {
+				"gryphon_Overdriven_bv":60,
+				"mora_Assault_bv":20,
+				"condor_Strike1_bv":20
+			}
 		},
 		{
 			"partitionWeight":15,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"enforcer_Overdriven_bv", "weight":15},
-				{"id":"enforcer_Overdriven2_bv", "weight":15},
-				{"id":"enforcer_XIV_Overdriven_bv", "weight":10},
-				{"id":"hammerhead_Overdriven_bv", "weight":20},
-				{"id":"sunder_Overdriven_bv", "weight":25},
-			]
+			"variants": {
+				"enforcer_Overdriven_bv":15,
+				"enforcer_Overdriven2_bv":15,
+				"enforcer_XIV_Overdriven_bv":10,
+				"hammerhead_Overdriven_bv":20,
+				"sunder_Overdriven_bv":25
+			}
 		},
 		{
 			"partitionWeight":2,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"hound_Standard", "weight":15},
-			]
+			"variants": {
+				"hound_Standard":15
+			}
 		},
 		{
 			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"colossus_Standard_bv", "weight":100},
-				{"id":"atlas_Standard_bv", "weight":1000},
-				{"id":"buffalo_hegemony_Standard_bv", "weight":1},
-			]
+			"variants": {
+				"colossus_Standard_bv":100,
+				"atlas_Standard_bv":1000,
+				"buffalo_hegemony_Standard_bv":1
+			}
 		},
 		{
 			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"phaeton_Standard_bv", "weight":1},
-				{"id":"prometheus_Super_bv", "weight":100},
-			]
-		},
+			"variants": {
+				"phaeton_Standard_bv":1,
+				"prometheus_Super_bv":100
+			}
+		}
 	]
 }

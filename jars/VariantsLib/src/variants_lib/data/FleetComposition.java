@@ -86,9 +86,7 @@ public class FleetComposition {
         for(int i = 0; i < partitions.length; i++) {
             str += "part " + i + " weight: " + partitions[i].partitionWeight + " maxDP: " + maxDP + " minDP: " + minDP + "\n";
 
-            for(int j = 0; j < partitions[i].members.length; j++) {
-                str += partitions[i].members[j].id + " " + partitions[i].members[j].weight + "\n";
-            }
+            
         }
         
         if(alwaysInclude == null) {
@@ -224,7 +222,7 @@ public class FleetComposition {
         }
 
         // read the individual partitions
-        double partitionWeightSum = 0;
+        float partitionWeightSum = 0;
         partitions = new FleetPartition[fleetPartitionsData.length()];
         for(int i = 0; i < fleetPartitionsData.length(); i++) {
             final JSONObject partitionData = fleetPartitionsData.getJSONObject(i);

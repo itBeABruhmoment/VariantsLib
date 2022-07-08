@@ -11,14 +11,14 @@ public class FleetPartitionMember {
     }
     
     public String id;
-    public double weight;
+    public float weight;
 
     public void makeWeightPercentage(double outOf)
     {
         weight /= outOf;
     }
 
-    public FleetPartitionMember(String variantId, double spawningWeight)
+    public FleetPartitionMember(String variantId, float spawningWeight)
     {
         id = variantId;
         weight = spawningWeight;

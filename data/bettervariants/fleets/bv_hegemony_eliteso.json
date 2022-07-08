@@ -10,60 +10,53 @@
 	"fleetPartitions": [
 		{
 			"partitionWeight":30,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"legion_StrikeE_bv", "weight":10},
-			]
+			"variants": {
+				"legion_StrikeE_bv":10
+			}
 		},
 		{
 			"partitionWeight":35,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"eagle_xiv_Overdriven_bv", "weight":80},
-				{"id":"falcon_xiv_Overdriven_bv", "weight":20},
-			]
+			"variants": {
+				"eagle_xiv_Overdriven_bv":80,
+				"falcon_xiv_Overdriven_bv":20
+			}
 		},
 		{
 			"partitionWeight":15,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"enforcer_XIV_Overdriven_bv", "weight":70},
-				{"id":"sunder_Overdriven_bv", "weight":30},
-			]
+			"variants": {
+				"enforcer_XIV_Overdriven_bv":70,
+				"sunder_Overdriven_bv":30
+			}
 		},
 		{
 			"partitionWeight":10,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"mora_StrikeE_bv", "weight":25},
-				{"id":"condor_StrikeE1_bv", "weight":10},
-				{"id":"gryphon_Overdriven_bv", "weight":50},
-				{"id":"condor_Strike2_bv", "weight":15},
-			]
+			"variants": {
+				"mora_StrikeE_bv":25,
+				"condor_StrikeE1_bv":10,
+				"gryphon_Overdriven_bv":50,
+				"condor_Strike2_bv":15
+			}
 		},
 		{
 			"partitionWeight":2,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"hound_Standard", "weight":15},
-			]
+			"variants":{
+				"hound_Standard":15
+			}
 		},
 		{
 			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"colossus_Standard_bv", "weight":100},
-				{"id":"atlas_Standard_bv", "weight":1000},
-				{"id":"buffalo_hegemony_Standard_bv", "weight":1},
-			]
+			"variants": {
+				"colossus_Standard_bv":100,
+				"atlas_Standard_bv":1000,
+				"buffalo_hegemony_Standard_bv":1
+			}
 		},
 		{
 			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"phaeton_Standard_bv", "weight":1},
-				{"id":"prometheus_Super_bv", "weight":100},
-			]
-		},
+			"variants": {
+				"phaeton_Standard_bv":1,
+				"prometheus_Super_bv":100
+			}
+		}
 	]
 }
