@@ -1,82 +1,77 @@
 {
 	"fleetDataId":"bv_tritachyon_regular",
-	"spawnWeight":10,
+	"spawnWeight":10.0,
 	"minDP":40,
 	"maxDP":400,
-	"targetFleetTypes": ["%combatplus"],
-	
-	"fleetPartitions": [
+	"defaultFleetWidePersonality":"steady",
+	"targetFleetTypes":["patrolMedium","exerelinInvasionFleet","nex_specialForces","mercBountyHunter","mercPatrol","mercArmada","exerelinInvasionSupportFleet","mercPrivateer","mercScout","vengeanceFleet","taskForce","patrolSmall","inspectionFleet","patrolLarge",],
+	"fleetPartitions":[
 		{
-			"partitionWeight":40,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"paragon_Elite", "weight":10},
-				{"id":"paragon_Escort_bv", "weight":10},
-				{"id":"astral_Strike_bv", "weight":3},
-				{"id":"astral_Elite_bv", "weight":3},
-				{"id":"doom_Support_bv", "weight":5},
-			]
+			"partitionWeight":37.74,
+			"variants":{
+				"paragon_Elite":32.26,
+				"paragon_Escort_bv":32.26,
+				"astral_Strike_bv":9.68,
+				"astral_Elite_bv":9.68,
+				"doom_Support_bv":16.13,
+			}
 		},
 		{
-			"partitionWeight":40,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"aurora_Assault", "weight":2.5},
-				{"id":"aurora_Balanced", "weight":2.5},
-				{"id":"aurora_Strike_bv", "weight":2.5},
-				{"id":"aurora_Overdriven_bv", "weight":2.5},
-				{"id":"apogee_Elite_bv", "weight":4},
-				{"id":"apogee_Standard_bv", "weight":4},
-				{"id":"eagle_Standard_bv", "weight":5},
-				{"id":"falcon_CS", "weight":5},
-				{"id":"fury_Attack1_bv", "weight":3},
-				{"id":"fury_Attack2_bv", "weight":3},
-				{"id":"fury_Strike_bv", "weight":3},
-			]
+			"partitionWeight":37.74,
+			"variants":{
+				"aurora_Assault":6.76,
+				"aurora_Balanced":6.76,
+				"aurora_Strike_bv":6.76,
+				"aurora_Overdriven_bv":6.76,
+				"apogee_Elite_bv":10.81,
+				"apogee_Standard_bv":10.81,
+				"eagle_Standard_bv":13.51,
+				"falcon_CS":13.51,
+				"fury_Attack1_bv":8.11,
+				"fury_Attack2_bv":8.11,
+				"fury_Strike_bv":8.11,
+			}
 		},
 		{
-			"partitionWeight":10,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"harbinger_Overdriven1_bv", "weight":5},
-				{"id":"harbinger_Overdriven2_bv", "weight":5},
-				{"id":"sunder_Support_bv", "weight":3},
-				{"id":"sunder_Assault_bv", "weight":3},
-				{"id":"sunder_Overdriven_bv", "weight":3},
-				{"id":"medusa_Attack_bv", "weight":10},
-				{"id":"hyperion_Assault_bv", "weight":5},
-			]
+			"partitionWeight":9.43,
+			"variants":{
+				"harbinger_Overdriven1_bv":14.71,
+				"harbinger_Overdriven2_bv":14.71,
+				"sunder_Support_bv":8.82,
+				"sunder_Assault_bv":8.82,
+				"sunder_Overdriven_bv":8.82,
+				"medusa_Attack_bv":29.41,
+				"hyperion_Assault_bv":14.71,
+			}
 		},
 		{
-			"partitionWeight":10,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"omen_Ew_bv", "weight":15},
-				{"id":"tempest_Attack1_bv", "weight":10},
-				{"id":"tempest_Attack2_bv", "weight":10},
-				{"id":"tempest_Attack3_bv", "weight":10},
-				{"id":"brawler_tritachyon_Standard1_bv", "weight":5},
-				{"id":"brawler_tritachyon_Standard2_bv", "weight":5},
-				{"id":"shrike_Attack_bv", "weight":10},
-				{"id":"shrike_Support_bv", "weight":10},
-			]
+			"partitionWeight":9.43,
+			"variants":{
+				"omen_Ew_bv":20.00,
+				"tempest_Attack1_bv":13.33,
+				"tempest_Attack2_bv":13.33,
+				"tempest_Attack3_bv":13.33,
+				"brawler_tritachyon_Standard1_bv":6.67,
+				"brawler_tritachyon_Standard2_bv":6.67,
+				"shrike_Attack_bv":13.33,
+				"shrike_Support_bv":13.33,
+			}
 		},
 		{
-			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"colossus_Standard_bv", "weight":100},
-				{"id":"atlas_Standard_bv", "weight":1000},
-				{"id":"buffalo_tritachyon_Standard_bv", "weight":1},
-			]
+			"partitionWeight":2.83,
+			"variants":{
+				"colossus_Standard_bv":9.08,
+				"atlas_Standard_bv":90.83,
+				"buffalo_tritachyon_Standard_bv":0.09,
+			}
 		},
 		{
-			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"phaeton_Standard_bv", "weight":1},
-				{"id":"prometheus_Super_bv", "weight":100},
-			]
+			"partitionWeight":2.83,
+			"variants":{
+				"phaeton_Standard_bv":0.99,
+				"prometheus_Super_bv":99.01,
+			}
 		},
-	]
+	],
 }
+

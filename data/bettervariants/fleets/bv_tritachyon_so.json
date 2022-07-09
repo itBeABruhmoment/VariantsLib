@@ -1,75 +1,69 @@
 {
 	"fleetDataId":"bv_tritachyon_so",
-	"spawnWeight":10,
+	"spawnWeight":10.0,
 	"minDP":40,
 	"maxDP":400,
 	"defaultFleetWidePersonality":"reckless",
-	"targetFleetTypes": ["%notinvasion"],
-	
-	"fleetPartitions": [
+	"targetFleetTypes":["mercScout","patrolMedium","vengeanceFleet","nex_specialForces","patrolSmall","mercBountyHunter","patrolLarge","mercPatrol","mercArmada","mercPrivateer",],
+	"fleetPartitions":[
 		{
-			"partitionWeight":25,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"paragon_Elite", "weight":10},
-				{"id":"paragon_Escort_bv", "weight":10},
-				{"id":"astral_Strike_bv", "weight":10},
-				{"id":"astral_Elite_bv", "weight":10},
-				{"id":"doom_Support_bv", "weight":10},
-			]
+			"partitionWeight":23.58,
+			"variants":{
+				"paragon_Elite":20.00,
+				"paragon_Escort_bv":20.00,
+				"astral_Strike_bv":20.00,
+				"astral_Elite_bv":20.00,
+				"doom_Support_bv":20.00,
+			}
 		},
 		{
-			"partitionWeight":45,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"doom_Overdriven_bv", "weight":15},
-				{"id":"aurora_Overdriven_bv", "weight":15},
-				{"id":"eagle_Overdriven_bv", "weight":10},
-				{"id":"fury_Attack1_bv", "weight":4},
-				{"id":"fury_Attack2_bv", "weight":4},
-				{"id":"fury_Strike_bv", "weight":4},
-			]
+			"partitionWeight":42.45,
+			"variants":{
+				"doom_Overdriven_bv":28.85,
+				"aurora_Overdriven_bv":28.85,
+				"eagle_Overdriven_bv":19.23,
+				"fury_Attack1_bv":7.69,
+				"fury_Attack2_bv":7.69,
+				"fury_Strike_bv":7.69,
+			}
 		},
 		{
-			"partitionWeight":20,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"harbinger_Overdriven1_bv", "weight":5},
-				{"id":"harbinger_Overdriven2_bv", "weight":5},
-				{"id":"sunder_Assault_bv", "weight":10},
-				{"id":"sunder_Overdriven_bv", "weight":10},
-				{"id":"medusa_Overdriven_bv", "weight":10},
-				{"id":"hyperion_Assault_bv", "weight":10},
-			]
+			"partitionWeight":18.87,
+			"variants":{
+				"harbinger_Overdriven1_bv":10.00,
+				"harbinger_Overdriven2_bv":10.00,
+				"sunder_Assault_bv":20.00,
+				"sunder_Overdriven_bv":20.00,
+				"medusa_Overdriven_bv":20.00,
+				"hyperion_Assault_bv":20.00,
+			}
 		},
 		{
-			"partitionWeight":10,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"omen_Ew_bv", "weight":15},
-				{"id":"tempest_Attack1_bv", "weight":10},
-				{"id":"tempest_Attack2_bv", "weight":10},
-				{"id":"tempest_Attack3_bv", "weight":10},
-				{"id":"brawler_tritachyon_Standard1_bv", "weight":5},
-				{"id":"brawler_tritachyon_Standard2_bv", "weight":5},
-			]
+			"partitionWeight":9.43,
+			"variants":{
+				"omen_Ew_bv":27.27,
+				"tempest_Attack1_bv":18.18,
+				"tempest_Attack2_bv":18.18,
+				"tempest_Attack3_bv":18.18,
+				"brawler_tritachyon_Standard1_bv":9.09,
+				"brawler_tritachyon_Standard2_bv":9.09,
+			}
 		},
 		{
-			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"colossus_Standard_bv", "weight":100},
-				{"id":"atlas_Standard_bv", "weight":1000},
-				{"id":"buffalo_tritachyon_Standard_bv", "weight":1},
-			]
+			"partitionWeight":2.83,
+			"variants":{
+				"colossus_Standard_bv":9.08,
+				"atlas_Standard_bv":90.83,
+				"buffalo_tritachyon_Standard_bv":0.09,
+			}
 		},
 		{
-			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"phaeton_Standard_bv", "weight":1},
-				{"id":"prometheus_Super_bv", "weight":100},
-			]
+			"partitionWeight":2.83,
+			"variants":{
+				"phaeton_Standard_bv":0.99,
+				"prometheus_Super_bv":99.01,
+			}
 		},
-	]
+	],
 }
+

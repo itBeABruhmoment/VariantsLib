@@ -1,64 +1,64 @@
 {
 	"fleetDataId":"bv_hegemony_xiv",
-	"spawnWeight":100,
+	"spawnWeight":100.0,
 	"minDP":40,
 	"maxDP":400,
 	"defaultFleetWidePersonality":"aggressive",
-	"alwaysInclude":[{"id":"ox_Standard", "amount":2}],
-	"additionalCommanderSkills":["support_doctrine"],
-	"targetFleetTypes": ["%boss"],
-	
-	"fleetPartitions": [
+	"additionalCommanderSkills":["support_doctrine",],
+	"targetFleetTypes":["exerelinInvasionFleet","vengeanceFleet","nex_specialForces","taskForce","inspectionFleet","exerelinInvasionSupportFleet",],
+	"alwaysInclude":{"ox_Standard":2},
+	"fleetPartitions":[
 		{
-			"partitionWeight":35,
-			"variants": {
-				"onslaught_xiv_Standard_bv":3.3,
-				"onslaught_xiv_Elite2_bv":3.3
+			"partitionWeight":32.41,
+			"variants":{
+				"onslaught_xiv_Standard_bv":50.00,
+				"onslaught_xiv_Elite2_bv":50.00,
 			}
 		},
 		{
-			"partitionWeight":40,
-			"variants": {
-				"dominator_XIV_Elite_bv":2.5,
-				"dominator_XIV_Elite2_bv":2.5,
-				"dominator_XIV_Elite3_bv":2.5,
-				"dominator_XIV_Elite4_bv":2.5,
-				"eagle_xiv_Standard_bv":1.5,
-				"eagle_xiv_Overdriven_bv":3.5,
-				"mora_Assault_bv":2,
-				"mora_Strike_bv":2
+			"partitionWeight":37.04,
+			"variants":{
+				"dominator_XIV_Elite_bv":13.16,
+				"dominator_XIV_Elite2_bv":13.16,
+				"dominator_XIV_Elite3_bv":13.16,
+				"dominator_XIV_Elite4_bv":13.16,
+				"eagle_xiv_Standard_bv":7.89,
+				"eagle_xiv_Overdriven_bv":18.42,
+				"mora_Assault_bv":10.53,
+				"mora_Strike_bv":10.53,
 			}
 		},
 		{
-			"partitionWeight":25,
-			"variants": {
-				"falcon_xiv_Overdriven_bv":5,
-				"falcon_xiv_Support_bv":5,
-				"enforcer_XIV_Elite3_bv":5,
-				"enforcer_XIV_Elite2_bv":5,
-				"enforcer_XIV_Overdriven_bv":5
+			"partitionWeight":23.15,
+			"variants":{
+				"falcon_xiv_Overdriven_bv":20.00,
+				"falcon_xiv_Support_bv":20.00,
+				"enforcer_XIV_Elite3_bv":20.00,
+				"enforcer_XIV_Elite2_bv":20.00,
+				"enforcer_XIV_Overdriven_bv":20.00,
 			}
 		},
 		{
-			"partitionWeight":2,
-			"variants": {
-				"hound_Standard":15
+			"partitionWeight":1.85,
+			"variants":{
+				"hound_Standard":100.00,
 			}
 		},
 		{
-			"partitionWeight":3,
-			"variants": {
-				"colossus_Standard_bv":100,
-				"atlas_Standard_bv":1000,
-				"buffalo_hegemony_Standard_bv":1
+			"partitionWeight":2.78,
+			"variants":{
+				"colossus_Standard_bv":9.08,
+				"atlas_Standard_bv":90.83,
+				"buffalo_hegemony_Standard_bv":0.09,
 			}
 		},
 		{
-			"partitionWeight":3,
-			"variants": {
-				"phaeton_Standard_bv":1,
-				"prometheus_Super_bv":100
+			"partitionWeight":2.78,
+			"variants":{
+				"phaeton_Standard_bv":0.99,
+				"prometheus_Super_bv":99.01,
 			}
-		}
-	]
+		},
+	],
 }
+

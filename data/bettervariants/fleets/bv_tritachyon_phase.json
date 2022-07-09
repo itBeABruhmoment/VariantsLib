@@ -1,43 +1,39 @@
 {
 	"fleetDataId":"bv_tritachyon_phase",
-	"spawnWeight":100,
+	"spawnWeight":100.0,
 	"minDP":40,
 	"maxDP":400,
-	"additionalCommanderSkills":["support_doctrine", "crew_training"],
 	"defaultFleetWidePersonality":"reckless",
-	"targetFleetTypes": ["%notinvasionboss"],
-	
-	"fleetPartitions": [
+	"additionalCommanderSkills":["support_doctrine","crew_training",],
+	"targetFleetTypes":["vengeanceFleet","nex_specialForces",],
+	"fleetPartitions":[
 		{
-			"partitionWeight":50,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"doom_Overdriven_bv", "weight":10},
-				{"id":"doom_Support_bv", "weight":10},
-			]
+			"partitionWeight":50.00,
+			"variants":{
+				"doom_Overdriven_bv":50.00,
+				"doom_Support_bv":50.00,
+			}
 		},
 		{
-			"partitionWeight":20,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"harbinger_Overdriven1_bv", "weight":15},
-				{"id":"harbinger_Overdriven2_bv", "weight":15},
-			]
+			"partitionWeight":20.00,
+			"variants":{
+				"harbinger_Overdriven1_bv":50.00,
+				"harbinger_Overdriven2_bv":50.00,
+			}
 		},
 		{
-			"partitionWeight":20,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"afflictor_Strike_bv", "weight":50},
-				{"id":"shade_Assault_bv", "weight":50},
-			]
+			"partitionWeight":20.00,
+			"variants":{
+				"afflictor_Strike_bv":50.00,
+				"shade_Assault_bv":50.00,
+			}
 		},
 		{
-			"partitionWeight":10,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"revenant_Elite", "weight":15},
-			]
+			"partitionWeight":10.00,
+			"variants":{
+				"revenant_Elite":100.00,
+			}
 		},
-	]
+	],
 }
+

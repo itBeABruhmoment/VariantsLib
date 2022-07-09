@@ -2,8 +2,11 @@ package variants_lib.data;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,6 +19,8 @@ import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 
 public class FleetComposition {
+    //TODO: fix alwaysInclude and all broken files
+
     private static final Logger log = Global.getLogger(variants_lib.data.FleetComposition.class);
     static {
         log.setLevel(Level.ALL);
@@ -69,7 +74,7 @@ public class FleetComposition {
     }};
 
     public HashSet<String> targetFleetTypes;
-    public AlwaysBuildMember[] alwaysInclude;
+    public Vector<AlwaysBuildMember> alwaysInclude;
     public FleetPartition[] partitions;
     public String[] commanderSkills;
     public String id;
@@ -82,20 +87,60 @@ public class FleetComposition {
     @Override
     public String toString() 
     {
-        String str = "";
-        for(int i = 0; i < partitions.length; i++) {
-            str += "part " + i + " weight: " + partitions[i].partitionWeight + " maxDP: " + maxDP + " minDP: " + minDP + "\n";
+        String newJsonStr =  "\n{\n";
+        try {
+            DecimalFormat df = new DecimalFormat("#.00");
 
-            
+            newJsonStr += "\t\"" + "fleetDataId" + "\":\"" + id + "\",\n";
+            newJsonStr += "\t\"" + "spawnWeight" + "\":" + spawnWeight + ",\n";
+            newJsonStr += "\t\"" + "minDP" + "\":" + minDP + ",\n";
+            newJsonStr += "\t\"" + "maxDP" + "\":" + maxDP + ",\n";
+
+            if(defaultFleetWidePersonality != null) {
+                newJsonStr += "\t\"" + "defaultFleetWidePersonality" + "\":\"" + defaultFleetWidePersonality + "\",\n";
+            }
+
+            if(alwaysInclude != null) {
+                newJsonStr += "\t\"" + "alwaysInclude" + "\":[";
+                for(AlwaysBuildMember member : alwaysInclude) {
+                    newJsonStr += "\"" + member.id + "\":" + member.amount + ", ";
+                }
+                newJsonStr += "],\n";
+            }
+
+            if(commanderSkills != null) {
+                newJsonStr += "\t\"" + "additionalCommanderSkills" + "\":[";
+                for(String skill : commanderSkills) {
+                    newJsonStr += "\"" + skill + "\",";
+                }
+                newJsonStr += "],\n";
+            }
+
+            if(targetFleetTypes != null) {
+                newJsonStr += "\t\"" + "targetFleetTypes" + "\":[";
+                for(String type : targetFleetTypes) {
+                    newJsonStr += "\"" + type + "\",";
+                }
+            }
+
+            newJsonStr += "],\n";
+            newJsonStr += "\t\"" + "fleetPartitions" + "\":[\n";
+            for(FleetPartition partition : partitions) {
+                newJsonStr += "\t\t{\n";
+                newJsonStr += "\t\t\t\"partitionWeight\":" + df.format(partition.partitionWeight * 100.0d) + ",\n";
+                newJsonStr += "\t\t\t\"variants\":{\n";
+                for(FleetPartitionMember member : partition.members) {
+                    newJsonStr += "\t\t\t\t\"" + member.id + "\":" + df.format(member.weight * 100.0d) + ",\n";
+                }
+                newJsonStr += "\t\t\t}\n";
+                newJsonStr += "\t\t},\n";
+            }
+            newJsonStr += "\t],\n";
+            newJsonStr += "}";
+        } catch(NullPointerException e) {
+            log.debug("null");
         }
-        
-        if(alwaysInclude == null) {
-            return str;
-        }
-        for(AlwaysBuildMember mem : alwaysInclude) {
-            str += "id: " + mem.id + " amount: " + mem.amount + "\n";
-        }
-        return str;
+        return newJsonStr;
     }
 
     // constuct from json
@@ -236,42 +281,33 @@ public class FleetComposition {
         }
 
         // load always include variants
-        JSONArray alwaysIncludeData = null;
+        JSONObject alwaysIncludeData = null;
         try {
-            alwaysIncludeData = fleetDataJson.getJSONArray("alwaysSpawn");
+            alwaysIncludeData = fleetDataJson.getJSONObject("alwaysInclude");
         } catch(Exception e) {
             alwaysIncludeData = null;
         }
 
-        if(alwaysIncludeData == null) {
-            alwaysIncludeData = null;
-        } else {
-            alwaysInclude = new AlwaysBuildMember[alwaysIncludeData.length()];
-            for(int i = 0; i < alwaysIncludeData.length(); i++) {
-                JSONObject alwaysIncludeMemberData = alwaysIncludeData.getJSONObject(i);
-
-                String variantId = null;
+        if(alwaysIncludeData != null) {
+            alwaysInclude = new Vector<>();
+            Iterator iterate = alwaysIncludeData.keys();
+            while(iterate.hasNext()) {
+                String key = (String)iterate.next();
+                int amount = 0;
                 try {
-                    variantId = alwaysIncludeMemberData.optString("id");
+                    amount = alwaysIncludeData.getInt(key);
                 } catch(Exception e) {
-                    throw new Exception(loadedFileInfo + " always include " + i + " failed to read \"id\"");
+                    throw new Exception(loadedFileInfo + " could not have the amount of \"" + key + "\" read in \"alwaysInclude\" field. Check for errors in file");
                 }
-                if(!Global.getSettings().doesVariantExist(variantId)) {
-                    throw new Exception(loadedFileInfo + " always include " + i + " \""+  id + "\" is not a recognized variant");
+                if(amount < 0) {
+                    throw new Exception(loadedFileInfo + " has invalid number in its \"alwaysInclude\" field");
                 }
-
-                int amount = -1;
-                try {
-                    amount = alwaysIncludeMemberData.getInt("amount");
-                } catch(Exception e) {
-                    throw new Exception(loadedFileInfo + " always include " + i + " failed to read \"amount\"");
-                }
-                if(amount < 1) {
-                    throw new Exception(loadedFileInfo + " always include " + i + " \"amount\" is invalid int");
-                }
-
-                alwaysInclude[i] = new AlwaysBuildMember(variantId, amount);
+                alwaysInclude.add(new AlwaysBuildMember(key, amount));
             }
+            alwaysInclude.trimToSize();
+        } else {
+            log.debug(loadedFileInfo + " has no \"alwaysInclude\" field. Set to nothing");
+            alwaysInclude = null;
         }
     }
 }

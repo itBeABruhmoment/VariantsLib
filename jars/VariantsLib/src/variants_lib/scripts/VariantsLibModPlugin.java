@@ -8,6 +8,8 @@ import com.fs.starfarer.api.Global;
 import variants_lib.data.CommonStrings;
 import variants_lib.data.FactionData;
 import variants_lib.data.FleetBuildData;
+import variants_lib.data.FleetComposition;
+import variants_lib.data.FleetPartition;
 import variants_lib.data.SettingsData;
 import variants_lib.data.VariantData;
 
@@ -32,6 +34,10 @@ public class VariantsLibModPlugin extends BaseModPlugin {
         VariantData.loadData();
         log.debug(CommonStrings.MOD_ID + ": loading fleet build data");
         FleetBuildData.loadData();
+
+        //for(FleetComposition part : FleetBuildData.FLEET_DATA.values()) {
+        //    log.debug(part.toString());
+        //}
     }
 
     @Override

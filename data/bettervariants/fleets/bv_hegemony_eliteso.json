@@ -1,62 +1,62 @@
 {
 	"fleetDataId":"bv_hegemony_eliteso",
-	"spawnWeight":100,
+	"spawnWeight":100.0,
 	"minDP":40,
 	"maxDP":400,
-	"alwaysInclude":[{"id":"ox_Standard", "amount":2}],
 	"defaultFleetWidePersonality":"reckless",
-	"targetFleetTypes": ["%notinvasionboss"],
-	
-	"fleetPartitions": [
+	"targetFleetTypes":["vengeanceFleet","nex_specialForces",],
+	"alwaysInclude":{"ox_Standard":2},
+	"fleetPartitions":[
 		{
-			"partitionWeight":30,
-			"variants": {
-				"legion_StrikeE_bv":10
-			}
-		},
-		{
-			"partitionWeight":35,
-			"variants": {
-				"eagle_xiv_Overdriven_bv":80,
-				"falcon_xiv_Overdriven_bv":20
-			}
-		},
-		{
-			"partitionWeight":15,
-			"variants": {
-				"enforcer_XIV_Overdriven_bv":70,
-				"sunder_Overdriven_bv":30
-			}
-		},
-		{
-			"partitionWeight":10,
-			"variants": {
-				"mora_StrikeE_bv":25,
-				"condor_StrikeE1_bv":10,
-				"gryphon_Overdriven_bv":50,
-				"condor_Strike2_bv":15
-			}
-		},
-		{
-			"partitionWeight":2,
+			"partitionWeight":30.61,
 			"variants":{
-				"hound_Standard":15
+				"legion_StrikeE_bv":100.00,
 			}
 		},
 		{
-			"partitionWeight":3,
-			"variants": {
-				"colossus_Standard_bv":100,
-				"atlas_Standard_bv":1000,
-				"buffalo_hegemony_Standard_bv":1
+			"partitionWeight":35.71,
+			"variants":{
+				"eagle_xiv_Overdriven_bv":80.00,
+				"falcon_xiv_Overdriven_bv":20.00,
 			}
 		},
 		{
-			"partitionWeight":3,
-			"variants": {
-				"phaeton_Standard_bv":1,
-				"prometheus_Super_bv":100
+			"partitionWeight":15.31,
+			"variants":{
+				"enforcer_XIV_Overdriven_bv":70.00,
+				"sunder_Overdriven_bv":30.00,
 			}
-		}
-	]
+		},
+		{
+			"partitionWeight":10.20,
+			"variants":{
+				"mora_StrikeE_bv":25.00,
+				"condor_StrikeE1_bv":10.00,
+				"gryphon_Overdriven_bv":50.00,
+				"condor_Strike2_bv":15.00,
+			}
+		},
+		{
+			"partitionWeight":2.04,
+			"variants":{
+				"hound_Standard":100.00,
+			}
+		},
+		{
+			"partitionWeight":3.06,
+			"variants":{
+				"colossus_Standard_bv":9.08,
+				"atlas_Standard_bv":90.83,
+				"buffalo_hegemony_Standard_bv":0.09,
+			}
+		},
+		{
+			"partitionWeight":3.06,
+			"variants":{
+				"phaeton_Standard_bv":0.99,
+				"prometheus_Super_bv":99.01,
+			}
+		},
+	],
 }
+

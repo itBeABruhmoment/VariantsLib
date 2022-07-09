@@ -41,6 +41,11 @@ public class FleetBuilding {
     static {
         log.setLevel(Level.ALL);
     }
+
+    private static void FBLog(Object o) 
+    {
+        log.debug(o);
+    }
     
     private static double getDPDouble(String variantId)
     {
@@ -172,6 +177,7 @@ public class FleetBuilding {
             if(civilianShips.size() < info.officers.size()) {
                 civilianShips.get(0).setCaptain(info.captain);
             }
+
         } else {
             // assign officers
             Collections.shuffle(combatShips);
@@ -231,7 +237,6 @@ public class FleetBuilding {
     
             }
         }
-
 
         // add ships to fleet
         for(FleetMemberAPI member : combatShips) {

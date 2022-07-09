@@ -1,94 +1,85 @@
 {
 	"fleetDataId":"bv_independent_ranged",
-	"spawnWeight":50,
+	"spawnWeight":50.0,
 	"minDP":40,
 	"maxDP":400,
 	"defaultFleetWidePersonality":"steady",
-	"targetFleetTypes": ["%combatplus"],
-	
-	"fleetPartitions": [
+	"targetFleetTypes":["patrolMedium","exerelinInvasionFleet","nex_specialForces","mercBountyHunter","mercPatrol","mercArmada","exerelinInvasionSupportFleet","mercPrivateer","mercScout","vengeanceFleet","taskForce","patrolSmall","inspectionFleet","patrolLarge",],
+	"fleetPartitions":[
 		{
-			"partitionWeight":20,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"conquest_Elite_bv", "weight":10},
-				{"id":"conquest_Elite2_bv", "weight":10},
-			]
+			"partitionWeight":18.18,
+			"variants":{
+				"conquest_Elite_bv":50.00,
+				"conquest_Elite2_bv":50.00,
+			}
 		},
 		{
-			"partitionWeight":25,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"dominator_Outdated_bv", "weight":25},
-				{"id":"dominator_Shield_Breaker_bv", "weight":25},
-			]
+			"partitionWeight":22.73,
+			"variants":{
+				"dominator_Outdated_bv":50.00,
+				"dominator_Shield_Breaker_bv":50.00,
+			}
 		},
 		{
-			"partitionWeight":10,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"condor_Strike1_bv", "weight":10},
-				{"id":"heron_Strike", "weight":50},
-				{"id":"mora_Assault_bv", "weight":20},
-				{"id":"mora_Strike_bv", "weight":20},
-			]
+			"partitionWeight":9.09,
+			"variants":{
+				"condor_Strike1_bv":10.00,
+				"heron_Strike":50.00,
+				"mora_Assault_bv":20.00,
+				"mora_Strike_bv":20.00,
+			}
 		},
 		{
-			"partitionWeight":10,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"falcon_Overdriven_bv", "weight":25},
-				{"id":"enforcer_Overdriven_bv", "weight":25},
-				{"id":"sunder_Overdriven_bv", "weight":25},
-				{"id":"tempest_Attack1_bv", "weight":10},
-				{"id":"tempest_Attack2_bv", "weight":10},
-				{"id":"tempest_Attack3_bv", "weight":5},
-			]
+			"partitionWeight":9.09,
+			"variants":{
+				"falcon_Overdriven_bv":25.00,
+				"enforcer_Overdriven_bv":25.00,
+				"sunder_Overdriven_bv":25.00,
+				"tempest_Attack1_bv":10.00,
+				"tempest_Attack2_bv":10.00,
+				"tempest_Attack3_bv":5.00,
+			}
 		},
 		{
-			"partitionWeight":10,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"venture_Rocket_bv", "weight":20},
-				{"id":"falcon_CS_bv", "weight":40},
-				{"id":"apogee_Elite_bv", "weight":25},
-				{"id":"apogee_Standard_bv", "weight":25},
-			]
+			"partitionWeight":9.09,
+			"variants":{
+				"venture_Rocket_bv":18.18,
+				"falcon_CS_bv":36.36,
+				"apogee_Elite_bv":22.73,
+				"apogee_Standard_bv":22.73,
+			}
 		},
 		{
-			"partitionWeight":20,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"sunder_Support_bv", "weight":40},
-				{"id":"enforcer_Elite_bv", "weight":20},
-			]
+			"partitionWeight":18.18,
+			"variants":{
+				"sunder_Support_bv":66.67,
+				"enforcer_Elite_bv":33.33,
+			}
 		},
 		{
-			"partitionWeight":5,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"brawler_Elite_bv", "weight":25},
-				{"id":"omen_Ew_bv", "weight":35},
-				{"id":"monitor_Escort", "weight":40},
-			]
+			"partitionWeight":4.55,
+			"variants":{
+				"brawler_Elite_bv":25.00,
+				"omen_Ew_bv":35.00,
+				"monitor_Escort":40.00,
+			}
 		},
 		{
-			"partitionWeight":6,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"colossus_Standard_bv", "weight":100},
-				{"id":"atlas_Standard_bv", "weight":1000},
-				{"id":"buffalo_Standard_bv", "weight":1},
-			]
+			"partitionWeight":5.45,
+			"variants":{
+				"colossus_Standard_bv":9.08,
+				"atlas_Standard_bv":90.83,
+				"buffalo_Standard_bv":0.09,
+			}
 		},
 		{
-			"partitionWeight":4,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"dram_Light_bv", "weight":1},
-				{"id":"phaeton_Standard_bv", "weight":10},
-				{"id":"prometheus_Super_bv", "weight":100},
-			]
+			"partitionWeight":3.64,
+			"variants":{
+				"dram_Light_bv":0.90,
+				"phaeton_Standard_bv":9.01,
+				"prometheus_Super_bv":90.09,
+			}
 		},
-	]
+	],
 }
+

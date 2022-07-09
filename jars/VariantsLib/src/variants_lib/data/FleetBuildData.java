@@ -45,7 +45,7 @@ public class FleetBuildData {
         try {
             fleetDataJson = Global.getSettings().loadJSON(fileName, modId);
         } catch(Exception e) {
-            throw new Exception(loadedFileInfo + " could not be opened. Ensure everything is formated correctly (check your spelling, file structure, etc)");
+            throw new Exception(loadedFileInfo + " could not be opened. Ensure everything is formated correctly (check your spelling, file structure, formatting, check for duplicate keys, etc)");
         }
         
         String fleetDataId = fleetDataJson.optString("fleetDataId");

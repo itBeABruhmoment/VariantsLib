@@ -1,69 +1,63 @@
 {
 	"fleetDataId":"bv_sindrian_diktat_so",
-	"spawnWeight":10,
+	"spawnWeight":10.0,
 	"minDP":40,
 	"maxDP":400,
 	"defaultFleetWidePersonality":"reckless",
-	"targetFleetTypes": ["%notinvasion"],
-	
-	"fleetPartitions": [
+	"targetFleetTypes":["mercScout","patrolMedium","vengeanceFleet","nex_specialForces","patrolSmall","mercBountyHunter","patrolLarge","mercPatrol","mercArmada","mercPrivateer",],
+	"fleetPartitions":[
 		{
-			"partitionWeight":27,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"conquest_Elite_bv", "weight":50},
-				{"id":"conquest_Elite2_bv", "weight":50},
-			]
+			"partitionWeight":25.00,
+			"variants":{
+				"conquest_Elite_bv":50.00,
+				"conquest_Elite2_bv":50.00,
+			}
 		},
 		{
-			"partitionWeight":40,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"eagle_Overdriven_bv", "weight":30},
-				{"id":"falcon_Overdriven_bv", "weight":25},
-				{"id":"fury_Attack1_bv", "weight":10},
-				{"id":"fury_Attack2_bv", "weight":10},
-				{"id":"fury_Strike_bv", "weight":10},
-				{"id":"heron_Strike", "weight":15},
-			]
+			"partitionWeight":37.04,
+			"variants":{
+				"eagle_Overdriven_bv":30.00,
+				"falcon_Overdriven_bv":25.00,
+				"fury_Attack1_bv":10.00,
+				"fury_Attack2_bv":10.00,
+				"fury_Strike_bv":10.00,
+				"heron_Strike":15.00,
+			}
 		},
 		{
-			"partitionWeight":27,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"enforcer_Overdriven_bv", "weight":20},
-				{"id":"enforcer_Overdriven2_bv", "weight":25},
-				{"id":"hammerhead_Overdriven_bv", "weight":15},
-				{"id":"sunder_Overdriven_bv", "weight":20},
-				{"id":"condor_Strike1_bv", "weight":5},
-				{"id":"drover_Strike_bv", "weight":15},
-			]
+			"partitionWeight":25.00,
+			"variants":{
+				"enforcer_Overdriven_bv":20.00,
+				"enforcer_Overdriven2_bv":25.00,
+				"hammerhead_Overdriven_bv":15.00,
+				"sunder_Overdriven_bv":20.00,
+				"condor_Strike1_bv":5.00,
+				"drover_Strike_bv":15.00,
+			}
 		},
 		{
-			"partitionWeight":8,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"vigilance_Strike", "weight":30},
-				{"id":"monitor_Escort", "weight":40},
-				{"id":"lasher_Standard1_bv", "weight":30},
-			]
+			"partitionWeight":7.41,
+			"variants":{
+				"vigilance_Strike":30.00,
+				"monitor_Escort":40.00,
+				"lasher_Standard1_bv":30.00,
+			}
 		},
 		{
-			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"colossus_Standard_bv", "weight":100},
-				{"id":"atlas_Standard_bv", "weight":1000},
-				{"id":"buffalo_Standard_bv", "weight":1},
-			]
+			"partitionWeight":2.78,
+			"variants":{
+				"colossus_Standard_bv":9.08,
+				"atlas_Standard_bv":90.83,
+				"buffalo_Standard_bv":0.09,
+			}
 		},
 		{
-			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"phaeton_Standard_bv", "weight":1},
-				{"id":"prometheus_Super_bv", "weight":100},
-			]
+			"partitionWeight":2.78,
+			"variants":{
+				"phaeton_Standard_bv":0.99,
+				"prometheus_Super_bv":99.01,
+			}
 		},
-	]
+	],
 }
+

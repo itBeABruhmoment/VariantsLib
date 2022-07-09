@@ -52,7 +52,7 @@ public class FleetPartition {
         // construct "members field"
         float variantWeightSum = 0.0f;
         members = new Vector<FleetPartitionMember>();
-        Iterator keys = partitionData.keys();
+        Iterator keys = variants.keys();
         while(keys.hasNext()) {
             String key = (String) keys.next();
             if(!key.equals(PARTITION_WEIGHT) && !key.equals(VARIANTS)) {
@@ -62,7 +62,7 @@ public class FleetPartition {
 
                 float variantWeight = 0.0f;
                 try {
-                    variantWeight = (float) partitionData.getDouble(key);
+                    variantWeight = (float) variants.getDouble(key);
                 } catch(Exception e) {
                     throw new Exception(loadedFileInfo + " fleet partion " + index + " failed to read the weight of the variant \"" + key + "\"");
                 }

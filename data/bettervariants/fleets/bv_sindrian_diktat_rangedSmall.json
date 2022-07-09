@@ -1,78 +1,72 @@
 {
 	"fleetDataId":"bv_sindrian_diktat_rangedSmall",
-	"spawnWeight":10,
+	"spawnWeight":10.0,
 	"minDP":30,
 	"maxDP":250,
-	"targetFleetTypes": ["%combatplus"],
-	
-	"fleetPartitions": [
+	"defaultFleetWidePersonality":"steady",
+	"targetFleetTypes":["patrolMedium","exerelinInvasionFleet","nex_specialForces","mercBountyHunter","mercPatrol","mercArmada","exerelinInvasionSupportFleet","mercPrivateer","mercScout","vengeanceFleet","taskForce","patrolSmall","inspectionFleet","patrolLarge",],
+	"fleetPartitions":[
 		{
-			"partitionWeight":25,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"dominator_AntiCV_bv", "weight":10},
-				{"id":"dominator_Assault_bv", "weight":20},
-				{"id":"dominator_Outdated_bv", "weight":20},
-				{"id":"eagle_Balanced_bv", "weight":20},
-				{"id":"fury_Strike_bv", "weight":10},
-				{"id":"falcon_CS", "weight":20},
-			]
+			"partitionWeight":25.00,
+			"variants":{
+				"dominator_AntiCV_bv":10.00,
+				"dominator_Assault_bv":20.00,
+				"dominator_Outdated_bv":20.00,
+				"eagle_Balanced_bv":20.00,
+				"fury_Strike_bv":10.00,
+				"falcon_CS":20.00,
+			}
 		},
 		{
-			"partitionWeight":15,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"mora_Assault_bv", "weight":10},
-				{"id":"mora_Strike_bv", "weight":10},
-				{"id":"mora_StrikeE_bv", "weight":20},
-				{"id":"condor_Strike1_bv", "weight":10},
-				{"id":"heron_Strike", "weight":25},
-				{"id":"drover_Strike_bv", "weight":25},
-			]
+			"partitionWeight":15.00,
+			"variants":{
+				"mora_Assault_bv":10.00,
+				"mora_Strike_bv":10.00,
+				"mora_StrikeE_bv":20.00,
+				"condor_Strike1_bv":10.00,
+				"heron_Strike":25.00,
+				"drover_Strike_bv":25.00,
+			}
 		},
 		{
-			"partitionWeight":10,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"falcon_Overdriven_bv", "weight":20},
-				{"id":"eagle_Overdriven_bv", "weight":30},
-				{"id":"enforcer_Overdriven_bv", "weight":25},
-				{"id":"sunder_Overdriven_bv", "weight":25},
-			]
+			"partitionWeight":10.00,
+			"variants":{
+				"falcon_Overdriven_bv":20.00,
+				"eagle_Overdriven_bv":30.00,
+				"enforcer_Overdriven_bv":25.00,
+				"sunder_Overdriven_bv":25.00,
+			}
 		},
 		{
-			"partitionWeight":30,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"sunder_Support_bv", "weight":50},
-				{"id":"enforcer_Elite_bv", "weight":50},
-			]
+			"partitionWeight":30.00,
+			"variants":{
+				"sunder_Support_bv":50.00,
+				"enforcer_Elite_bv":50.00,
+			}
 		},
 		{
-			"partitionWeight":10,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"brawler_Elite_bv", "weight":30},
-				{"id":"monitor_Escort", "weight":70},
-			]
+			"partitionWeight":10.00,
+			"variants":{
+				"brawler_Elite_bv":30.00,
+				"monitor_Escort":70.00,
+			}
 		},
 		{
-			"partitionWeight":7,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"colossus_Standard_bv", "weight":100},
-				{"id":"atlas_Standard_bv", "weight":1000},
-				{"id":"buffalo_Standard_bv", "weight":1},
-			]
+			"partitionWeight":7.00,
+			"variants":{
+				"colossus_Standard_bv":9.08,
+				"atlas_Standard_bv":90.83,
+				"buffalo_Standard_bv":0.09,
+			}
 		},
 		{
-			"partitionWeight":3,
-			"partitionWeightVariance":5,
-			"variants": [
-				{"id":"phaeton_Standard_bv", "weight":100},
-				{"id":"dram_Light_bv", "weight":1},
-				{"id":"prometheus_Super_bv", "weight":10000},
-			]
+			"partitionWeight":3.00,
+			"variants":{
+				"phaeton_Standard_bv":0.99,
+				"dram_Light_bv":0.01,
+				"prometheus_Super_bv":99.00,
+			}
 		},
-	]
+	],
 }
+
