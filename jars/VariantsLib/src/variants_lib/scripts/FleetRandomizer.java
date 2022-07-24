@@ -109,7 +109,7 @@ public class FleetRandomizer {
             return;
         }
 
-        String fleetCompId = FleetBuilding.editFleet(fleet, fleet.getFaction().getId(), getFleetType(fleet));
+        String fleetCompId = FleetBuilding.editFleet(fleet);
         if(fleetCompId != null) {
             fleet.getMemoryWithoutUpdate().set(CommonStrings.FLEET_VARIANT_KEY, fleetCompId);
         }

@@ -9,6 +9,7 @@ import java.util.Collections;
 
 import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.fleet.RepairTrackerAPI;
+import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 
@@ -33,7 +34,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 public class FleetBuilding {
-    public static final String ALWAYS_EDIT = "ALWAYS_EDIT";
     private static final int MAX_OVERBUDGET = 3;
     private static final Random rand = new Random();
     private static final String[] FALLBACK_HULLMODS = {"hardenedshieldemitter", "fluxdistributor", 
@@ -338,7 +338,7 @@ public class FleetBuilding {
             if(comp != null 
             && comp.maxDP >= info.originalDP 
             && info.originalDP >= comp.minDP 
-            && (comp.targetFleetTypes.contains(fleetType) || fleetType.equals(ALWAYS_EDIT))) {
+            && comp.spawnWeights.containsKey(fleetType)) {
                 fleetComps.add(comp);
             }
         }
@@ -376,21 +376,21 @@ public class FleetBuilding {
             return null;
         }
 
-        double random = rand.nextDouble();
-        double totalWeightsSum = 0;
+        float random = rand.nextFloat();
+        float totalWeightsSum = 0;
         for(FleetComposition comp : validFleetComps) {
-            totalWeightsSum += comp.spawnWeight;
+            totalWeightsSum += comp.spawnWeights.get(fleetType);
         }
         //log.debug("rand: " + random + " weightSum: " + totalWeightsSum);
-        double runningWeightsSum = 0;
+        float runningWeightsSum = 0;
         for(FleetComposition comp : validFleetComps) {
             //log.debug("add: " + comp.spawnWeight / totalWeightsSum);
-            runningWeightsSum += comp.spawnWeight / totalWeightsSum;
+            runningWeightsSum += comp.spawnWeights.get(fleetType) / totalWeightsSum;
             if(runningWeightsSum > random) {
                 return comp;
             }
         }
-        return validFleetComps.get(validFleetComps.size() - 1);
+        return null;
     }
 
     // give commander any addition skills specified in fleet json
@@ -407,11 +407,16 @@ public class FleetBuilding {
         }
     }
 
-    // fleetType is the String that is mapped to the fleet's "$fleetType" memkey
-    public static String editFleet(CampaignFleetAPI fleetAPI, String factionId, String fleetType) 
+    public static String editFleet(CampaignFleetAPI fleetAPI) 
     {
-
         log.debug("editing " + fleetAPI.getFullName());
+        String factionId = fleetAPI.getFaction().getId();
+        String fleetType = fleetAPI.getMemoryWithoutUpdate().getString(MemFlags.MEMORY_KEY_FLEET_TYPE);
+
+        if(fleetType == null) {
+            log.debug("edit failed, fleet has no fleet type");
+        }
+
         FleetInfo info = getInfo(fleetAPI);
         //log.debug(info.toString());
 
@@ -421,6 +426,33 @@ public class FleetBuilding {
         }
 
         FleetComposition compInfo = pickFleet(info, factionId, fleetType);
+        if(compInfo == null) {
+            log.debug("fleet not edited");
+            return null;
+        }
+
+        log.debug("changing to " + compInfo.id);
+        clearMembers(fleetAPI);
+        createFleet(fleetAPI, info, compInfo);
+        editCommander(info.captain, compInfo);
+
+        return compInfo.id;
+    }
+
+    // fleetType is the String that is mapped to the fleet's "$fleetType" memkey
+    public static String editFleet(CampaignFleetAPI fleetAPI, String fleetVariantId, double averageSmods) 
+    {
+        log.debug("editing " + fleetAPI.getFullName());
+
+        FleetInfo info = getInfo(fleetAPI);
+        info.averageSmods = averageSmods;
+
+        if(info.isStationFleet) {
+            log.debug("edit failed, station");
+            return null;
+        }
+
+        FleetComposition compInfo = FleetBuildData.FLEET_DATA.get(fleetVariantId);
         if(compInfo == null) {
             log.debug("fleet not edited");
             return null;
@@ -444,12 +476,12 @@ public class FleetBuilding {
     // store important info on fleet before editing
     private static class FleetInfo 
     {
-        public final PersonAPI captain;
-        public final Vector<PersonAPI> officers;
-        public final int originalDP;
-        public final Vector<FleetMemberAPI> mothballedShips;
-        public final boolean isStationFleet;
-        public final double averageSmods;
+        public PersonAPI captain;
+        public Vector<PersonAPI> officers;
+        public int originalDP;
+        public Vector<FleetMemberAPI> mothballedShips;
+        public boolean isStationFleet;
+        public double averageSmods;
 
         public FleetInfo(PersonAPI Captain, Vector<PersonAPI> Officers, int TotalDp, 
         Vector<FleetMemberAPI> MothballedShips, boolean IsStationFleet, double AverageSmods)

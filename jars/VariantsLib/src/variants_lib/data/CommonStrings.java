@@ -27,7 +27,6 @@ public class CommonStrings {
     }};
 
     // fleet types of some nex fleets
-
     public static final String NEX_VENGANCE_FLEET = "vengeanceFleet";
     public static final String NEX_INVASION_FLEET = "exerelinInvasionFleet";
     public static final String NEX_INVASION_SUPPORT_FLEET = "exerelinInvasionSupportFleet";
@@ -43,6 +42,9 @@ public class CommonStrings {
     public static final String NO_AUTOFIT_TAG =  "no_autofit";
 
     // variant_tags.csv related strings
+
+    // fleets.csv related strings
+    public static final String FLEETS_CSV_FIRST_COLUMN_NAME = "fileName";
 
     // the skill editing tags mapped to their corresponding skill Id's
     public static final HashMap<String, String> SKILL_EDIT_TAGS = new HashMap<String, String>() {{

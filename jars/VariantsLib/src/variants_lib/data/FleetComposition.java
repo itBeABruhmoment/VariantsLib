@@ -73,12 +73,11 @@ public class FleetComposition {
         put(BOSS_FLEET_TYPES_MACRO, BOSS_PRESET_TARGET_FLEET_TYPES); put(NON_INVASION_BOSS_FLEET_TYPES_MACRO, NON_INVASION_BOSS_TARGET_FLEET_TYPES);
     }};
 
-    public HashSet<String> targetFleetTypes;
     public Vector<AlwaysBuildMember> alwaysInclude;
     public FleetPartition[] partitions;
     public String[] commanderSkills;
     public String id;
-    public double spawnWeight;
+    public HashMap<String, Float> spawnWeights;
     public int minDP;
     public int maxDP;
     public String defaultFleetWidePersonality;
@@ -87,12 +86,15 @@ public class FleetComposition {
     @Override
     public String toString() 
     {
-        String newJsonStr =  "\n{\n";
+        String newJsonStr = "spawnWeights:";
+        for(String key: spawnWeights.keySet()) {
+            newJsonStr += "\"" + key + "\":" + spawnWeights.get(key) + ",";
+        }
+        newJsonStr += "\n";
+        newJsonStr +=  "\n{\n";
         try {
             DecimalFormat df = new DecimalFormat("#.00");
-
             newJsonStr += "\t\"" + "fleetDataId" + "\":\"" + id + "\",\n";
-            newJsonStr += "\t\"" + "spawnWeight" + "\":" + spawnWeight + ",\n";
             newJsonStr += "\t\"" + "minDP" + "\":" + minDP + ",\n";
             newJsonStr += "\t\"" + "maxDP" + "\":" + maxDP + ",\n";
 
@@ -116,13 +118,6 @@ public class FleetComposition {
                 newJsonStr += "],\n";
             }
 
-            if(targetFleetTypes != null) {
-                newJsonStr += "\t\"" + "targetFleetTypes" + "\":[";
-                for(String type : targetFleetTypes) {
-                    newJsonStr += "\"" + type + "\",";
-                }
-            }
-
             newJsonStr += "],\n";
             newJsonStr += "\t\"" + "fleetPartitions" + "\":[\n";
             for(FleetPartition partition : partitions) {
@@ -144,18 +139,26 @@ public class FleetComposition {
     }
 
     // constuct from json
-    public FleetComposition(JSONObject fleetDataJson, String dataId, String loadedFileInfo) throws Exception, IOException
+    public FleetComposition(JSONObject fleetDataCSVRow, JSONObject fleetDataJson, String dataId, String loadedFileInfo) throws Exception, IOException
     {
         id = dataId;
-        
-        // read spawn weight
-        try {
-            spawnWeight = fleetDataJson.getDouble("spawnWeight");
-        } catch(Exception e) {
-            throw new Exception(loadedFileInfo + " could not have its \"spawnWeight\" field read. Check spelling/formatting");
-        }
-        if(spawnWeight < 0) {
-            throw new Exception(loadedFileInfo + " has \"spawnWeight\" field less than zero");
+
+        // construct weights field
+        spawnWeights = new HashMap<>();
+        Iterator keys = fleetDataCSVRow.keys();
+        while(keys.hasNext()) {
+            String fleetType = (String)keys.next();
+            if(!fleetType.equals(CommonStrings.FLEETS_CSV_FIRST_COLUMN_NAME)) {
+                float weight;
+                try {
+                    weight = (float) fleetDataCSVRow.optDouble(fleetType);
+                } catch(Exception e) {
+                    weight = 0.0f;
+                }
+                if(weight > 0.00001f) {
+                    spawnWeights.put(fleetType, weight);
+                }
+            }
         }
 
         // read "maxDP" and "minDp" fields
@@ -188,35 +191,6 @@ public class FleetComposition {
         }
         if(defaultFleetWidePersonality != null && !CommonStrings.PERSONALITIES.contains(defaultFleetWidePersonality)) {
             throw new Exception(loadedFileInfo + " has invalid personality in \"defaultFleetWidePersonality\" field");
-        }
-
-        // read "targetFleetTypes" field
-        JSONArray targetFleetTypesJson = null;
-        try {
-            targetFleetTypesJson  = fleetDataJson.getJSONArray("targetFleetTypes");
-        } catch(Exception e) {
-            log.debug(loadedFileInfo + " has no \"targetFleetTypes\" field, setting to some default value");
-            targetFleetTypesJson = null;
-        }
-
-        if(targetFleetTypesJson != null) {
-            targetFleetTypes = new HashSet<String>();
-            for(int i = 0; i < targetFleetTypesJson.length(); i++) {
-                try {
-                    String fleetType = targetFleetTypesJson.getString(i);
-                    // check for macros
-                    final HashSet<String> preset = FLEET_TYPE_MACROS.get(fleetType);
-                    if(preset != null) {
-                        targetFleetTypes = preset;
-                        break;
-                    }
-                    targetFleetTypes.add(fleetType);
-                } catch(Exception e) {
-                    throw new Exception(loadedFileInfo + " could not have element in \"targetFleetTypes\" field read");
-                }
-            }
-        } else {
-            targetFleetTypes = DEFAULT_TARGET_FLEET_TYPES;
         }
 
         // read "additionalCommanderSkills" field

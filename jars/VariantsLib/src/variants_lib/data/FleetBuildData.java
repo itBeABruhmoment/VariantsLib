@@ -19,8 +19,6 @@ public class FleetBuildData {
     }
 
     public static final HashMap<String, FleetComposition> FLEET_DATA = new HashMap<String, FleetComposition>();
-    private static final String CSV_FIRST_COLUMN_NAME = "fileName";
-    private static final String CSV_SECOND_COLUMN_NAME = "modId";
 
     /*public static void testJson() throws JSONException, IOException
     {
@@ -34,7 +32,7 @@ public class FleetBuildData {
         Console.showMessage(variants.getJSONObject(0).getInt("weight"));
     }*/
 
-    public static void loadFleetJson(String fileName, String modId) throws Exception, IOException
+    public static void loadFleetJson(String fileName, String modId, JSONObject fleetDataCSVRow) throws Exception, IOException
     {
         // for error messages
         String loadedFileInfo = CommonStrings.MOD_ID + ":the file \"" + fileName + "\" from the mod \"" + modId + "\"";
@@ -53,7 +51,7 @@ public class FleetBuildData {
             throw new Exception(loadedFileInfo + " has no \"fleetDataId\" field, check spelling and formatting");
         }
 
-        FleetComposition comp = new FleetComposition(fleetDataJson, fleetDataId, loadedFileInfo);
+        FleetComposition comp = new FleetComposition(fleetDataCSVRow, fleetDataJson, fleetDataId, loadedFileInfo);
         FLEET_DATA.put(fleetDataId, comp);
     }
 
@@ -66,14 +64,16 @@ public class FleetBuildData {
         for(int i = 0; i < fleetDataRegister.length(); i++) {
             // get info for loading the fleet data json
             final JSONObject row = fleetDataRegister.getJSONObject(i);
-            String fileName = row.optString(CSV_FIRST_COLUMN_NAME);
+            String fileName = row.optString(CommonStrings.FLEETS_CSV_FIRST_COLUMN_NAME);
             if(fileName.equals("")) {
                 continue;
             }
             fileName = CommonStrings.FLEETS_FOLDER_PATH + fileName;
-            String modId = row.optString(CSV_SECOND_COLUMN_NAME);
+            //String modId = row.optString(CSV_SECOND_COLUMN_NAME);
+            String modId = CommonStrings.MOD_ID;
 
-            loadFleetJson(fileName, modId);
+
+            loadFleetJson(fileName, modId, row);
         }
     }
     

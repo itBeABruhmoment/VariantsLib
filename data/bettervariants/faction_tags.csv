@@ -1,5 +1,5 @@
 factionID,fleets,specialFleetSpawnRate,tags,specialFleetSpawnRateOverrides
-hegemony,"bv_hegemony_lowtech, bv_hegemony_xiv, bv_hegemony_so, bv_hegemony_eliteso, bv_smod_test",0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “inspectionFleet”:0.7, “taskForce”:0.6"
+hegemony,"bv_hegemony_lowtech, bv_hegemony_xiv, bv_hegemony_so, bv_hegemony_eliteso",0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “inspectionFleet”:0.7, “taskForce”:0.6"
 independent,"bv_independent_so1, bv_independent_ranged, bv_independent_explore",0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “taskForce”:0.6"
 knights_of_ludd,bv_luddic_church_carrier,0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “taskForce”:0.6"
 lions_guard,"bv_sindrian_diktat_ranged, bv_sindrian_diktat_so",0.3,"no_autofit, bounty","“vengeanceFleet”:0.7, “taskForce”:0.6"
