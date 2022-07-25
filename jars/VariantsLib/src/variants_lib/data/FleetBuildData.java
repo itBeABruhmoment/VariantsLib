@@ -1,6 +1,9 @@
 package variants_lib.data;
 
 import java.util.HashMap;
+
+import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
+
 import java.io.IOException;
 
 import org.json.JSONArray;
@@ -10,6 +13,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.ModSpecAPI;
 
 // loads data on fleet types
 public class FleetBuildData {
@@ -50,6 +54,9 @@ public class FleetBuildData {
         if(fleetDataId.equals("")) {
             throw new Exception(loadedFileInfo + " has no \"fleetDataId\" field, check spelling and formatting");
         }
+        if(FLEET_DATA.containsKey(fleetDataId)) {
+            throw new Exception(CommonStrings.MOD_ID + ": more than one fleets have the fleetDataId \"" + fleetDataId + "\"");
+        }
 
         FleetComposition comp = new FleetComposition(fleetDataCSVRow, fleetDataJson, fleetDataId, loadedFileInfo);
         FLEET_DATA.put(fleetDataId, comp);
@@ -57,23 +64,30 @@ public class FleetBuildData {
 
     public static void loadData() throws Exception, IOException
     {
-        // load "fleets.csv"
-        final JSONArray fleetDataRegister = Global.getSettings().loadCSV(CommonStrings.FLEETS_CSV_PATH,
-        CommonStrings.MOD_ID);
-        
-        for(int i = 0; i < fleetDataRegister.length(); i++) {
-            // get info for loading the fleet data json
-            final JSONObject row = fleetDataRegister.getJSONObject(i);
-            String fileName = row.optString(CommonStrings.FLEETS_CSV_FIRST_COLUMN_NAME);
-            if(fileName.equals("")) {
-                continue;
+        for(ModSpecAPI mod : Global.getSettings().getModManager().getEnabledModsCopy()) {
+            // load csv for mod
+            String modId = mod.getId();
+            JSONArray fleetDataRegister = null;
+            try {
+                fleetDataRegister = Global.getSettings().loadCSV(CommonStrings.FLEETS_CSV_PATH, modId);
+            } catch(Exception e) {
+                log.debug(CommonStrings.MOD_ID + ": " + CommonStrings.FLEETS_CSV_PATH + "could not be opened for the mod " + modId);
+                fleetDataRegister = null;
             }
-            fileName = CommonStrings.FLEETS_FOLDER_PATH + fileName;
-            //String modId = row.optString(CSV_SECOND_COLUMN_NAME);
-            String modId = CommonStrings.MOD_ID;
 
-
-            loadFleetJson(fileName, modId, row);
+            if(fleetDataRegister != null) {
+                for(int i = 0; i < fleetDataRegister.length(); i++) {
+                    // get info for loading the fleet data json
+                    final JSONObject row = fleetDataRegister.getJSONObject(i);
+                    String fileName = row.optString(CommonStrings.FLEETS_CSV_FIRST_COLUMN_NAME);
+                    if(fileName.equals("")) {
+                        continue;
+                    }
+                    fileName = CommonStrings.FLEETS_FOLDER_PATH + fileName;
+        
+                    loadFleetJson(fileName, modId, row);
+                }
+            }
         }
     }
     

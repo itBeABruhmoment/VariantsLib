@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.ModSpecAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 
 import org.apache.log4j.Level;
@@ -113,50 +114,70 @@ public class VariantData {
 
     public static void loadData() throws IOException, JSONException, Exception
     {
-        final JSONArray data = Global.getSettings().loadCSV(CommonStrings.VARIANT_TAGS_CSV_PATH,
-            CommonStrings.MOD_ID);
+        for(ModSpecAPI mod : Global.getSettings().getModManager().getEnabledModsCopy()) {
+            String modId = mod.getId();
+            log.debug(CommonStrings.MOD_ID + ": trying to load " + CommonStrings.VARIANT_TAGS_CSV_PATH + "from the mod " + modId);
+            JSONArray data = null;
+            try {
+                data = Global.getSettings().loadCSV(CommonStrings.VARIANT_TAGS_CSV_PATH, modId);
+            } catch(Exception e) {
+                data = null;
+                log.debug(CommonStrings.MOD_ID + ": " + CommonStrings.VARIANT_TAGS_CSV_PATH + " could not be opened for the mod " + modId + ", skipped");
+            }
         
-        for(int i = 0; i < data.length(); i++) {
-            final JSONObject row = data.getJSONObject(i);
-            String variantId = row.optString(CSV_FIRST_COLUMN_NAME);
-
-            if(variantId.equals("")) {
-                continue;
+            if(data != null) {
+                for(int i = 0; i < data.length(); i++) {
+                    final JSONObject row = data.getJSONObject(i);
+                    String variantId = row.optString(CSV_FIRST_COLUMN_NAME);
+    
+                    if(variantId.equals("")) {
+                        continue;
+                    }
+    
+                    if(VARIANT_DATA.containsKey(variantId)) {
+                        throw new Exception(CommonStrings.MOD_ID + ": the variant \"" + variantId + 
+                        "\" appears twice in " + CommonStrings.VARIANT_TAGS_CSV_PATH);
+                    }
+    
+                    if(Global.getSettings().getVariant(variantId) == null) {
+                        throw new Exception(CommonStrings.MOD_ID + ": the variant \"" + variantId + 
+                        "\" listed in the file " + CommonStrings.VARIANT_TAGS_CSV_PATH + " is not a recognized variant");
+                    }
+    
+                    String officerSpecRaw = row.optString(CSV_SECOND_COLUMN_NAME);
+                    Vector<String> officerSpec = processTags(officerSpecRaw);
+                    officerSpec.trimToSize();
+    
+                    if(hasDuplicateTags(officerSpec)) {
+                        throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
+                        " has duplicate officer spec in" + CommonStrings.VARIANT_TAGS_CSV_PATH + ". Remove them");
+                    }
+    
+                    String invalidTag = hasInvalidOfficerSpecTags(officerSpec);
+                    if(invalidTag != null) {
+                        throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
+                        " has the unrecognised tag \"" + invalidTag + "\" in "+ CommonStrings.VARIANT_TAGS_CSV_PATH);
+                    }
+    
+                    String smodsRaw = row.optString(CSV_THIRD_COLUMN_NAME);
+                    Vector<String> smods = processTags(smodsRaw);
+                    smods.trimToSize();
+    
+                    if(hasDuplicateTags(smods)) {
+                        throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
+                        " has duplicate smods tags in" + CommonStrings.VARIANT_TAGS_CSV_PATH + ". Remove them");
+                    }
+    
+                    invalidTag = hasInvalidSmodTags(smods);
+                    if(invalidTag != null) {
+                        throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
+                        " has the unrecognised tag \"" + invalidTag + "\" in "+ CommonStrings.VARIANT_TAGS_CSV_PATH);
+                    }
+    
+                    VARIANT_DATA.put(variantId, new VariantDataMember(officerSpec, smods));
+                }
             }
-
-            String officerSpecRaw = row.optString(CSV_SECOND_COLUMN_NAME);
-            Vector<String> officerSpec = processTags(officerSpecRaw);
-            officerSpec.trimToSize();
-
-            if(hasDuplicateTags(officerSpec)) {
-                throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
-                " has duplicate officer spec in" + CommonStrings.VARIANT_TAGS_CSV_PATH + ". Remove them");
-            }
-
-            String invalidTag = hasInvalidOfficerSpecTags(officerSpec);
-            if(invalidTag != null) {
-                throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
-                " has the unrecognised tag \"" + invalidTag + "\" in "+ CommonStrings.VARIANT_TAGS_CSV_PATH);
-            }
-
-            String smodsRaw = row.optString(CSV_THIRD_COLUMN_NAME);
-            Vector<String> smods = processTags(smodsRaw);
-            smods.trimToSize();
-
-            if(hasDuplicateTags(smods)) {
-                throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
-                " has duplicate smods tags in" + CommonStrings.VARIANT_TAGS_CSV_PATH + ". Remove them");
-            }
-
-            invalidTag = hasInvalidSmodTags(smods);
-            if(invalidTag != null) {
-                throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
-                " has the unrecognised tag \"" + invalidTag + "\" in "+ CommonStrings.VARIANT_TAGS_CSV_PATH);
-            }
-
-            VARIANT_DATA.put(variantId, new VariantDataMember(officerSpec, smods));
         }
-        
     }
 
     public static class VariantDataMember {

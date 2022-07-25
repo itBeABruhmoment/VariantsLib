@@ -19,8 +19,6 @@ import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 
 public class FleetComposition {
-    //TODO: fix alwaysInclude and all broken files
-
     private static final Logger log = Global.getLogger(variants_lib.data.FleetComposition.class);
     static {
         log.setLevel(Level.ALL);

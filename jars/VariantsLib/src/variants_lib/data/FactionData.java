@@ -18,6 +18,7 @@ data.BetterVariants_FactionData.FactionConfig da = (data.BetterVariants_FactionD
 String s = da.toString();
 Console.showMessage(s);
 */
+import com.fs.starfarer.api.ModSpecAPI;
 
 // loads data found in faction_tags.csv
 public class FactionData {
@@ -74,103 +75,129 @@ public class FactionData {
 
     public static void loadData() throws IOException, JSONException, Exception
     {
-        final JSONArray data = Global.getSettings().loadCSV(CommonStrings.FACTION_TAGS_CSV_PATH,
-            CommonStrings.MOD_ID);
-        
-        for(int i = 0; i < data.length(); i++) {
-            final JSONObject row = data.getJSONObject(i);
-
-            // read faction id, ignore rows without this field
-            String factionId = row.optString(CSV_FIRST_COLUMN_NAME);
-            if(factionId.equals("")) {
-                continue;
-            }
-
-            //log.debug(CommonStrings.MOD_ID + ": loading data for " + factionId);
-
-            // read custom fleets the faction can spawn
-            String fleetRaw = row.optString(CSV_SECOND_COLUMN_NAME);
-            Vector<String> fleetIds = processTags(fleetRaw);
-
-            // read spawnrate of special fleets
-            String specialFleetSpawnRateRaw = row.optString(CSV_THIRD_COLUMN_NAME);
-            double specialFleetSpawnRate = 0;
+        for(ModSpecAPI mod : Global.getSettings().getModManager().getEnabledModsCopy()) {
+            String modId = mod.getId();
+            log.debug(CommonStrings.MOD_ID + ": trying to load " + CommonStrings.FACTION_TAGS_CSV_PATH + "from the mod " + modId);
+            JSONArray data = null;
             try {
-                specialFleetSpawnRate = Double.parseDouble(specialFleetSpawnRateRaw);
-            } catch(NumberFormatException e) {
-                throw new Exception(CommonStrings.MOD_ID + ": the faction " + factionId + " has invalid \"specialFleetSpawnRateRaw\" field");
+                data = Global.getSettings().loadCSV(CommonStrings.FACTION_TAGS_CSV_PATH, modId);
+            } catch(Exception e) {
+                log.debug(CommonStrings.MOD_ID + ": mod " + modId + " could not have the file " + CommonStrings.FACTION_TAGS_CSV_PATH + " opened, skipped");
+                data = null;
             }
-            if(specialFleetSpawnRate < 0 || specialFleetSpawnRate > 1) {
-                throw new Exception(CommonStrings.MOD_ID + ": the faction " + factionId + " has invalid number in \"specialFleetSpawnRateRaw\" field");
-            }
-            // apply a setting
-            specialFleetSpawnRate *= SettingsData.getSpecialFleetSpawnMult();
 
-            // read specialFleetSpawnRateOverrides
-            HashMap<String, Double> weightOverrides = new HashMap<String, Double>();
-            String overridesRaw = row.optString(CSV_FIFTH_COLUMN_NAME);
-            if(!overridesRaw.equals("")) {
-                JSONObject weightOverridesJson = null;
-                try {
-                    weightOverridesJson = new JSONObject("{ "+ overridesRaw + " }");
-                } catch(Exception e) {
-                    throw new Exception(CommonStrings.MOD_ID + ": the faction " + factionId + " has impropery formatted " + CSV_FIFTH_COLUMN_NAME);
-                }
-                if(weightOverridesJson != null) {
-                    for(String key : JSONObject.getNames(weightOverridesJson)) {
-                        double weight = specialFleetSpawnRate;
+            if(data != null) {
+                for(int i = 0; i < data.length(); i++) {
+                    final JSONObject row = data.getJSONObject(i);
+
+                    // read faction id, ignore rows without this field
+                    String factionId = row.optString(CSV_FIRST_COLUMN_NAME);
+                    if(factionId.equals("")) {
+                        continue;
+                    }
+
+                    // read custom fleets the faction can spawn
+                    String fleetRaw = row.optString(CSV_SECOND_COLUMN_NAME);
+                    Vector<String> fleetIds = processTags(fleetRaw);
+
+                    // read spawnrate of special fleets
+                    String specialFleetSpawnRateRaw = row.optString(CSV_THIRD_COLUMN_NAME);
+                    double specialFleetSpawnRate = 0;
+                    try {
+                        specialFleetSpawnRate = Double.parseDouble(specialFleetSpawnRateRaw);
+                    } catch(NumberFormatException e) {
+                        throw new Exception(CommonStrings.MOD_ID + ": the faction " + factionId + " has invalid \"specialFleetSpawnRateRaw\" field");
+                    }
+                    if(specialFleetSpawnRate < 0 || specialFleetSpawnRate > 1) {
+                        throw new Exception(CommonStrings.MOD_ID + ": the faction " + factionId + " has invalid number in \"specialFleetSpawnRateRaw\" field");
+                    }
+                    // apply a setting
+                    specialFleetSpawnRate *= SettingsData.getSpecialFleetSpawnMult();
+
+                    // read specialFleetSpawnRateOverrides
+                    HashMap<String, Double> weightOverrides = new HashMap<String, Double>();
+                    String overridesRaw = row.optString(CSV_FIFTH_COLUMN_NAME);
+                    if(!overridesRaw.equals("")) {
+                        JSONObject weightOverridesJson = null;
                         try {
-                            weight = weightOverridesJson.getDouble(key);
+                            weightOverridesJson = new JSONObject("{ "+ overridesRaw + " }");
                         } catch(Exception e) {
-                            throw new Exception(CommonStrings.MOD_ID + ": the faction " + factionId + " has impropery formatted double in " + CSV_FIFTH_COLUMN_NAME);
+                            throw new Exception(CommonStrings.MOD_ID + ": the faction " + factionId + " has impropery formatted " + CSV_FIFTH_COLUMN_NAME);
                         }
-                        // apply setting
-                        weight *= SettingsData.getSpecialFleetSpawnMult();
-                        weightOverrides.put(key, weight);
+                        if(weightOverridesJson != null) {
+                            for(String key : JSONObject.getNames(weightOverridesJson)) {
+                                double weight = specialFleetSpawnRate;
+                                try {
+                                    weight = weightOverridesJson.getDouble(key);
+                                } catch(Exception e) {
+                                    throw new Exception(CommonStrings.MOD_ID + ": the faction " + factionId + " has impropery formatted double in " + CSV_FIFTH_COLUMN_NAME);
+                                }
+                                // apply setting
+                                weight *= SettingsData.getSpecialFleetSpawnMult();
+                                weightOverrides.put(key, weight);
+                            }
+                        }
+                    }
+
+                    // read tags
+                    String tagsRaw = row.optString(CSV_FOURTH_COLUMN_NAME);
+                    Vector<String> tags = processTags(tagsRaw);
+                    HashSet<String> tagsHash = new HashSet<String>();
+                    for(String tag : tags) {
+                        tagsHash.add(tag);
+                    }
+
+                    if(hasDuplicateTags(tags)) {
+                        throw new Exception(CommonStrings.MOD_ID + ": the faction " + factionId + " has duplicate tags. Remove them");
+                    }
+
+
+                    if(FACTION_DATA.containsKey(factionId)) {
+                        FACTION_DATA.get(factionId).merge(new FactionConfig(tagsHash, fleetIds, specialFleetSpawnRate, weightOverrides));
+                    } else {
+                        FACTION_DATA.put(factionId, new FactionConfig(tagsHash, fleetIds, specialFleetSpawnRate, weightOverrides));
                     }
                 }
             }
-
-            // read tags
-            String tagsRaw = row.optString(CSV_FOURTH_COLUMN_NAME);
-            Vector<String> tags = processTags(tagsRaw);
-            HashSet<String> tagsHash = new HashSet<String>();
-            for(String tag : tags) {
-                tagsHash.add(tag);
-            }
-
-            if(hasDuplicateTags(tags)) {
-                throw new Exception(CommonStrings.MOD_ID + ": the faction " + factionId + " has duplicate tags. Remove them");
-            }
-
-            
-            
-
-            FACTION_DATA.put(factionId, new FactionConfig(tagsHash, fleetIds, specialFleetSpawnRate, weightOverrides));
-            //log.debug(FACTION_DATA.get(factionId).toString());
-        }
-        
+        }  
     }
 
     public static class FactionConfig
     {
-        public final HashMap<String, Double> specialFleetSpawnRateOverrides;
-        public final HashSet<String> tags;
-        public final Vector<String> customFleetIds;
-        public final double specialFleetSpawnRate;
+        public HashMap<String, Double> specialFleetSpawnRateOverrides;
+        public HashSet<String> tags;
+        public Vector<String> customFleetIds;
+        public double specialFleetSpawnRate;
 
         public boolean hasTag(String tag)
         {
             return tags.contains(tag);
         }
 
-        FactionConfig(HashSet<String> Tags, Vector<String> CustomFleetIds, double SpecialFleetSpawnRate, 
+        public FactionConfig(HashSet<String> Tags, Vector<String> CustomFleetIds, double SpecialFleetSpawnRate, 
         HashMap<String, Double> SpecialFleetSpawnRateOverrides)
         {
             tags = Tags;
             customFleetIds = CustomFleetIds;
             specialFleetSpawnRate = SpecialFleetSpawnRate;
             specialFleetSpawnRateOverrides = SpecialFleetSpawnRateOverrides;
+        }
+
+        // when data conficts the values in "other" get priortized
+        public void merge(FactionConfig other)
+        {
+            specialFleetSpawnRate = other.specialFleetSpawnRate;
+            for(String key : other.specialFleetSpawnRateOverrides.keySet()) {
+                specialFleetSpawnRateOverrides.put(key, other.specialFleetSpawnRateOverrides.get(key));
+            }
+            for(String key : other.tags) {
+                tags.add(key);
+            }
+            for(String fleetId : other.customFleetIds) {
+                if(!customFleetIds.contains(fleetId)) {
+                    customFleetIds.add(fleetId);
+                }
+            }
         }
 
         @Override
