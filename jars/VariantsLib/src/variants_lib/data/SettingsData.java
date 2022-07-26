@@ -14,7 +14,6 @@ public class SettingsData {
         log.setLevel(Level.ALL);
     }
 
-    private static final String SETTINGS_FILE_NAME = "data/bettervariants/better_variants_settings.json";
     private static boolean enableAutofit = false;
     private static float specialFleetSpawnMult = 1.0f;
     private static boolean enableOfficerEditing = true;
@@ -23,30 +22,30 @@ public class SettingsData {
     {
         final JSONObject settings;
         try {
-            settings = Global.getSettings().loadJSON(SETTINGS_FILE_NAME, CommonStrings.MOD_ID);
+            settings = Global.getSettings().loadJSON(CommonStrings.SETTINGS_FILE_NAME, CommonStrings.MOD_ID);
         } catch(Exception e) {
-            throw new Exception(CommonStrings.MOD_ID + ": failed to read " + SETTINGS_FILE_NAME);
+            throw new Exception(CommonStrings.MOD_ID + ": failed to read " + CommonStrings.SETTINGS_FILE_NAME);
         }
 
         try {
             enableAutofit = settings.getBoolean("enableAutofit");
         } catch(Exception e) {
-            throw new Exception(CommonStrings.MOD_ID + "failed to read \"enableAutofit\" in " + SETTINGS_FILE_NAME);
+            throw new Exception(CommonStrings.MOD_ID + "failed to read \"enableAutofit\" in " + CommonStrings.SETTINGS_FILE_NAME);
         }
 
         try {
             specialFleetSpawnMult = (float) settings.getDouble("specialFleetSpawnMult");
         } catch(Exception e) {
-            throw new Exception(CommonStrings.MOD_ID + "failed to read \"specialFleetSpawnMult\" in " + SETTINGS_FILE_NAME);
+            throw new Exception(CommonStrings.MOD_ID + "failed to read \"specialFleetSpawnMult\" in " + CommonStrings.SETTINGS_FILE_NAME);
         }
         if(specialFleetSpawnMult < 0.0f) {
-            throw new Exception(CommonStrings.MOD_ID + "\"specialFleetSpawnMult\" from " + SETTINGS_FILE_NAME + "has a negative value");
+            throw new Exception(CommonStrings.MOD_ID + "\"specialFleetSpawnMult\" from " + CommonStrings.SETTINGS_FILE_NAME + "has a negative value");
         }
 
         try {
             enableOfficerEditing = settings.getBoolean("enableOfficerEditing");
         } catch(Exception e) {
-            throw new Exception(CommonStrings.MOD_ID + "failed to read \"enableOfficerEditing\" in " + SETTINGS_FILE_NAME);
+            throw new Exception(CommonStrings.MOD_ID + "failed to read \"enableOfficerEditing\" in " + CommonStrings.SETTINGS_FILE_NAME);
         }
     }
 

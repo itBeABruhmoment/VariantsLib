@@ -7,11 +7,11 @@ import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 // stores important strings
 public class CommonStrings {
     // file paths and other important mod info
-
-    public static final String VARIANT_TAGS_CSV_PATH = "data/bettervariants/variant_tags.csv";
-    public static final String FACTION_TAGS_CSV_PATH = "data/bettervariants/faction_tags.csv";
-    public static final String FLEETS_CSV_PATH = "data/bettervariants/fleets/fleets.csv";
-    public static final String FLEETS_FOLDER_PATH = "data/bettervariants/fleets/";
+    public static final String SETTINGS_FILE_NAME = "data/variants_lib/better_variants_settings.json";
+    public static final String VARIANT_TAGS_CSV_PATH = "data/variants_lib/variant_tags.csv";
+    public static final String FACTION_TAGS_CSV_PATH = "data/variants_lib/faction_tags.csv";
+    public static final String FLEETS_CSV_PATH = "data/variants_lib/fleets/fleets.csv";
+    public static final String FLEETS_FOLDER_PATH = "data/variants_lib/fleets/";
     public static final String MOD_ID = "variants_lib";
 
     // memkeys
