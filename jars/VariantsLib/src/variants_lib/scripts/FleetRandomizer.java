@@ -88,14 +88,7 @@ public class FleetRandomizer {
         // disable autofit
         String factionId = fleet.getFaction().getId();
 
-        FleetInflater inflater = fleet.getInflater();
-        if(!SettingsData.autofitEnabled()
-        && FactionData.FACTION_DATA.get(factionId) != null 
-        && FactionData.FACTION_DATA.get(factionId).hasTag(CommonStrings.NO_AUTOFIT_TAG)
-        && inflater instanceof DefaultFleetInflater
-        && !(inflater instanceof NoAutofitFleetInflater)) {
-            fleet.setInflater(new NoAutofitFleetInflater((DefaultFleetInflater) inflater, rand));
-        }
+        
 
         
         if(fleet.getMemoryWithoutUpdate().contains(CommonStrings.FLEET_EDITED_MEMKEY)) {
@@ -109,9 +102,25 @@ public class FleetRandomizer {
             return;
         }
 
+        // edit ships in fleet
         String fleetCompId = FleetBuilding.editFleet(fleet);
         if(fleetCompId != null) {
             fleet.getMemoryWithoutUpdate().set(CommonStrings.FLEET_VARIANT_KEY, fleetCompId);
+        }
+
+        // manage no autofit stuff
+        if(!SettingsData.autofitEnabled()
+        && FactionData.FACTION_DATA.get(factionId) != null 
+        && FactionData.FACTION_DATA.get(factionId).hasTag(CommonStrings.NO_AUTOFIT_TAG)) {
+            float quality = 1.0f;
+            try {
+                quality = fleet.getInflater().getQuality();
+            } catch(Exception e) {
+                quality = 1.0f;
+                log.debug("inflator not found, defauting quality to max");
+            }
+            FleetBuilding.addDmods(fleet, quality);
+            fleet.setInflated(true);
         }
 
         // edit officers of fleet

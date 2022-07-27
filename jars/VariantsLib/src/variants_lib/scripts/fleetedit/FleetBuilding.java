@@ -9,6 +9,7 @@ import java.util.Collections;
 
 import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.fleet.RepairTrackerAPI;
+import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
@@ -32,7 +33,7 @@ import com.fs.starfarer.api.campaign.FleetInflater;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-
+// TODO: add param to indicate not to add dmods
 public class FleetBuilding {
     private static final int MAX_OVERBUDGET = 3;
     private static final Random rand = new Random();
@@ -157,12 +158,6 @@ public class FleetBuilding {
 
     private static void createFleet(CampaignFleetAPI fleetAPI, FleetInfo info, FleetComposition fleetCompData)
     {
-        float quality = 1.0f;
-        FleetInflater inflater = fleetAPI.getInflater();
-        if(inflater != null) {
-            quality = inflater.getQuality();
-        }
-
         Vector<FleetMemberAPI> combatShips = new Vector<FleetMemberAPI>(30);
         Vector<FleetMemberAPI> civilianShips = new Vector<FleetMemberAPI>(10);
         int maxShipsThatCanBeAdded = 30 - info.mothballedShips.size();
@@ -402,6 +397,35 @@ public class FleetBuilding {
             for(String skill : compInfo.commanderSkills) {
                 if(!stats.hasSkill(skill)) {
                     stats.increaseSkill(skill);
+                }
+            }
+        }
+    }
+
+    public static void addDmods(CampaignFleetAPI fleet, float quality)
+    {
+        // add dmods
+        quality = quality + (0.05f * quality); // noticed an abnormal amount dmods in factions such as diktat
+        for(FleetMemberAPI ship : fleet.getMembersWithFightersCopy()) {
+            if(!ship.isFighterWing() && !ship.isStation()) {
+                int numExistingDmods = DModManager.getNumDMods(ship.getVariant());
+                if(quality <= 0.0f) {
+                    int numDmods = 5 - numExistingDmods;
+                    if(numDmods > 0) {
+                        DModManager.addDMods(ship, true, numDmods, rand);
+                    } // otherwise do nothing
+                } else if(quality <= 1.0f) {
+                    int numDmods = Math.round(5.0f - (quality + (rand.nextFloat() / 5.0f - 0.1f)) * 5.0f);
+                    if(numDmods < 0) {
+                        numDmods = 0;
+                    }
+                    if(numDmods > 5) {
+                        numDmods = 5;
+                    }
+                    numDmods = numDmods - numExistingDmods;
+                    if(numDmods > 0) {
+                        DModManager.addDMods(ship, true, numDmods, rand);
+                    }
                 }
             }
         }
