@@ -17,6 +17,8 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 
+
+// note to self, when disabling the mod fleets spawned with edited from this mod get converted to nebulas for some reason
 public class VariantsLibModPlugin extends BaseModPlugin {
     private static final Logger log = Global.getLogger(variants_lib.scripts.VariantsLibModPlugin.class);
     static {
