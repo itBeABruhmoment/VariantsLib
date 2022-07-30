@@ -10,6 +10,8 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 
 import variants_lib.data.CommonStrings;
 import variants_lib.data.FactionData;
+import variants_lib.data.FleetBuildData;
+import variants_lib.data.FleetComposition;
 import variants_lib.data.SettingsData;
 import variants_lib.scripts.fleetedit.FleetBuilding;
 import variants_lib.scripts.fleetedit.OfficerEditing;
@@ -85,12 +87,8 @@ public class FleetRandomizer {
 
     public static void modify(CampaignFleetAPI fleet)
     {
-        // disable autofit
         String factionId = fleet.getFaction().getId();
-
-        
-
-        
+   
         if(fleet.getMemoryWithoutUpdate().contains(CommonStrings.FLEET_EDITED_MEMKEY)) {
             return;
         }
@@ -129,6 +127,14 @@ public class FleetRandomizer {
         }
 
         FleetBuilding.setProperCr(fleet);
+
+        // run any post modification scripts
+        FleetComposition comp = FleetBuildData.FLEET_DATA.get(fleetCompId);
+        if(comp.postModificationScripts != null) {
+            for(String scriptPath : comp.postModificationScripts) {
+                FleetBuildData.SCRIPTS.get(scriptPath).run(fleet);
+            }
+        }
     }
 
     public static boolean alreadyModified(CampaignFleetAPI fleet)

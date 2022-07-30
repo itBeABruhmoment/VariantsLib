@@ -24,56 +24,10 @@ public class FleetComposition {
         log.setLevel(Level.ALL);
     }
 
-    public static final String DEFAULT_FLEET_TYPES_MACRO = "%combat";
-    public static final HashSet<String> DEFAULT_TARGET_FLEET_TYPES = new HashSet<String>() {{
-        add(FleetTypes.MERC_ARMADA);    add(FleetTypes.MERC_BOUNTY_HUNTER); add(FleetTypes.MERC_PATROL);
-        add(FleetTypes.MERC_PRIVATEER); add(FleetTypes.MERC_SCOUT);         add(FleetTypes.PATROL_LARGE);
-        add(FleetTypes.PATROL_MEDIUM);  add(FleetTypes.PATROL_SMALL);       
-    }};
-
-    public static final String NON_INVASION_FLEET_TYPES_MACRO = "%notinvasion";
-    public static final HashSet<String> NON_INVASION_TARGET_FLEET_TYPES = new HashSet<String>() {{
-        add(FleetTypes.MERC_ARMADA);    add(FleetTypes.MERC_BOUNTY_HUNTER); add(FleetTypes.MERC_PATROL);
-        add(FleetTypes.MERC_PRIVATEER); add(FleetTypes.MERC_SCOUT);         add(FleetTypes.PATROL_LARGE);
-        add(FleetTypes.PATROL_MEDIUM);  add(FleetTypes.PATROL_SMALL);       add("vengeanceFleet");
-        add("nex_specialForces");
-    }};
-
-    public static final String NON_INVASION_BOSS_FLEET_TYPES_MACRO = "%notinvasionboss";
-    public static final HashSet<String> NON_INVASION_BOSS_TARGET_FLEET_TYPES = new HashSet<String>() {{
-        add("vengeanceFleet"); add("nex_specialForces");
-    }};
-
-    public static final String INVASION_FLEET_TYPES_MACRO = "%invasion";
-    public static final HashSet<String> INVASION_TARGET_FLEET_TYPES = new HashSet<String>() {{
-        add(FleetTypes.TASK_FORCE);     add(FleetTypes.INSPECTION_FLEET);   add("exerelinInvasionFleet");
-        add("exerelinInvasionSupportFleet");
-    }};
-
-    public static final String COMBAT_FLEET_TYPES_MACRO = "%combatplus";
-    public static final HashSet<String> COMBAT_PRESET_TARGET_FLEET_TYPES = new HashSet<String>() {{
-        add(FleetTypes.MERC_ARMADA);    add(FleetTypes.MERC_BOUNTY_HUNTER); add(FleetTypes.MERC_PATROL);
-        add(FleetTypes.MERC_PRIVATEER); add(FleetTypes.MERC_SCOUT);         add(FleetTypes.PATROL_LARGE);
-        add(FleetTypes.PATROL_MEDIUM);  add(FleetTypes.PATROL_SMALL);       add(FleetTypes.TASK_FORCE);
-        add(FleetTypes.INSPECTION_FLEET);add("vengeanceFleet");             add("nex_specialForces");
-        add("exerelinInvasionFleet");   add("exerelinInvasionSupportFleet");
-    }};
-
-    public static final String BOSS_FLEET_TYPES_MACRO = "%boss";
-    public static final HashSet<String> BOSS_PRESET_TARGET_FLEET_TYPES = new HashSet<String>() {{
-        add(FleetTypes.TASK_FORCE);     add(FleetTypes.INSPECTION_FLEET);   add("vengeanceFleet");
-        add("nex_specialForces");       add("exerelinInvasionFleet");   add("exerelinInvasionSupportFleet");
-    }};
-
-    public static final HashMap<String, HashSet<String>> FLEET_TYPE_MACROS = new HashMap<String, HashSet<String>>() {{
-        put(DEFAULT_FLEET_TYPES_MACRO, DEFAULT_TARGET_FLEET_TYPES); put(NON_INVASION_FLEET_TYPES_MACRO, NON_INVASION_TARGET_FLEET_TYPES);
-        put(INVASION_FLEET_TYPES_MACRO, INVASION_TARGET_FLEET_TYPES); put(COMBAT_FLEET_TYPES_MACRO, COMBAT_PRESET_TARGET_FLEET_TYPES);
-        put(BOSS_FLEET_TYPES_MACRO, BOSS_PRESET_TARGET_FLEET_TYPES); put(NON_INVASION_BOSS_FLEET_TYPES_MACRO, NON_INVASION_BOSS_TARGET_FLEET_TYPES);
-    }};
-
     public Vector<AlwaysBuildMember> alwaysInclude;
     public FleetPartition[] partitions;
     public String[] commanderSkills;
+    public String[] postModificationScripts;
     public String id;
     public HashMap<String, Float> spawnWeights;
     public int minDP;
@@ -90,6 +44,7 @@ public class FleetComposition {
         }
         newJsonStr += "\n";
         newJsonStr +=  "\n{\n";
+
         try {
             DecimalFormat df = new DecimalFormat("#.00");
             newJsonStr += "\t\"" + "fleetDataId" + "\":\"" + id + "\",\n";
@@ -192,40 +147,19 @@ public class FleetComposition {
         }
 
         // read "additionalCommanderSkills" field
-        JSONArray commanderSkillsJson = null;
-        try {
-            commanderSkillsJson  = fleetDataJson.getJSONArray("additionalCommanderSkills");
-        } catch(Exception e) {
-            log.debug(loadedFileInfo + " has no \"additionalCommanderSkills\" field, setting to nothing");
-            commanderSkillsJson = null;
+        commanderSkills = getStringArray("additionalCommanderSkills", loadedFileInfo, fleetDataJson);
+        if(commanderSkills != null && !skillIdsAreCorrect(commanderSkills)) {
+            throw new Exception(loadedFileInfo + " has invalid skill in \"additionalCommanderSkills\" field");
         }
 
-        if(commanderSkillsJson == null) {
-            commanderSkills = null;
-        } else {
-            List<String> skillIds = Global.getSettings().getSkillIds();
-            commanderSkills = new String[commanderSkillsJson.length()];
-            for(int i = 0; i < commanderSkillsJson.length(); i++) {
-                try {
-                    commanderSkills[i] = commanderSkillsJson.getString(i);
-                } catch(Exception e) {
-                    throw new Exception(loadedFileInfo + " could not have element in \"additionalCommanderSkills\" field read");
-                }
-
-                // verify if String is skill
-                boolean found = false;
-                for(String skillId : skillIds) {
-                    if(skillId.equals(commanderSkills[i])) {
-                        found = true;
-                        break;
-                    }
-                }
-                if(!found) {
-                    throw new Exception(loadedFileInfo + " has invalid skill \"" + commanderSkills[i] + "\"");
-                }
+        // read "postModificationScripts"
+        postModificationScripts = getStringArray("postModificationScripts", loadedFileInfo, fleetDataJson);
+        if(postModificationScripts != null) {
+            for(String script : postModificationScripts) {
+                FleetBuildData.addScriptToStore(script);
             }
-
         }
+
 
         // read partitions data field
         final JSONArray fleetPartitionsData;
@@ -281,5 +215,50 @@ public class FleetComposition {
             log.debug(loadedFileInfo + " has no \"alwaysInclude\" field. Set to nothing");
             alwaysInclude = null;
         }
+    }
+
+    private static boolean skillIdsAreCorrect(String[] skillIds)
+    {
+        // verify if String is skill
+        List<String> allSkillIds = Global.getSettings().getSkillIds();
+        for(int i = 0; i < skillIds.length; i++) {
+            boolean found = false;
+            for(String skill : allSkillIds) {
+                if(skill.equals(skillIds[i])) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if(!found) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static String[] getStringArray(String key, String loadedFileInfo, JSONObject json) throws Exception
+    {
+        JSONArray jsonArr = null;
+        try {
+            jsonArr = json.getJSONArray(key);
+        } catch(Exception e) {
+            log.debug(loadedFileInfo + " could not have its \"" + key + "\" field read, set to null");
+            jsonArr = null;
+        }
+        if(jsonArr == null) {
+            return null;
+        }
+
+        String[] strArr = new String[jsonArr.length()];
+        for(int i = 0; i < jsonArr.length(); i++) {
+            try {
+                strArr[i] = jsonArr.getString(i);
+            } catch(Exception e) {
+                log.debug(loadedFileInfo + " had error while reading its \"" + key + "\" field read, set to null");
+                return null;
+            }
+        }
+        return strArr;
     }
 }

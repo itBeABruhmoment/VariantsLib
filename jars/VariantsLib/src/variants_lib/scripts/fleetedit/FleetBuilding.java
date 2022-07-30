@@ -437,21 +437,21 @@ public class FleetBuilding {
         String factionId = fleetAPI.getFaction().getId();
         String fleetType = fleetAPI.getMemoryWithoutUpdate().getString(MemFlags.MEMORY_KEY_FLEET_TYPE);
 
+        FleetInfo info = getInfo(fleetAPI);
+        FleetComposition compInfo = pickFleet(info, factionId, fleetType);
+        if(compInfo == null) {
+            log.debug("fleet not edited");
+            return null;
+        }
+
         if(fleetType == null) {
             log.debug("edit failed, fleet has no fleet type");
         }
 
-        FleetInfo info = getInfo(fleetAPI);
         //log.debug(info.toString());
 
         if(info.isStationFleet) {
             log.debug("edit failed, station");
-            return null;
-        }
-
-        FleetComposition compInfo = pickFleet(info, factionId, fleetType);
-        if(compInfo == null) {
-            log.debug("fleet not edited");
             return null;
         }
 

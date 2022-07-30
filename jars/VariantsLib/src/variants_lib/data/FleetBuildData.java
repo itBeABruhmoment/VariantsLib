@@ -2,8 +2,6 @@ package variants_lib.data;
 
 import java.util.HashMap;
 
-import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
-
 import java.io.IOException;
 
 import org.json.JSONArray;
@@ -15,6 +13,9 @@ import org.apache.log4j.Logger;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.ModSpecAPI;
 
+import variants_lib.scripts.FleetEditingScript;
+
+
 // loads data on fleet types
 public class FleetBuildData {
     private static final Logger log = Global.getLogger(variants_lib.data.FleetBuildData.class);
@@ -22,7 +23,8 @@ public class FleetBuildData {
         log.setLevel(Level.ALL);
     }
 
-    public static final HashMap<String, FleetComposition> FLEET_DATA = new HashMap<String, FleetComposition>();
+    public static final HashMap<String, FleetComposition> FLEET_DATA = new HashMap<>();
+    public static final HashMap<String, FleetEditingScript> SCRIPTS = new HashMap<>();
 
     /*public static void testJson() throws JSONException, IOException
     {
@@ -35,6 +37,20 @@ public class FleetBuildData {
         org.json.JSONArray variants = partition1.getJSONArray("variants");
         Console.showMessage(variants.getJSONObject(0).getInt("weight"));
     }*/
+
+    public static void addScriptToStore(String classPath) throws Exception
+    {
+        try {
+            FleetEditingScript script = (FleetEditingScript) Class.forName(classPath).newInstance();
+            SCRIPTS.put(classPath, script);
+        } catch(ClassNotFoundException e) {
+            throw new Exception(CommonStrings.MOD_ID + ": failed to find the class \"" + classPath + "\"");
+        } catch(ClassCastException e) {
+            throw new Exception(CommonStrings.MOD_ID + ": \"" + classPath + "\" is not a class that implements \"FleetEditingScript\"");
+        } catch(Exception e) {
+            throw new Exception(CommonStrings.MOD_ID + ": failed to create the class \"" + classPath + "\"");
+        }
+    }
 
     public static void loadFleetJson(String fileName, String modId, JSONObject fleetDataCSVRow) throws Exception, IOException
     {

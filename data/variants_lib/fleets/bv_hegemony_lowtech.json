@@ -4,7 +4,6 @@
 	"minDP":40,
 	"maxDP":400,
 	"defaultFleetWidePersonality":"steady",
-	"targetFleetTypes":["patrolMedium","exerelinInvasionFleet","nex_specialForces","mercBountyHunter","mercPatrol","mercArmada","exerelinInvasionSupportFleet","mercPrivateer","mercScout","vengeanceFleet","taskForce","patrolSmall","inspectionFleet","patrolLarge",],
 	"fleetPartitions":[
 		{
 			"partitionWeight":37.74,
