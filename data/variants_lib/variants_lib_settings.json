@@ -2,4 +2,6 @@
 	"enableAutofit":false,
 	"specialFleetSpawnMult":10.0,
 	"enableOfficerEditing":true,
+	# "universalPreModificationScripts":["variants_lib.scripts.FleetEditingScriptTest"],
+	# "universalPostModificationScripts":["variants_lib.scripts.FleetEditingScriptTest"]
 }

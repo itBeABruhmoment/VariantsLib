@@ -6,6 +6,8 @@ import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
 
+import variants_lib.data.SettingsData;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -36,6 +38,12 @@ public class VariantsLibListener extends BaseCampaignEventListener{
     
     @Override
     public void reportFleetSpawned(CampaignFleetAPI fleet) {
+        for(FleetEditingScript script : SettingsData.universalPreModificationScripts.values()) {
+            script.run(fleet);
+        }
         FleetRandomizer.modify(fleet);
+        for(FleetEditingScript script : SettingsData.universalPostModificationScripts.values()) {
+            script.run(fleet);
+        }
     }
 }
