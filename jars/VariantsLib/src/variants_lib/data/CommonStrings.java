@@ -7,7 +7,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 // stores important strings
 public class CommonStrings {
     // file paths and other important mod info
-    public static final String SETTINGS_FILE_NAME = "data/variants_lib/better_variants_settings.json";
+    public static final String SETTINGS_FILE_NAME = "data/variants_lib/variants_lib_settings.json";
     public static final String VARIANT_TAGS_CSV_PATH = "data/variants_lib/variant_tags.csv";
     public static final String FACTION_TAGS_CSV_PATH = "data/variants_lib/faction_tags.csv";
     public static final String FLEETS_CSV_PATH = "data/variants_lib/fleets/fleets.csv";
@@ -16,9 +16,9 @@ public class CommonStrings {
 
     // memkeys
 
-    public static final String DO_NOT_CHANGE_PERSONALITY_KEY = "$bvNoPersonalityChange";
-    public static final String MODIFIED_IN_BATTLE_KEY = "$bvModifiedInBattle";
-    public static final String FLEET_VARIANT_KEY = "$bvType";
+    public static final String DO_NOT_CHANGE_PERSONALITY_KEY = "$vlNoPersonalityChange";
+    public static final String MODIFIED_IN_BATTLE_KEY = "$vlModifiedInBattle";
+    public static final String FLEET_VARIANT_KEY = "$vlType";
     public static final String FLEET_EDITED_MEMKEY = "$vlmodified";
 
     public static final HashSet<String> PERSONALITIES =  new HashSet<String>() {{

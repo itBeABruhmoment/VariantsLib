@@ -128,11 +128,13 @@ public class FleetRandomizer {
 
         FleetBuilding.setProperCr(fleet);
 
-        // run any post modification scripts
-        FleetComposition comp = FleetBuildData.FLEET_DATA.get(fleetCompId);
-        if(comp.postModificationScripts != null) {
-            for(String scriptPath : comp.postModificationScripts) {
-                FleetBuildData.SCRIPTS.get(scriptPath).run(fleet);
+        if(fleetCompId != null) {
+            // run any post modification scripts
+            FleetComposition comp = FleetBuildData.FLEET_DATA.get(fleetCompId);
+            if(comp.postModificationScripts != null) {
+                for(String scriptPath : comp.postModificationScripts) {
+                    FleetBuildData.SCRIPTS.get(scriptPath).run(fleet);
+                }
             }
         }
     }
