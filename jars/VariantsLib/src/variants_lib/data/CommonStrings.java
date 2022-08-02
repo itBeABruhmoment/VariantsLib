@@ -12,6 +12,7 @@ public class CommonStrings {
     public static final String FACTION_TAGS_CSV_PATH = "data/variants_lib/faction_tags.csv";
     public static final String FLEETS_CSV_PATH = "data/variants_lib/fleets/fleets.csv";
     public static final String FLEETS_FOLDER_PATH = "data/variants_lib/fleets/";
+    public static final String MODDED_VARIANTS_FOLDER_PATH = "data/variants_lib/modded_variants/";
     public static final String MOD_ID = "variants_lib";
 
     // memkeys

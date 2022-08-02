@@ -74,7 +74,7 @@ public class FleetBuildData {
             throw new Exception(CommonStrings.MOD_ID + ": more than one fleets have the fleetDataId \"" + fleetDataId + "\"");
         }
 
-        FleetComposition comp = new FleetComposition(fleetDataCSVRow, fleetDataJson, fleetDataId, loadedFileInfo);
+        FleetComposition comp = new FleetComposition(fleetDataCSVRow, fleetDataJson, fleetDataId, loadedFileInfo, modId);
         FLEET_DATA.put(fleetDataId, comp);
     }
 

@@ -92,7 +92,7 @@ public class FleetComposition {
     }
 
     // constuct from json
-    public FleetComposition(JSONObject fleetDataCSVRow, JSONObject fleetDataJson, String dataId, String loadedFileInfo) throws Exception, IOException
+    public FleetComposition(JSONObject fleetDataCSVRow, JSONObject fleetDataJson, String dataId, String loadedFileInfo, String modId) throws Exception, IOException
     {
         id = dataId;
 
@@ -177,7 +177,7 @@ public class FleetComposition {
         partitions = new FleetPartition[fleetPartitionsData.length()];
         for(int i = 0; i < fleetPartitionsData.length(); i++) {
             final JSONObject partitionData = fleetPartitionsData.getJSONObject(i);
-            partitions[i] = new FleetPartition(partitionData, loadedFileInfo, i);
+            partitions[i] = new FleetPartition(partitionData, loadedFileInfo, i, modId);
             partitionWeightSum += partitions[i].partitionWeight;
         }
 
@@ -208,6 +208,10 @@ public class FleetComposition {
                 if(amount < 0) {
                     throw new Exception(loadedFileInfo + " has invalid number in its \"alwaysInclude\" field");
                 }
+                if(Global.getSettings().getVariant(key) == null && ModdedVariantsData.addVariantToStore(key, modId)) {
+                    throw new Exception(loadedFileInfo + "has unrecognized variant \"" + key + " in \"alwaysInclude\" field");
+                }
+
                 alwaysInclude.add(new AlwaysBuildMember(key, amount));
             }
             alwaysInclude.trimToSize();

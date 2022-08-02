@@ -139,9 +139,9 @@ public class VariantData {
                         "\" appears twice in " + CommonStrings.VARIANT_TAGS_CSV_PATH);
                     }
     
-                    if(Global.getSettings().getVariant(variantId) == null) {
-                        throw new Exception(CommonStrings.MOD_ID + ": the variant \"" + variantId + 
-                        "\" listed in the file " + CommonStrings.VARIANT_TAGS_CSV_PATH + " is not a recognized variant");
+                    if(Global.getSettings().getVariant(variantId) == null && !ModdedVariantsData.VARIANTS.containsKey(variantId)) {
+                        log.debug(CommonStrings.MOD_ID + ": WARNING, the variant \"" + variantId + 
+                        "\" listed in the file " + CommonStrings.VARIANT_TAGS_CSV_PATH + " is not loaded");
                     }
     
                     String officerSpecRaw = row.optString(CSV_SECOND_COLUMN_NAME);

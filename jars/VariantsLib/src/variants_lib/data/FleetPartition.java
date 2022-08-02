@@ -29,7 +29,7 @@ public class FleetPartition {
     }
 
     // loadedFileInfo and index is just data for throwing descriptive error messages
-    public FleetPartition(JSONObject partitionData, String loadedFileInfo, int index) throws Exception
+    public FleetPartition(JSONObject partitionData, String loadedFileInfo, int index, String modId) throws Exception
     {
         // read "partitionWeight"
         try {
@@ -56,7 +56,7 @@ public class FleetPartition {
         while(keys.hasNext()) {
             String key = (String) keys.next();
             if(!key.equals(PARTITION_WEIGHT) && !key.equals(VARIANTS)) {
-                if(Global.getSettings().getVariant(key) == null) {
+                if(Global.getSettings().getVariant(key) == null && ModdedVariantsData.addVariantToStore(key, modId)) {
                     throw new Exception(loadedFileInfo + " fleet partion " + index + " has unrecognised variant \"" + key + "\"");
                 }
 

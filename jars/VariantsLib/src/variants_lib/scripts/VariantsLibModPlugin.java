@@ -10,6 +10,7 @@ import variants_lib.data.FactionData;
 import variants_lib.data.FleetBuildData;
 import variants_lib.data.FleetComposition;
 import variants_lib.data.FleetPartition;
+import variants_lib.data.ModdedVariantsData;
 import variants_lib.data.SettingsData;
 import variants_lib.data.VariantData;
 
@@ -32,14 +33,18 @@ public class VariantsLibModPlugin extends BaseModPlugin {
         SettingsData.loadSettings();
         log.debug(CommonStrings.MOD_ID + ": loading faction data");
         FactionData.loadData();
-        log.debug(CommonStrings.MOD_ID + ": loading variant data");
-        VariantData.loadData();
+        // somewhat important for FleetBuildData to be loaded before VariantData
         log.debug(CommonStrings.MOD_ID + ": loading fleet build data");
         FleetBuildData.loadData();
+        log.debug(CommonStrings.MOD_ID + ": loading variant data");
+        VariantData.loadData();
 
         //for(FleetComposition part : FleetBuildData.FLEET_DATA.values()) {
         //    log.debug(part.toString());
         //}
+        //log.debug("load test");
+        //log.debug(ModdedVariantsData.addShipToStore("afflictor_d_pirates_Strike_test", CommonStrings.MOD_ID));
+        //log.debug(ModdedVariantsData.VARIANTS.get("afflictor_d_pirates_Strike_test").getHullVariantId());
     }
 
     @Override
