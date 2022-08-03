@@ -1,4 +1,5 @@
 {
+	"requiredMods":["unbetter_variants", "super_cool_mod"],
 	"fleetDataId":"bv_smod_test",
 	"spawnWeight":10.0,
 	"minDP":40,

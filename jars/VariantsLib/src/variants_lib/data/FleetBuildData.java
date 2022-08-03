@@ -1,7 +1,7 @@
 package variants_lib.data;
 
 import java.util.HashMap;
-
+import java.util.List;
 import java.io.IOException;
 
 import org.json.JSONArray;
@@ -11,6 +11,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.ModManagerAPI;
 import com.fs.starfarer.api.ModSpecAPI;
 
 import variants_lib.scripts.FleetEditingScript;
@@ -55,7 +56,7 @@ public class FleetBuildData {
     public static void loadFleetJson(String fileName, String modId, JSONObject fleetDataCSVRow) throws Exception, IOException
     {
         // for error messages
-        String loadedFileInfo = CommonStrings.MOD_ID + ":the file \"" + fileName + "\" from the mod \"" + modId + "\"";
+        String loadedFileInfo = CommonStrings.MOD_ID + ": the file \"" + fileName + "\" from the mod \"" + modId + "\"";
 
         // load the json
         log.debug("trying to read " + fileName + " from " + modId);
@@ -74,8 +75,27 @@ public class FleetBuildData {
             throw new Exception(CommonStrings.MOD_ID + ": more than one fleets have the fleetDataId \"" + fleetDataId + "\"");
         }
 
-        FleetComposition comp = new FleetComposition(fleetDataCSVRow, fleetDataJson, fleetDataId, loadedFileInfo, modId);
-        FLEET_DATA.put(fleetDataId, comp);
+        // check whether to load the fleet
+        String[] requiredMods = getStringArray("requiredMods", loadedFileInfo, fleetDataJson);
+        boolean shouldLoad = false;
+        if(requiredMods == null) {
+            shouldLoad = true;
+        } else {
+            shouldLoad = true;
+            for(String id : requiredMods) {
+                if(!Global.getSettings().getModManager().isModEnabled(id)) {
+                    shouldLoad = false;
+                    break;
+                }
+            }
+        }
+
+        if(shouldLoad) {
+            FleetComposition comp = new FleetComposition(fleetDataCSVRow, fleetDataJson, fleetDataId, loadedFileInfo, modId);
+            FLEET_DATA.put(fleetDataId, comp);
+        } else {
+            log.debug(loadedFileInfo + " was not loaded due to unenabled required mods");
+        }
     }
 
     public static void loadData() throws Exception, IOException
@@ -105,6 +125,31 @@ public class FleetBuildData {
                 }
             }
         }
+    }
+
+    private static String[] getStringArray(String key, String loadedFileInfo, JSONObject json) throws Exception
+    {
+        JSONArray jsonArr = null;
+        try {
+            jsonArr = json.getJSONArray(key);
+        } catch(Exception e) {
+            log.debug(loadedFileInfo + " could not have its \"" + key + "\" field read, set to null");
+            jsonArr = null;
+        }
+        if(jsonArr == null) {
+            return null;
+        }
+
+        String[] strArr = new String[jsonArr.length()];
+        for(int i = 0; i < jsonArr.length(); i++) {
+            try {
+                strArr[i] = jsonArr.getString(i);
+            } catch(Exception e) {
+                log.debug(loadedFileInfo + " had error while reading its \"" + key + "\" field read, set to null");
+                return null;
+            }
+        }
+        return strArr;
     }
     
     private FleetBuildData() {} // do nothing
