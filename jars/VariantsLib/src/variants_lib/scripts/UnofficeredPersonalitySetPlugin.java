@@ -14,6 +14,7 @@ import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 import variants_lib.data.CommonStrings;
 import variants_lib.data.FleetBuildData;
+import variants_lib.data.SettingsData;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -74,6 +75,10 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin {
 
     @Override
     public void init(CombatEngineAPI combatEngine) {
+        if(!SettingsData.personalitySetEnabled()) {
+            return;
+        }
+
         CampaignFleetAPI enemyFleet = null;
         String fleetWidePersonality = null;
 

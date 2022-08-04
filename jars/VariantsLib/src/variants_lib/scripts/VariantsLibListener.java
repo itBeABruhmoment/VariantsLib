@@ -24,6 +24,10 @@ public class VariantsLibListener extends BaseCampaignEventListener{
     @Override
     public void reportPlayerEngagement(EngagementResultAPI result)
     {
+        if(!SettingsData.personalitySetEnabled()) {
+            return;
+        }
+
         log.debug("resetting faction aggressions");
         BattleAPI battle = result.getBattle();
         for(CampaignFleetAPI fleet : battle.getNonPlayerSide()) {

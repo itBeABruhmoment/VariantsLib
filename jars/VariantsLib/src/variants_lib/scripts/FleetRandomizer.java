@@ -101,13 +101,16 @@ public class FleetRandomizer {
         }
 
         // edit ships in fleet
-        String fleetCompId = FleetBuilding.editFleet(fleet);
-        if(fleetCompId != null) {
-            fleet.getMemoryWithoutUpdate().set(CommonStrings.FLEET_VARIANT_KEY, fleetCompId);
+        String fleetCompId = null;
+        if(SettingsData.fleetEditingEnabled()) {
+            fleetCompId = FleetBuilding.editFleet(fleet);
+            if(fleetCompId != null) {
+                fleet.getMemoryWithoutUpdate().set(CommonStrings.FLEET_VARIANT_KEY, fleetCompId);
+            }
         }
 
         // manage no autofit stuff
-        if(!SettingsData.autofitEnabled()
+        if(SettingsData.noAutofitFeaturesEnabled()
         && FactionData.FACTION_DATA.get(factionId) != null 
         && FactionData.FACTION_DATA.get(factionId).hasTag(CommonStrings.NO_AUTOFIT_TAG)) {
             float quality = 1.0f;

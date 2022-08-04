@@ -13,6 +13,8 @@ import com.fs.starfarer.api.ModSpecAPI;
 
 import variants_lib.scripts.FleetEditingScript;
 
+// TODO: finish merging features
+
 // loads settings for this mod
 public class SettingsData {
     private static final Logger log = Global.getLogger(variants_lib.data.SettingsData.class);
@@ -20,14 +22,39 @@ public class SettingsData {
         log.setLevel(Level.ALL);
     }
 
+    private static int maxShipsInAIFleet = 30;
+    private static int maxOfficersInAIFleet = 10;
     private static boolean enableAutofit = false;
     private static float specialFleetSpawnMult = 1.0f;
     private static boolean enableOfficerEditing = true;
+    private static boolean enableFleetEditing = true;
+    private static boolean enablePersonalitySet = true;
     public static HashMap<String, FleetEditingScript> universalPreModificationScripts = new HashMap<>();
     public static HashMap<String, FleetEditingScript> universalPostModificationScripts = new HashMap<>();
 
     public static void loadSettings() throws Exception
     {
+        log.debug("getting important settings from base game settings");
+        JSONObject vanillaGameSettings = null;
+        try {
+            vanillaGameSettings = Global.getSettings().getSettingsJSON();
+        } catch(Exception e) {
+            log.debug("vanilla settings could not be loaded, setting max ships and officers in fleet to default values");
+        }
+        if(vanillaGameSettings != null) {
+            try {
+                maxOfficersInAIFleet = vanillaGameSettings.getInt("maxShipsInAIFleet");
+            } catch(Exception e) {
+                maxShipsInAIFleet = 30;
+                log.debug("could not read maxShipsInAIFleet field, set to 30");
+            }
+            try {
+                maxOfficersInAIFleet = vanillaGameSettings.getInt("maxOfficersInAIFleet");
+            } catch(Exception e) {
+                log.debug("could not read maxOfficersInAIFleet field, set to 10");
+            }
+        }
+
         final JSONObject settings;
         try {
             settings = Global.getSettings().loadJSON(CommonStrings.SETTINGS_FILE_NAME, CommonStrings.MOD_ID);
@@ -36,9 +63,9 @@ public class SettingsData {
         }
 
         try {
-            enableAutofit = settings.getBoolean("enableAutofit");
+            enableAutofit = settings.getBoolean("enableNoAutofitFeatures");
         } catch(Exception e) {
-            throw new Exception(CommonStrings.MOD_ID + "failed to read \"enableAutofit\" in " + CommonStrings.SETTINGS_FILE_NAME);
+            throw new Exception(CommonStrings.MOD_ID + "failed to read \"enableNoAutofitFeatures\" in " + CommonStrings.SETTINGS_FILE_NAME);
         }
 
         try {
@@ -71,6 +98,43 @@ public class SettingsData {
             if(settingsJson == null) {
                 continue;
             }
+
+            boolean noAuto = true;
+            try {
+                noAuto = settingsJson.getBoolean("enableNoAutofitFeatures");
+            } catch(Exception e) {
+                noAuto = true;
+                log.debug("enableNoAutofitFeatures field could not be read setting to default");
+            }
+            // merge so that one mod disabling it disables the feature
+            enableAutofit = enableAutofit && noAuto;
+
+            boolean officerEdit = true;
+            try {
+                officerEdit = settingsJson.getBoolean("enableOfficerEditing");
+            } catch(Exception e) {
+                officerEdit = true;
+                log.debug("enableOfficerEditing field could not be read setting to default");
+            }
+            enableOfficerEditing = enableOfficerEditing && officerEdit;
+
+            boolean fleetEdit = true;
+            try {
+                fleetEdit = settingsJson.getBoolean("enableFleetEditing");
+            } catch(Exception e) {
+                fleetEdit = true;
+                log.debug("enableFleetEditing field could not be read setting to default");
+            }
+            enableFleetEditing = enableFleetEditing && fleetEdit;
+
+            boolean personalitySet = true;
+            try {
+                personalitySet = settingsJson.getBoolean("enableDefaultPersonalitySetting");
+            } catch(Exception e) {
+                personalitySet = true;
+                log.debug("enableDefaultPersonalitySetting field could not be read setting to default");
+            }
+            enablePersonalitySet = enablePersonalitySet && personalitySet;
 
             JSONArray universalPreModificationScriptsArr = null;
             try {
@@ -125,7 +189,7 @@ public class SettingsData {
         return enableOfficerEditing;
     }
 
-    public static boolean autofitEnabled()
+    public static boolean noAutofitFeaturesEnabled()
     {
         return enableAutofit;
     }
@@ -133,6 +197,26 @@ public class SettingsData {
     public static float getSpecialFleetSpawnMult()
     {
         return specialFleetSpawnMult;
+    }
+
+    public static int getMaxShipsInAIFleet()
+    {
+        return maxShipsInAIFleet;
+    }
+
+    public static int getMaxOfficersInAIFleet()
+    {
+        return maxShipsInAIFleet;
+    }
+
+    public static boolean fleetEditingEnabled()
+    {
+        return enableFleetEditing;
+    }
+
+    public static boolean personalitySetEnabled()
+    {
+        return enablePersonalitySet;
     }
 
     SettingsData() {} // do nothing
