@@ -1,0 +1,92 @@
+{
+	# mods that need to be enabled for this file to be loaded. Use this if the fleet contains 
+	# content from other mods
+	#DEFAULT: no mods. The fleet is always loaded
+	"requiredMods":["variants_lib"],
+	
+	# String used to identify this fleet variant. Must be unique
+	"fleetDataId":"example_fleet", 
+	# minimum dp of fleet to be edited to this fleet variant
+	"minDP":70, 
+	# maximum dp of fleet to be edited to this fleet variant
+	"maxDP":400, 
+	# Personality unofficered ships in this fleet will have in combat
+	# DEFAULT: the factions officer agressiveness specified in doctrine
+	"defaultFleetWidePersonality":"aggressive", 
+	# commander skills that will be added to the fleet's captain
+	# DEFAULT: no additional skills
+	"additionalCommanderSkills":["support_doctrine"], 
+	# variants and their amount to always add to fleets of this type
+	# DEFAULT: no additional ships
+	"alwaysInclude":{"ox_Standard":2, "atlas_Standard":1},
+
+	# a script that will be run after a fleet of this type is spawned
+	# the script must implement the interface variants_lib.scripts.FleetEditingScript
+	# scripts are run in the order that they are listed here
+	# DEFAULT: no scripts
+	"postModificationScripts":["variants_lib.scripts.FleetEditingScriptTest"],
+
+	# Specify what portion of the fleet's dp should be dedicated to different types of ships
+	# Based on how the fleet generation system works, it's best to have ships with similar dp 
+	# in each partition and have the higher average dp partitions before lower dp ones
+	"fleetPartitions":[
+		# a partition
+		{
+			# specifies the portion of the fleets dp that will be occupied by ships in this partition
+			# so partitionWeight / sumOfAllPartitonWeights will be dedicated to ships in this partition
+			# any unused dp is given to be used by the next partiton down
+			"partitionWeight":30,
+			# list of variants in the partition and their respective weights
+			# each variant has a variantWeight / sumOfAllVariantWeightsInThisPartition chance of spawning
+			# note that spawning probablities can be skewed if some variants can't be spawned with the partitions allotted dp
+			"variants":{
+				"onslaught_xiv_Elite":50.00,
+				"onslaught_Elite":50.00,
+			}
+		},
+		# another partition
+		{
+			"partitionWeight":40,
+			"variants":{
+				"dominator_AntiCV":13.16,
+				"dominator_Assault":13.16,
+				"dominator_Support":13.16,
+				"dominator_Outdated":13.16,
+				"eagle_Assault":7.89,
+				"eagle_xiv_Elite":18.42,
+				"mora_Assault":10.53,
+				"mora_Strike":10.53,
+			}
+		},
+		{
+			"partitionWeight":20,
+			"variants":{
+				"falcon_xiv_Elite":20.00,
+				"enforcer_Assault":20.00,
+			}
+		},
+		{
+			"partitionWeight":2,
+			"variants":{
+				"hound_Standard":100.00,
+			}
+		},
+		{
+			"partitionWeight":3,
+			"variants":{
+				# ghetto way of spawning logistics of appropriate size
+				"colossus_Standard":10,
+				"atlas_Standard":100,
+				"buffalo_hegemony_Standard":1,
+			}
+		},
+		{
+			"partitionWeight":3,
+			"variants":{
+				"phaeton_Standard":1,
+				"prometheus_Super":100,
+			}
+		},
+	],
+}
+
