@@ -3,6 +3,9 @@ package variants_lib.scripts.fleetedit;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
+
+import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Collections;
@@ -10,16 +13,21 @@ import java.util.Collections;
 import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.fleet.RepairTrackerAPI;
 import com.fs.starfarer.api.impl.campaign.DModManager;
+import com.fs.starfarer.api.impl.campaign.events.OfficerManagerEvent;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.campaign.FactionAPI;
+import com.fs.starfarer.api.campaign.FactionDoctrineAPI;
 
 import variants_lib.data.AlwaysBuildMember;
+import variants_lib.data.CommonStrings;
 import variants_lib.data.FactionData;
 import variants_lib.data.FleetBuildData;
 import variants_lib.data.FleetComposition;
 import variants_lib.data.FleetPartition;
 import variants_lib.data.FleetPartitionMember;
+import variants_lib.data.SettingsData;
 import variants_lib.data.VariantData;
 import variants_lib.data.FactionData.FactionConfig;
 import variants_lib.data.VariantData.VariantDataMember;
@@ -30,6 +38,7 @@ import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.campaign.FleetDataAPI;
 import com.fs.starfarer.api.campaign.FleetInflater;
+import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -523,6 +532,154 @@ public class FleetBuilding {
         {
             return "cap: " + captain + " officers: " + officers + " DP: " + originalDP + " smods: " + averageSmods;
         }
+    }
+
+    public static class VariantsLibFleetParams 
+    {
+        String fleetName;
+        String faction;
+        String fleetType; // String to store under the memkey $fleetType
+        String fleetDataId;
+        int fleetPoints;
+        float quality; // 0.0f being max dmods, 1.0f being the least
+        float averageSmods;
+        int numOfficers;
+        float averageOfficerLevel;
+        PersonAPI commander;
+        boolean enableAutofit;
+        boolean enableOfficerEditing;
+        boolean runAssociatedScripts; // whether to run the fleets post modification scripts
+
+        public VariantsLibFleetParams(String FleetName, String Faction, String FleetType, String FleetDataId, int FleetPoints, float Quality, float AverageSmods,
+            int NumOfficers, float AverageOfficerLevel, PersonAPI Commander, boolean EnableAutofit, boolean EnableOfficerEditing, 
+            boolean RunAssociatedScripts) {
+            fleetName = FleetName;
+            faction = Faction;
+            fleetType = FleetType;
+            fleetDataId = FleetDataId;
+            fleetPoints = FleetPoints;
+            quality = Quality;
+            averageSmods = AverageSmods;
+            numOfficers = NumOfficers;
+            averageOfficerLevel = AverageOfficerLevel;
+            commander = Commander;
+            enableAutofit = EnableAutofit;
+            enableOfficerEditing = EnableOfficerEditing;
+            runAssociatedScripts = RunAssociatedScripts;
+        }
+
+        public VariantsLibFleetParams(String FleetName, String Faction, String FleetType, String FleetDataId, int FleetPoints, float Quality, float AverageSmods,
+            int NumOfficers, float AverageOfficerLevel, boolean EnableAutofit, boolean EnableOfficerEditing, boolean RunAssociatedScripts) {
+            fleetName = FleetName;
+            faction = Faction;
+            fleetType = FleetType;
+            fleetDataId = FleetDataId;
+            fleetPoints = FleetPoints;
+            quality = Quality;
+            averageSmods = AverageSmods;
+            numOfficers = NumOfficers;
+            averageOfficerLevel = AverageOfficerLevel;
+            enableAutofit = EnableAutofit;
+            enableOfficerEditing = EnableOfficerEditing;
+            runAssociatedScripts = RunAssociatedScripts;
+
+            commander = OfficerManagerEvent.createOfficer(Global.getSector().getFaction(faction), Math.round(averageOfficerLevel));
+        }
+
+        /*
+        // auto generates officer related fields based on faction's doctrine
+        VariantsLibFleetParams(String FleetName, String Faction, String FleetType, String FleetDataId, int FleetPoints, float Quality, float AverageSmods,
+        boolean EnableAutofit, boolean EnableOfficerEditing, boolean RunAssociatedScripts) {
+            fleetName = FleetName;
+            faction = Faction;
+            fleetType = FleetType;
+            fleetDataId = FleetDataId;
+            fleetPoints = FleetPoints;
+            quality = Quality;
+            averageSmods = AverageSmods;
+            enableAutofit = EnableAutofit;
+            enableOfficerEditing = EnableOfficerEditing;
+            runAssociatedScripts = RunAssociatedScripts;
+
+            // 140 / 19
+            // dubious auto generation based on a sample size of 2
+            // max quality: 7 / 10 ships officered all level 5 and level 7 commander
+            // min quality: 8 / 23 ships officered mix of 3's 4's and 5's
+            FactionDoctrineAPI doctrine = Global.getSector().getFaction(faction).getDoctrine();
+            int officerQulity = doctrine.getOfficerQuality();
+            numOfficers = Math.round((0.8825f * quality + 0.25875f) * SettingsData.getMaxOfficersInAIFleet());
+            if(numOfficers > SettingsData.getMaxOfficersInAIFleet()) {
+                numOfficers = SettingsData.getMaxOfficersInAIFleet();
+            }
+        }
+        */
+    }
+
+    public static CampaignFleetAPI createFleet(VariantsLibFleetParams params)
+    {
+        int numOfficers = params.numOfficers;
+
+        log.debug("flag1");
+        float averageOfficerLevel = params.averageOfficerLevel;
+        if(averageOfficerLevel < 1.0f) {
+            averageOfficerLevel = 1.0f;
+        } else if(averageOfficerLevel > 10.0f) {
+            averageOfficerLevel = 10.0f;
+        }
+
+        FactionAPI faction = Global.getSector().getFaction(params.faction);
+
+        log.debug("flag2");
+        Vector<PersonAPI> officers = new Vector<>();
+        for(int i = 0; i < numOfficers; i++) {
+            int level = Math.round(averageOfficerLevel + (rand.nextFloat() - 0.5f));
+            if(level < 1) {
+                level = 1;
+            } else if(level > 10) {
+                level = 10;
+            }
+            officers.add(OfficerManagerEvent.createOfficer(faction, level));
+        }
+
+        log.debug("flag3");
+        FleetInfo buildData = new FleetInfo(params.commander, officers, params.fleetPoints, 
+            new Vector<FleetMemberAPI>(), false, params.averageSmods);
+
+        log.debug("flag4");
+        CampaignFleetAPI fleet = Global.getFactory().createEmptyFleet(params.faction, params.fleetName, true);
+        FleetComposition comp = FleetBuildData.FLEET_DATA.get(params.fleetDataId);
+        createFleet(fleet, buildData, comp);
+        FleetBuilding.addDmods(fleet, params.quality);
+        if(params.enableAutofit) {
+            fleet.setInflated(false);
+            if(fleet.getInflater() != null) {
+                fleet.getInflater().setQuality(params.quality);
+            }
+        } else {
+            addDmods(fleet, params.quality);
+            fleet.setInflated(true);
+        }
+        if(params.enableOfficerEditing) {
+            OfficerEditing.editAllOfficers(fleet, params.fleetDataId);
+        }
+        setProperCr(fleet);
+
+        log.debug("flag5");
+        // run any post modification scripts
+        if(params.runAssociatedScripts && comp.postModificationScripts != null) {
+            for(String scriptPath : comp.postModificationScripts) {
+                FleetBuildData.SCRIPTS.get(scriptPath).run(fleet);
+            }
+        }
+
+        log.debug("flag6");
+        fleet.setName(params.fleetName);
+        MemoryAPI fleetMemory = fleet.getMemoryWithoutUpdate();
+        fleetMemory.set(CommonStrings.FLEET_EDITED_MEMKEY, true);
+        fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, params.fleetDataId);
+        fleetMemory.set(MemFlags.MEMORY_KEY_FLEET_TYPE, params.fleetType);
+        
+        return fleet;
     }
 
     private FleetBuilding() {} // do nothing

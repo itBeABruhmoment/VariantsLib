@@ -48,4 +48,31 @@ public class TestCode {
         Global.getSector().addPing(toSpawn, "danger");
         FleetBuilding.editFleet(toSpawn, "bv_smod_test", 2.0);
     }
+
+    // runcode variants_lib.scripts.TestCode.spawnFleet();
+    public static void spawnFleet()
+    {
+        FleetBuilding.VariantsLibFleetParams params = new FleetBuilding.VariantsLibFleetParams(
+            "fleet",
+            "hegemony",
+            FleetTypes.PATROL_LARGE,
+            "bv_hegemony_lowtech",
+            200,
+            1.0f,
+            0.0f,
+            8,
+            5.0f,
+            false,
+            true,
+            true
+        );
+
+        CampaignFleetAPI toSpawn = FleetBuilding.createFleet(params);
+
+        // Spawn fleet around player
+        final Vector2f offset = new Vector2f(0, 0);
+        Global.getSector().getCurrentLocation().spawnFleet(
+                Global.getSector().getPlayerFleet(), offset.x, offset.y, toSpawn);
+        Global.getSector().addPing(toSpawn, "danger");
+    }
 }
