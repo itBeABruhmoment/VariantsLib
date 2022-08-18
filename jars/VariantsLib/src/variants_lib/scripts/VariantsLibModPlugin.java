@@ -1,6 +1,8 @@
 package variants_lib.scripts;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
@@ -25,6 +27,33 @@ public class VariantsLibModPlugin extends BaseModPlugin {
     static {
         log.setLevel(Level.ALL);
     }
+
+    /*
+    //this doesn't want to work, probably because it uses reflection
+    @Override
+    public void onDevModeF8Reload() {
+        try {
+            //log.debug(CommonStrings.MOD_ID + ": loading settings");
+            //SettingsData.loadSettings();
+            //log.debug(CommonStrings.MOD_ID + ": loading faction data");
+            //FactionData.loadData();
+            // somewhat important for FleetBuildData to be loaded before VariantData
+            //log.debug(CommonStrings.MOD_ID + ": loading fleet build data");
+            //FleetBuildData.loadData();
+            //log.debug(CommonStrings.MOD_ID + ": loading variant data");
+            VariantData.loadData();
+        } catch(Exception e) {
+            //log.debug(CommonStrings.MOD_ID + ": failed to reload variants lib data");
+            //log.debug(e.getMessage());
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String sStackTrace = sw.toString();
+            //log.debug(sStackTrace);
+        }
+    }
+    */
+    
 
     @Override
     public void onApplicationLoad() throws IOException, JSONException, Exception

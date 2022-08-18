@@ -1,0 +1,97 @@
+command,class,tags,syntax,help
+vlSpawnFleet,variants_lib.console.vlSpawnFleet,,vlSpawnFleet <faction> <fleetId> <fleet points>,"spawns a variants lib fleet by faction, fleet id, and fleet points"
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+,,,,
+Help,org.lazywizard.console.commands.Help,"core,console",help [optionalCommand],"Shows a list of all commands, or the details on using a specific command if one is entered as an argument."
+Hide,org.lazywizard.console.commands.Hide,"core,cheat,campaign",hide (no arguments),Makes your fleet invisible to other fleets.
+Home,org.lazywizard.console.commands.Home,"core,cheat,campaign",home (no arguments),Teleports the player to their home location.\nHome location is set with the 'sethome' command.
+InfiniteAmmo,org.lazywizard.console.commands.InfiniteAmmo,"core,cheat,combat",infiniteammo [optionalTarget],"Toggles infinite ship system and weapon ammunition. Valid arguments are PLAYER, FLEET, ENEMY, ALL. Target defaults to PLAYER if no argument is entered."
+InfiniteCR,org.lazywizard.console.commands.InfiniteCR,"core,cheat,combat",infinitecr [optionalTarget],"Toggles CR degradation in combat. Valid arguments are PLAYER, FLEET, ENEMY, ALL. Target defaults to PLAYER if no argument is entered."
+InfiniteFuel,org.lazywizard.console.commands.InfiniteFuel,"core,cheat,campaign",infinitefuel (no arguments),Toggles infinite fuel for your fleet. Buying/selling and quest rewards still function normally.
+InfiniteFlux,org.lazywizard.console.commands.InfiniteFlux,"core,cheat,combat",infiniteflux [optionalTarget],"Toggles infinite flux. Valid arguments are PLAYER, FLEET, ENEMY, ALL. Target defaults to PLAYER if no argument is entered."
+InfiniteSupplies,org.lazywizard.console.commands.InfiniteSupplies,"core,cheat,campaign",infinitesupplies (no arguments),Toggles infinite supplies for your fleet. Buying/selling and quest rewards still function normally.
+Jump,org.lazywizard.console.commands.Jump,"core,cheat,campaign",jump <system>,Teleports your fleet to the specified system. You will be brought to that system's star (if it has one). If you want to travel to a specific token you should chain 'goto' after this command. The argument 'home' will function identically to the 'home' command.
+Kill,org.lazywizard.console.commands.Kill,"core,cheat,campaign,combat",kill (no arguments),"Kills the target of the currently piloted ship. If used in the campaign, enters a mode where any fleet you click on is instantly destroyed (press escape to cancel). Kills in campaign mode are not credited to the player."
+List,org.lazywizard.console.commands.List_,"core,console",list ships|variants|wings|weapons|items|specials|factions|bases|systems|planets|stations|markets|conditions|industries|officers|aliases|commands|mods [optionalFilter],"Lists all internal IDs of a specific category for use with this mod's commands. Results can be further refined by adding a second argument to restrict results to IDs that contain the entered filter.\nValid categories: ships, variants, wings, weapons, items, specials, factions, bases, systems, planets, stations, markets, conditions, industries, officers, aliases, commands, mods"
+ModInfo,org.lazywizard.console.commands.ModInfo,"core,console",modinfo <modId>,"Shows information about a mod, such as what you'd find in its mod_info.json, whether it is enabled or not, and what ships, wings and weapons it adds."
+NoCooldown,org.lazywizard.console.commands.NoCooldown,"core,cheat,combat",nocooldown [optionalTarget],"Toggles ship system and weapon cooldowns. Valid arguments are PLAYER, FLEET, ENEMY, ALL. Target defaults to PLAYER if no argument is entered."
+Nuke,org.lazywizard.console.commands.Nuke,"core,cheat,combat",nuke (no arguments),Destroys all enemies on the battle map. All kills will be credited to the player.
+OpenMarket,org.lazywizard.console.commands.OpenMarket,"core,cheat,campaign",openmarket <marketId>,Opens a market's interaction dialog after you close the console.
+PlanetList,org.lazywizard.console.commands.PlanetList,"core,cheat,campaign",planetlist [optionalFilter],Displays a list of planets in the sector.
+Reload,org.lazywizard.console.commands.ReloadConsole,"core,console",reload (no arguments),Reloads all console commands and settings.
+RemoveCondition,org.lazywizard.console.commands.RemoveCondition,"core,cheat,market",removecondition <conditionId>,Removes a condition from a market.\nUse without arguments to list all existing conditions of the current market.
+RemoveHulks,org.lazywizard.console.commands.RemoveHulks,"core,combat",removehulks (no arguments),Destroys all hulks on the battle map. This will affect loot and ship recovery after the battle is over!
+RemoveIndustry,org.lazywizard.console.commands.RemoveIndustry,"core,cheat,market",removeindustry <industryId>,Removes an industry from a market.\nUse without arguments to list all existing industries of the current market.
+RemoveSubmarket,org.lazywizard.console.commands.RemoveSubmarket,"core,cheat,market",removesubmarket <submarketId>,Removes a submarket from a market.\nUse without arguments to list all existing submarkets of the current market.
+Repair,org.lazywizard.console.commands.Repair,"core,cheat,campaign,combat",repair (no arguments),"Repairs all friendly ships on the battle map if used in combat, or all ships in your fleet on the campaign map."
+Respec,org.lazywizard.console.commands.Respec,"core,cheat,campaign",respec [optionalOfficerNameOrNumber],"Resets skills and attributes to zero and refunds all spent points. If an argument is entered, respecs that officer. Use 'list officers' for a list of respeccable officers in your fleet."
+Reveal,org.lazywizard.console.commands.Reveal,"core,cheat,campaign,combat",reveal (no arguments),"Toggles fog of war on the battle map, or gives infinite sensor range on the campaign map."
+Rout,org.lazywizard.console.commands.Rout,"core,cheat,combat",rout (no arguments),Forces the enemy side to order a full retreat.
+RunCode,org.lazywizard.console.commands.RunCode,"core,console",runcode <line of code>,"Compiles and runs a line of code. Compilation is done using the Janino library, so some Java language features such as generics are not supported. This command has access to most API and LazyLib classes, and does not accept return statements."
+SetCommission,org.lazywizard.console.commands.SetCommission,"core,cheat,campaign",setcommission none|<faction>,"Sets the faction the player is commissioned to work for, or ends the current commission if \""none\"" is entered."
+#SetFaction,org.lazywizard.console.commands.SetFaction,"core,cheat,campaign",setfaction <factionId>,Changes the player's faction to whichever faction is entered. Game stability after using this command is not guaranteed!
+SetHome,org.lazywizard.console.commands.SetHome,"core,cheat,campaign",sethome [optionalHome],"Sets the point to be teleported to with the 'home' command.\nIf an argument is entered, the command will try to find a token with that name in the system. Otherwise, it will select a nearby object (or raw coordinates if no valid station or planet is found)."
+SetMarketSize,org.lazywizard.console.commands.SetMarketSize,"core,cheat,market",setmarketsize (size),Sets the size of the current market. Market size must be a number between 1 and 10.
+SetRelation,org.lazywizard.console.commands.SetRelation,"core,cheat,campaign",setrelation all|<faction> [optionalTowardsFaction] <amount>,"Sets the relationship between two factions to the given number. If no second faction is entered, relationship with the player faction is affected. Faction relationships range between -100 and 100."
+Settings,org.lazywizard.console.ShowSettings,"core,console,campaign",settings (no arguments)|reset,Opens the console settings menu. Entering 'reset' as an argument will reset console settings to their defaults (requires an application restart to take effect).
+ShowAI,org.lazywizard.console.commands.ShowAI,"core,combat",showai (no arguments),"Toggles rendering of AI targets (ship target, maneuvering target, and mouse target) for all ships on the battle map."
+ShowBounds,org.lazywizard.console.commands.ShowBounds,"core,combat",showbounds (no arguments),"Toggles rendering of collision bounds, collision radius, and shield radius (if applicable) for all ships on the battle map."
+ShowLoc,org.lazywizard.console.commands.ShowLoc,"core,campaign,combat",showloc (no arguments),Shows the coordinates of your current location.
+SourceOf,org.lazywizard.console.commands.SourceOf,"core,console",sourceof <command>|all,"Shows what mod a specific command came from, or all commands' sources if all is entered."
+SpawnAsteroids,org.lazywizard.console.commands.SpawnAsteroids,"core,cheat,combat",spawnasteroids (no arguments),"Allows you to spawn asteroids at will. Click and drag to control their spawn position and starting velocity. Press 6-0 to select asteroid size, and spacebar to exit spawn mode."
+SpawnDerelict,org.lazywizard.console.commands.SpawnDerelict,"core,cheat,campaign",spawnderelict <hullId>,Spawns a recoverable floating derelict of the specified empty hull.
+SpawnFleet,org.lazywizard.console.commands.SpawnFleet,"core,cheat,campaign",spawnfleet <faction> <combatFP> [optionalName],"Spawns a patrol fleet near the player with the given fleet points worth of combat ships and affiliated with the specified faction. The fleet will be given bonus utility ships to match its size.\nNote: the fleets spawned with this command do not match vanilla fleet compositions, and this command should not be used to test faction doctrines!"
+Status,org.lazywizard.console.commands.Status,"core,console",status,Shows debug information about the console's current status.
+Storage,org.lazywizard.console.commands.Storage,"core,cheat,campaign",storage (no arguments)|set|clear|clear ships,"Opens the Abandoned Terraforming Platform's storage from anywhere in the campaign. If the ATP doesn't exist this command will try to find a market with an unlocked storage tab, or open player cargo instead as a last resort.\nStorage can be set manually by docking with a market with a storage tab and entering ""storage set"".\nEntering \""storage clear\"" will delete all stored cargo, and \""storage clear ships\"" will delete all stored ships."
+Suicide,org.lazywizard.console.commands.Suicide,"core,cheat,campaign,combat",suicide (no arguments),"Kills the currently piloted ship, or the entire player fleet if used on the campaign map."
+Survey,org.lazywizard.console.commands.Survey,"core,cheat,campaign",survey all|[optionalLocationId],"Fully surveys all markets in the specified location. If 'all' is passed in as an argument, surveys all systems. If no argument is passed in, surveys the current system."
+ToggleAI,org.lazywizard.console.commands.ToggleAI,"core,cheat,combat",toggleai [optionalTarget] on|off,"Toggles the AI of the selected ship. If a target type argument is passed in, you need to tell it whether to turn the AI on or off for all selected ships. Valid arguments are FLEET, ENEMY, or ALL for the target, and on or off for the enabled argument."
+Traitor,org.lazywizard.console.commands.Traitor,"core,cheat,combat",traitor (no arguments),Toggles the side the selected ship will fight for.
+,,,,
+#Test,org.lazywizard.console.testing.Test,core,test (variable),Personal command for quick prototyping. Don't bother uncommenting; it probably won't do anything interesting.
