@@ -619,7 +619,6 @@ public class FleetBuilding {
     {
         int numOfficers = params.numOfficers;
 
-        log.debug("flag1");
         float averageOfficerLevel = params.averageOfficerLevel;
         if(averageOfficerLevel < 1.0f) {
             averageOfficerLevel = 1.0f;
@@ -629,7 +628,6 @@ public class FleetBuilding {
 
         FactionAPI faction = Global.getSector().getFaction(params.faction);
 
-        log.debug("flag2");
         Vector<PersonAPI> officers = new Vector<>();
         for(int i = 0; i < numOfficers; i++) {
             int level = Math.round(averageOfficerLevel + (rand.nextFloat() - 0.5f));
@@ -641,11 +639,9 @@ public class FleetBuilding {
             officers.add(OfficerManagerEvent.createOfficer(faction, level));
         }
 
-        log.debug("flag3");
         FleetInfo buildData = new FleetInfo(params.commander, officers, params.fleetPoints, 
             new Vector<FleetMemberAPI>(), false, params.averageSmods);
 
-        log.debug("flag4");
         CampaignFleetAPI fleet = Global.getFactory().createEmptyFleet(params.faction, params.fleetName, true);
         FleetComposition comp = FleetBuildData.FLEET_DATA.get(params.fleetDataId);
         createFleet(fleet, buildData, comp);
@@ -664,7 +660,6 @@ public class FleetBuilding {
         }
         setProperCr(fleet);
 
-        log.debug("flag5");
         // run any post modification scripts
         if(params.runAssociatedScripts && comp.postModificationScripts != null) {
             for(String scriptPath : comp.postModificationScripts) {
@@ -672,7 +667,6 @@ public class FleetBuilding {
             }
         }
 
-        log.debug("flag6");
         fleet.setName(params.fleetName);
         MemoryAPI fleetMemory = fleet.getMemoryWithoutUpdate();
         fleetMemory.set(CommonStrings.FLEET_EDITED_MEMKEY, true);
