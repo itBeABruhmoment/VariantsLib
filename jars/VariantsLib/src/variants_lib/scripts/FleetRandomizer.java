@@ -17,6 +17,7 @@ import variants_lib.scripts.fleetedit.FleetBuilding;
 import variants_lib.scripts.fleetedit.OfficerEditing;
 
 import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflater;
+import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -118,9 +119,19 @@ public class FleetRandomizer {
                 quality = fleet.getInflater().getQuality();
             } catch(Exception e) {
                 quality = 1.0f;
-                log.debug("inflator not found, defauting quality to max");
+                log.debug("could not get quality defaulting to max");
+            }
+
+            float averageSMods = 0.0f;
+            try {
+                DefaultFleetInflaterParams params = (DefaultFleetInflaterParams)fleet.getInflater().getParams();
+                averageSMods = params.averageSMods;
+            } catch(Exception e) {
+                averageSMods = 0.0f;
+                log.debug("could not get average smods defaulting to none");
             }
             FleetBuilding.addDmods(fleet, quality);
+            FleetBuilding.addSmods(fleet, averageSMods);
             fleet.setInflated(true);
         }
 

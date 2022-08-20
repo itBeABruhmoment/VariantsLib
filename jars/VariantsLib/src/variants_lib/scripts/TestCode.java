@@ -60,7 +60,7 @@ public class TestCode {
             "bv_hegemony_lowtech",
             200,
             1.0f,
-            0.0f,
+            1.0f,
             8,
             5.0f,
             false,

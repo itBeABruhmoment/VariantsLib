@@ -110,50 +110,7 @@ public class FleetBuilding {
 
     private static FleetMemberAPI createShip(String variantId, FleetInfo info)
     {
-        FleetMemberAPI ship = Global.getFactory().createFleetMember(FleetMemberType.SHIP, variantId);
-
-        // add smods if necessary
-        int numSmodsToAdd = (int) Math.round(info.averageSmods + (rand.nextFloat() - 0.5));
-        if(numSmodsToAdd > 0) {
-            VariantDataMember variantData = VariantData.VARIANT_DATA.get(variantId);
-            if(variantData == null || variantData.smods.size() == 0) {
-                ShipVariantAPI variant  = ship.getVariant();
-                Collection<String> hullMods = variant.getNonBuiltInHullmods();
-                int start = rand.nextInt() & Integer.MAX_VALUE; // get positive int
-                start = start % FALLBACK_HULLMODS.length;
-                int numHullModsAdded = 0;
-                for(int i = 0; i < FALLBACK_HULLMODS.length && numHullModsAdded < numSmodsToAdd; i++) {
-                    int index = (start + i) % FALLBACK_HULLMODS.length;
-                    if(!hullMods.contains(FALLBACK_HULLMODS[index])) {
-                        variant.addPermaMod(FALLBACK_HULLMODS[index], true);
-                        numHullModsAdded++;
-                    }
-                }
-            } else {
-                ShipVariantAPI variant  = ship.getVariant();
-                Collection<String> hullMods = variant.getNonBuiltInHullmods();
-                int numSmodsAdded = 0;
-                while(numSmodsAdded < numSmodsToAdd && numSmodsAdded < variantData.smods.size()) {
-                    if(!hullMods.contains(variantData.smods.get(numSmodsAdded))) {
-                        variant.addPermaMod(variantData.smods.get(numSmodsAdded), true);
-                        numSmodsAdded++;
-                    }
-                }
-                // fill in remaining hullmods
-                hullMods = variant.getNonBuiltInHullmods();
-                int start = rand.nextInt() & Integer.MAX_VALUE; // get positive int
-                start = start % FALLBACK_HULLMODS.length;
-                for(int i = 0; i < FALLBACK_HULLMODS.length && numSmodsAdded < numSmodsToAdd; i++) {
-                    int index = (start + i) % FALLBACK_HULLMODS.length;
-                    if(!hullMods.contains(FALLBACK_HULLMODS[index])) {
-                        variant.addPermaMod(FALLBACK_HULLMODS[index], true);
-                        numSmodsAdded++;
-                    }
-                }
-
-            }
-        }
-        return ship;
+        return Global.getFactory().createFleetMember(FleetMemberType.SHIP, variantId);
     }
 
     private static double sumPartitionWeights(int start, FleetComposition fleetCompData)
@@ -286,7 +243,6 @@ public class FleetBuilding {
         float totalDp = 0;
         Vector<FleetMemberAPI> mothballedShips = new Vector<FleetMemberAPI>(5);
         int numShips = 0;
-        int numSMods = 0;
         boolean isStationFleet = false;
 
 
@@ -303,12 +259,10 @@ public class FleetBuilding {
                 officers.add(member.getCaptain());
                 totalDp += member.getBaseDeploymentCostSupplies();
                 numShips++;
-                numSMods += member.getVariant().getSMods().size();
             }
         }
 
-        return new FleetInfo(captain, officers, Math.round(totalDp), mothballedShips, 
-        isStationFleet, ((double)numSMods) / numShips);
+        return new FleetInfo(captain, officers, Math.round(totalDp), mothballedShips, isStationFleet);
     }
 
     // delete all members in fleet
@@ -411,6 +365,63 @@ public class FleetBuilding {
         }
     }
 
+    public static void addSmods(CampaignFleetAPI fleet, float averageSmods)
+    {
+        if(averageSmods < 0.01) {
+            return;
+        }
+        for(FleetMemberAPI ship : fleet.getMembersWithFightersCopy()) {
+            if(!ship.isFighterWing() && !ship.isStation() && !ship.isCivilian()) {
+                int numSmodsToAdd = (int) Math.round(averageSmods + (rand.nextFloat() - 0.5));
+                if(numSmodsToAdd < 1) {
+                    continue;
+                }
+
+                String variantId = VariantData.isRegisteredVariant(ship);
+                VariantDataMember variantData = null;
+                if(variantId != null) {
+                    variantData = VariantData.VARIANT_DATA.get(variantId);
+                }
+                
+                if(variantData == null || variantData.smods.size() == 0) {
+                    ShipVariantAPI variant  = ship.getVariant();
+                    Collection<String> hullMods = variant.getNonBuiltInHullmods();
+                    int start = rand.nextInt() & Integer.MAX_VALUE; // get positive int
+                    start = start % FALLBACK_HULLMODS.length;
+                    int numHullModsAdded = 0;
+                    for(int i = 0; i < FALLBACK_HULLMODS.length && numHullModsAdded < numSmodsToAdd; i++) {
+                        int index = (start + i) % FALLBACK_HULLMODS.length;
+                        if(!hullMods.contains(FALLBACK_HULLMODS[index])) {
+                            variant.addPermaMod(FALLBACK_HULLMODS[index], true);
+                            numHullModsAdded++;
+                        }
+                    }
+                } else {
+                    ShipVariantAPI variant  = ship.getVariant();
+                    Collection<String> hullMods = variant.getNonBuiltInHullmods();
+                    int numSmodsAdded = 0;
+                    while(numSmodsAdded < numSmodsToAdd && numSmodsAdded < variantData.smods.size()) {
+                        if(!hullMods.contains(variantData.smods.get(numSmodsAdded))) {
+                            variant.addPermaMod(variantData.smods.get(numSmodsAdded), true);
+                            numSmodsAdded++;
+                        }
+                    }
+                    // fill in remaining hullmods
+                    hullMods = variant.getNonBuiltInHullmods();
+                    int start = rand.nextInt() & Integer.MAX_VALUE; // get positive int
+                    start = start % FALLBACK_HULLMODS.length;
+                    for(int i = 0; i < FALLBACK_HULLMODS.length && numSmodsAdded < numSmodsToAdd; i++) {
+                        int index = (start + i) % FALLBACK_HULLMODS.length;
+                        if(!hullMods.contains(FALLBACK_HULLMODS[index])) {
+                            variant.addPermaMod(FALLBACK_HULLMODS[index], true);
+                            numSmodsAdded++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public static void addDmods(CampaignFleetAPI fleet, float quality)
     {
         // add dmods
@@ -478,7 +489,6 @@ public class FleetBuilding {
         log.debug("editing " + fleetAPI.getFullName());
 
         FleetInfo info = getInfo(fleetAPI);
-        info.averageSmods = averageSmods;
 
         if(info.isStationFleet) {
             log.debug("edit failed, station");
@@ -514,23 +524,21 @@ public class FleetBuilding {
         public int originalDP;
         public Vector<FleetMemberAPI> mothballedShips;
         public boolean isStationFleet;
-        public double averageSmods;
 
         public FleetInfo(PersonAPI Captain, Vector<PersonAPI> Officers, int TotalDp, 
-        Vector<FleetMemberAPI> MothballedShips, boolean IsStationFleet, double AverageSmods)
+        Vector<FleetMemberAPI> MothballedShips, boolean IsStationFleet)
         {
             captain = Captain;
             officers = Officers;
             originalDP = TotalDp;
             mothballedShips = MothballedShips;
             isStationFleet = IsStationFleet;
-            averageSmods = AverageSmods;
         }
 
         @Override
         public String toString()
         {
-            return "cap: " + captain + " officers: " + officers + " DP: " + originalDP + " smods: " + averageSmods;
+            return "cap: " + captain + " officers: " + officers + " DP: " + originalDP;
         }
     }
 
@@ -615,6 +623,7 @@ public class FleetBuilding {
         */
     }
 
+    // TODO: add new average smods feature here
     public static CampaignFleetAPI createFleet(VariantsLibFleetParams params)
     {
         int numOfficers = params.numOfficers;
@@ -640,7 +649,7 @@ public class FleetBuilding {
         }
 
         FleetInfo buildData = new FleetInfo(params.commander, officers, params.fleetPoints, 
-            new Vector<FleetMemberAPI>(), false, params.averageSmods);
+            new Vector<FleetMemberAPI>(), false);
 
         CampaignFleetAPI fleet = Global.getFactory().createEmptyFleet(params.faction, params.fleetName, true);
         FleetComposition comp = FleetBuildData.FLEET_DATA.get(params.fleetDataId);
@@ -653,6 +662,7 @@ public class FleetBuilding {
             }
         } else {
             addDmods(fleet, params.quality);
+            addSmods(fleet, params.averageSmods);
             fleet.setInflated(true);
         }
         if(params.enableOfficerEditing) {
