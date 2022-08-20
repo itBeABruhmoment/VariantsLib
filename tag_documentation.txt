@@ -9,22 +9,22 @@ ti - officers of ships with this variant will be changed to timid
 st - officers of ships with this variant will be changed to steady
 ag - officers of ships with this variant will be changed to aggressive
 re - officers of ships with this variant will be changed to reckless
-hs - officers of this ship variant will likely be given helmsmanship
-ce - officers of this ship variant will likely be given combat endurance
-im - officers of this ship variant will likely be given impact mitigation
-dc - officers of this ship variant will likely be given damage control
-fm - officers of this ship variant will likely be given field modulation
-pd - officers of this ship variant will likely be given point defense
-ta - officers of this ship variant will likely be given target analysis
-bm - officers of this ship variant will likely be given ballistic mastery
-se - officers of this ship variant will likely be given systems expertise
-ms - officers of this ship variant will likely be given missile specialization
-gi - officers of this ship variant will likely be given gunnery implants
-ew - officers of this ship variant will likely be given energy weapon mastery
-oe - officers of this ship variant will likely be given ordinance expert
-pa - officers of this ship variant will likely be given polarized armour
+hs - helmsmanship
+ce - combat endurance
+im - impact mitigation
+dc - damage control
+fm - field modulation
+pd - point defense
+ta - target analysis
+bm - ballistic mastery
+se - systems expertise
+ms - missile specialization
+gi - gunnery implants
+ew - energy weapon mastery
+oe - ordinance expert
+pa - polarized armour
 
 faction_tags.csv
-note that fleets from factions not in this file will not be modified by this mod (aside from receiving a tag)
+note that fleets from factions not in this file will not be modified by this mod
 
 no_autofit - with a few exceptions, fleets from factions with this tag will not be autofit

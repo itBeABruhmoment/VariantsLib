@@ -1,7 +1,8 @@
 {
-	# mods that need to be enabled for this file to be loaded. Use this if the fleet contains 
-	# content from other mods
-	#DEFAULT: no mods. The fleet is always loaded
+	# mods that need to be enabled for this file to be loaded. Use this to make fleets with content 
+	# from other mods which may not be enabled. Put .variant files with content from other mods in 
+	# data/variants_lib/modded_variants and ensure its file name is the same as its variant id
+	# DEFAULT: no mods. If your mod is enabled the fleet will be loaded
 	"requiredMods":["variants_lib"],
 	
 	# String used to identify this fleet variant. Must be unique
@@ -22,26 +23,27 @@
 
 	# a script that will be run after a fleet of this type is spawned
 	# the script must implement the interface variants_lib.scripts.FleetEditingScript
-	# scripts are run in the order that they are listed here
+	# scripts are run in the order that they are listed
 	# DEFAULT: no scripts
 	"postModificationScripts":["variants_lib.scripts.FleetEditingScriptTest"],
 
-	# Specify what portion of the fleet's dp should be dedicated to different types of ships
+	# Specify what portion of the fleet's dp should be dedicated to different groups of ships
 	# Based on how the fleet generation system works, it's best to have ships with similar dp 
 	# in each partition and have the higher average dp partitions before lower dp ones
 	"fleetPartitions":[
 		# a partition
 		{
-			# specifies the portion of the fleets dp that will be occupied by ships in this partition
-			# so partitionWeight / sumOfAllPartitonWeights will be dedicated to ships in this partition
-			# any unused dp is given to be used by the next partiton down
+			# specifies the fraction of the fleets dp that will be occupied by ships in this partition.
+			# So partitionWeight / sumOfAllPartitonWeights of the fleets dp will be dedicated to ships 
+			# in this partition. Any unused dp is given to be used by the next partiton down
 			"partitionWeight":30,
-			# list of variants in the partition and their respective weights
-			# each variant has a variantWeight / sumOfAllVariantWeightsInThisPartition chance of spawning
-			# note that spawning probablities can be skewed if some variants can't be spawned with the partitions allotted dp
+			# A list of variants in the partition and their respective weights. Each variant has a 
+			# variantWeight / sumOfAllVariantWeightsInThisPartition chance of spawning. Note that 
+			# spawning probablities can be skewed if some variants can't be spawned with the partitions 
+			# allotted dp
 			"variants":{
-				"onslaught_xiv_Elite":50.00,
-				"onslaught_Elite":50.00,
+				"onslaught_xiv_Elite":50,
+				"onslaught_Elite":50,
 			}
 		},
 		# another partition
@@ -61,14 +63,14 @@
 		{
 			"partitionWeight":20,
 			"variants":{
-				"falcon_xiv_Elite":20.00,
-				"enforcer_Assault":20.00,
+				"falcon_xiv_Elite":20,
+				"enforcer_Assault":20,
 			}
 		},
 		{
 			"partitionWeight":2,
 			"variants":{
-				"hound_Standard":100.00,
+				"hound_Standard":100,
 			}
 		},
 		{
