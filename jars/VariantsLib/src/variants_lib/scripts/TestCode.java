@@ -25,7 +25,7 @@ public class TestCode {
         final FactionDoctrineAPI doctrine = faction.getDoctrine();
         final int totalFP = 100;
         final float freighterFP = totalFP * doctrine.getCombatFreighterProbability(); // TEMP
-        final FleetParamsV3 params = new FleetParamsV3(
+        FleetParamsV3 params = new FleetParamsV3(
                 null, // Hyperspace location
                 faction.getId(), // Faction ID
                 null, // Quality override (null disables)
@@ -37,6 +37,7 @@ public class TestCode {
                 freighterFP * .1f, // Liner FP
                 freighterFP * .1f, // Utility FP
                 0f); // Quality bonus
+        params.averageSMods = 2;
         final CampaignFleetAPI toSpawn = FleetFactoryV3.createFleet(params);
         FleetFactoryV3.addCommanderAndOfficers(toSpawn, params, new Random());
         toSpawn.setName("flyeet");
@@ -46,7 +47,7 @@ public class TestCode {
         Global.getSector().getCurrentLocation().spawnFleet(
                 Global.getSector().getPlayerFleet(), offset.x, offset.y, toSpawn);
         Global.getSector().addPing(toSpawn, "danger");
-        FleetBuilding.editFleet(toSpawn, "bv_smod_test", 2.0);
+        //FleetBuilding.editFleet(toSpawn, "bv_smod_test", 2.0);
     }
 
     // runcode variants_lib.scripts.TestCode.spawnFleet();
