@@ -107,7 +107,7 @@ public class FleetBuildData {
             try {
                 fleetDataRegister = Global.getSettings().loadCSV(CommonStrings.FLEETS_CSV_PATH, modId);
             } catch(Exception e) {
-                log.debug(CommonStrings.MOD_ID + ": " + CommonStrings.FLEETS_CSV_PATH + "could not be opened for the mod " + modId);
+                log.debug(CommonStrings.MOD_ID + ": " + CommonStrings.FLEETS_CSV_PATH + " could not be opened for the mod " + modId);
                 fleetDataRegister = null;
             }
 

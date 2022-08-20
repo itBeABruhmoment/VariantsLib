@@ -116,7 +116,7 @@ public class VariantData {
     {
         for(ModSpecAPI mod : Global.getSettings().getModManager().getEnabledModsCopy()) {
             String modId = mod.getId();
-            log.debug(CommonStrings.MOD_ID + ": trying to load " + CommonStrings.VARIANT_TAGS_CSV_PATH + "from the mod " + modId);
+            log.debug(CommonStrings.MOD_ID + ": trying to load " + CommonStrings.VARIANT_TAGS_CSV_PATH + " from the mod " + modId);
             JSONArray data = null;
             try {
                 data = Global.getSettings().loadCSV(CommonStrings.VARIANT_TAGS_CSV_PATH, modId);
