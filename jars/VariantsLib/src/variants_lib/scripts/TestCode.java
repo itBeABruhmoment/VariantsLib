@@ -55,15 +55,15 @@ public class TestCode {
     {
         FleetBuilding.VariantsLibFleetParams params = new FleetBuilding.VariantsLibFleetParams(
             "fleet",
-            "hegemony",
+            "luddic_path",
             FleetTypes.PATROL_LARGE,
             "bv_hegemony_lowtech",
             200,
-            1.0f,
+            0.5f,
             1.0f,
             8,
             5.0f,
-            false,
+            true,
             true,
             true
         );

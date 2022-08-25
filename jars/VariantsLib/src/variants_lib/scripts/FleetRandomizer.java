@@ -91,6 +91,7 @@ public class FleetRandomizer {
         String factionId = fleet.getFaction().getId();
    
         if(fleet.getMemoryWithoutUpdate().contains(CommonStrings.FLEET_EDITED_MEMKEY)) {
+            log.debug(CommonStrings.MOD_ID + ": fleet not edited, has " + CommonStrings.FLEET_EDITED_MEMKEY + " memkey");
             return;
         }
 

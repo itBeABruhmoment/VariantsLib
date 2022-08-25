@@ -12,6 +12,10 @@ import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.fleet.RepairTrackerAPI;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.events.OfficerManagerEvent;
+import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflater;
+import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
+import com.fs.starfarer.api.impl.campaign.fleets.FleetFactoryV3;
+import com.fs.starfarer.api.impl.campaign.fleets.FleetParamsV3;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
@@ -32,6 +36,7 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.campaign.FleetDataAPI;
+import com.fs.starfarer.api.campaign.FactionAPI.ShipPickMode;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 
 import org.apache.log4j.Level;
@@ -603,19 +608,30 @@ public class FleetBuilding {
 
         FleetInfo buildData = new FleetInfo(params.commander, officers, params.fleetPoints, 
             new Vector<FleetMemberAPI>(), false);
-
+    
         CampaignFleetAPI fleet = Global.getFactory().createEmptyFleet(params.faction, params.fleetName, true);
+        fleet.setCommander(params.commander);
+        clearMembers(fleet);
+
         FleetComposition comp = FleetBuildData.FLEET_DATA.get(params.fleetDataId);
         createFleet(fleet, buildData, comp);
-        FleetBuilding.addDmods(fleet, params.quality);
+        addSmods(fleet, params.averageSmods);
         if(params.enableAutofit) {
-            fleet.setInflated(false);
-            if(fleet.getInflater() != null) {
-                fleet.getInflater().setQuality(params.quality);
-            }
+            DefaultFleetInflaterParams inflaterParams = new DefaultFleetInflaterParams();
+            inflaterParams.allWeapons = false;
+            inflaterParams.averageSMods = 0;
+            inflaterParams.factionId = params.faction;
+            inflaterParams.mode = ShipPickMode.ALL;
+            inflaterParams.quality = params.quality;
+            inflaterParams.rProb = 1.0f - params.quality;
+            inflaterParams.seed = rand.nextLong();
+            inflaterParams.persistent = false;
+
+            DefaultFleetInflater inflater = new DefaultFleetInflater(inflaterParams);
+            inflater.inflate(fleet);
+            fleet.setInflated(true);
         } else {
             addDmods(fleet, params.quality);
-            addSmods(fleet, params.averageSmods);
             fleet.setInflated(true);
         }
         if(params.enableOfficerEditing) {
@@ -630,7 +646,6 @@ public class FleetBuilding {
             }
         }
 
-        fleet.setName(params.fleetName);
         MemoryAPI fleetMemory = fleet.getMemoryWithoutUpdate();
         fleetMemory.set(CommonStrings.FLEET_EDITED_MEMKEY, true);
         fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, params.fleetDataId);
