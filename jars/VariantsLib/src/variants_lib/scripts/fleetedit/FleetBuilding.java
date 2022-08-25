@@ -351,20 +351,6 @@ public class FleetBuilding {
         return null;
     }
 
-    // give commander any addition skills specified in fleet json
-    private static void editCommander(PersonAPI commander, FleetComposition compInfo) 
-    {
-        if(compInfo.commanderSkills != null) {
-            log.debug("adding additional skills");
-            MutableCharacterStatsAPI stats = commander.getStats();
-            for(String skill : compInfo.commanderSkills) {
-                if(!stats.hasSkill(skill)) {
-                    stats.increaseSkill(skill);
-                }
-            }
-        }
-    }
-
     public static void addSmods(CampaignFleetAPI fleet, float averageSmods)
     {
         if(averageSmods < 0.01) {
@@ -478,7 +464,6 @@ public class FleetBuilding {
         log.debug("changing to " + compInfo.id);
         clearMembers(fleetAPI);
         createFleet(fleetAPI, info, compInfo);
-        editCommander(info.captain, compInfo);
 
         return compInfo.id;
     }
@@ -504,7 +489,6 @@ public class FleetBuilding {
         log.debug("changing to " + compInfo.id);
         clearMembers(fleetAPI);
         createFleet(fleetAPI, info, compInfo);
-        editCommander(info.captain, compInfo);
 
         return compInfo.id;
     }

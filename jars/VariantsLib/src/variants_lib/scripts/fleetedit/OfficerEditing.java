@@ -11,12 +11,14 @@ import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 
 import variants_lib.data.CommonStrings;
 import variants_lib.data.FleetBuildData;
+import variants_lib.data.FleetComposition;
 import variants_lib.data.VariantData;
 
 import org.apache.log4j.Logger;
 
 import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
+import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI.SkillLevelAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
@@ -116,6 +118,11 @@ public class OfficerEditing {
 
     public static void editAllOfficers(CampaignFleetAPI fleet, String fleetCompId)
     {
+        FleetComposition comp = FleetBuildData.FLEET_DATA.get(fleetCompId);
+        if(comp != null && fleet.getCommander() != null) {
+            editCommander(fleet.getCommander(), comp);
+        }
+
         for(FleetMemberAPI member : fleet.getMembersWithFightersCopy()) {
             String variantId = VariantData.isRegisteredVariant(member);
             if(variantId != null) {
@@ -160,6 +167,20 @@ public class OfficerEditing {
             editSkills(skillEditQueue, fleetMember);
         } catch(Exception e) {
             log.debug("failed to edit " + variantId + " !?!?!?!?!");
+        }
+    }
+
+    // give commander any addition skills specified in fleet json
+    public static void editCommander(PersonAPI commander, FleetComposition compInfo) 
+    {
+        if(compInfo.commanderSkills != null) {
+            log.debug("adding additional skills");
+            MutableCharacterStatsAPI stats = commander.getStats();
+            for(String skill : compInfo.commanderSkills) {
+                if(!stats.hasSkill(skill)) {
+                    stats.increaseSkill(skill);
+                }
+            }
         }
     }
 
