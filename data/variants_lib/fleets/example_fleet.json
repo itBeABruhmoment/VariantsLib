@@ -12,7 +12,7 @@
 	# maximum dp of fleet to be edited to this fleet variant
 	"maxDP":400, 
 	# Personality unofficered ships in this fleet will have in combat
-	# DEFAULT: the factions officer agressiveness specified in doctrine
+	# DEFAULT: the factions officer aggressiveness specified in doctrine
 	"defaultFleetWidePersonality":"aggressive", 
 	# commander skills that will be added to the fleet's captain
 	# DEFAULT: no additional skills
@@ -33,12 +33,12 @@
 		# a partition
 		{
 			# specifies the fraction of the fleets dp that will be occupied by ships in this partition.
-			# So partitionWeight / sumOfAllPartitonWeights of the fleets dp will be dedicated to ships 
-			# in this partition. Any unused dp is given to be used by the next partiton down
+			# So partitionWeight / sumOfAllPartitionWeights of the fleets dp will be dedicated to ships 
+			# in this partition. Any unused dp is given to be used by the next partition down
 			"partitionWeight":30,
 			# A list of variants in the partition and their respective weights. Each variant has a 
 			# variantWeight / sumOfAllVariantWeightsInThisPartition chance of spawning. Note that 
-			# spawning probablities can be skewed if some variants can't be spawned with the partitions 
+			# spawning probabilities can be skewed if some variants can't be spawned with the partitions 
 			# allotted dp
 			"variants":{
 				"onslaught_xiv_Elite":50,
