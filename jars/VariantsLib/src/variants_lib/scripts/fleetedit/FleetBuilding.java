@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Collections;
@@ -18,7 +16,6 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
-import com.fs.starfarer.api.campaign.FactionDoctrineAPI;
 
 import variants_lib.data.AlwaysBuildMember;
 import variants_lib.data.CommonStrings;
@@ -27,22 +24,19 @@ import variants_lib.data.FleetBuildData;
 import variants_lib.data.FleetComposition;
 import variants_lib.data.FleetPartition;
 import variants_lib.data.FleetPartitionMember;
-import variants_lib.data.SettingsData;
 import variants_lib.data.VariantData;
 import variants_lib.data.FactionData.FactionConfig;
 import variants_lib.data.VariantData.VariantDataMember;
 
 import com.fs.starfarer.api.combat.ShipVariantAPI;
-import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.campaign.FleetDataAPI;
-import com.fs.starfarer.api.campaign.FleetInflater;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-// TODO: add param to indicate not to add dmods
+
 public class FleetBuilding {
     private static final int MAX_OVERBUDGET = 3;
     private static final Random rand = new Random();
@@ -542,6 +536,7 @@ public class FleetBuilding {
         boolean enableOfficerEditing;
         boolean runAssociatedScripts; // whether to run the fleets post modification scripts
 
+        // contructor with all the fields as arguments
         public VariantsLibFleetParams(String FleetName, String Faction, String FleetType, String FleetDataId, int FleetPoints, float Quality, float AverageSmods,
             int NumOfficers, float AverageOfficerLevel, PersonAPI Commander, boolean EnableAutofit, boolean EnableOfficerEditing, 
             boolean RunAssociatedScripts) {
@@ -560,6 +555,7 @@ public class FleetBuilding {
             runAssociatedScripts = RunAssociatedScripts;
         }
 
+        // constructor that auto generates a officer
         public VariantsLibFleetParams(String FleetName, String Faction, String FleetType, String FleetDataId, int FleetPoints, float Quality, float AverageSmods,
             int NumOfficers, float AverageOfficerLevel, boolean EnableAutofit, boolean EnableOfficerEditing, boolean RunAssociatedScripts) {
             fleetName = FleetName;
@@ -577,37 +573,10 @@ public class FleetBuilding {
 
             commander = OfficerManagerEvent.createOfficer(Global.getSector().getFaction(faction), Math.round(averageOfficerLevel));
         }
-
-        /*
-        // auto generates officer related fields based on faction's doctrine
-        VariantsLibFleetParams(String FleetName, String Faction, String FleetType, String FleetDataId, int FleetPoints, float Quality, float AverageSmods,
-        boolean EnableAutofit, boolean EnableOfficerEditing, boolean RunAssociatedScripts) {
-            fleetName = FleetName;
-            faction = Faction;
-            fleetType = FleetType;
-            fleetDataId = FleetDataId;
-            fleetPoints = FleetPoints;
-            quality = Quality;
-            averageSmods = AverageSmods;
-            enableAutofit = EnableAutofit;
-            enableOfficerEditing = EnableOfficerEditing;
-            runAssociatedScripts = RunAssociatedScripts;
-
-            // 140 / 19
-            // dubious auto generation based on a sample size of 2
-            // max quality: 7 / 10 ships officered all level 5 and level 7 commander
-            // min quality: 8 / 23 ships officered mix of 3's 4's and 5's
-            FactionDoctrineAPI doctrine = Global.getSector().getFaction(faction).getDoctrine();
-            int officerQulity = doctrine.getOfficerQuality();
-            numOfficers = Math.round((0.8825f * quality + 0.25875f) * SettingsData.getMaxOfficersInAIFleet());
-            if(numOfficers > SettingsData.getMaxOfficersInAIFleet()) {
-                numOfficers = SettingsData.getMaxOfficersInAIFleet();
-            }
-        }
-        */
     }
 
-    // TODO: add new average smods feature here
+    // Create a fleet from a fleet json with a FleetBuilding.VariantsLibFleetParams object. Sets the memkey CommonStrings.FLEET_EDITED_MEMKEY
+    // and CommonStrings.FLEET_VARIANT_KEY
     public static CampaignFleetAPI createFleet(VariantsLibFleetParams params)
     {
         int numOfficers = params.numOfficers;
@@ -672,25 +641,3 @@ public class FleetBuilding {
 
     private FleetBuilding() {} // do nothing
 }
-
-/*
-    private void test()
-    {
-        SectorEntityToken yourFleet = Global.getSector().getPlayerFleet();
-        LocationAPI currentSystem = (LocationAPI)yourFleet.getContainingLocation();
-        List<CampaignFleetAPI> fleets = currentSystem.getFleets();
-        for(CampaignFleetAPI fleet : fleets) {
-            if(fleet != yourFleet) {
-                Console.showMessage(fleet.getFullName() + " " + fleet.getInflater().getQuality());
-            }
-        }
-    }
-    
-    private static void addKite(CampaignFleetAPI fleetAPI, FleetInfo inf)
-    {
-        FleetMemberAPI ship = Global.getFactory().createFleetMember(FleetMemberType.SHIP, 
-        Global.getSettings().getVariant("kite_hegemony_Interceptor").clone());
-        ship.setCaptain(inf.captain);
-        fleetAPI.getFleetData().addFleetMember(ship);
-    }
-    */

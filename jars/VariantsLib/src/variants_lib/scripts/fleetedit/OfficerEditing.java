@@ -60,7 +60,6 @@ public class OfficerEditing {
         return intArr;
     }
 
-    // stack overflow ctrl-c ctrl-v
     private static void shuffleArray(int[] ar)
     {
         Random rnd = new Random();
@@ -116,6 +115,9 @@ public class OfficerEditing {
         }
     }
 
+    // Edit all officers in a fleet to be in line with what is specified in variant_tags.csv, the 
+    // additionalCommanderSkills field of a fleet json, and the defaultFleetWidePersonality field
+    // of a fleet json
     public static void editAllOfficers(CampaignFleetAPI fleet, String fleetCompId)
     {
         FleetComposition comp = FleetBuildData.FLEET_DATA.get(fleetCompId);
@@ -124,18 +126,65 @@ public class OfficerEditing {
         }
 
         for(FleetMemberAPI member : fleet.getMembersWithFightersCopy()) {
-            String variantId = VariantData.isRegisteredVariant(member);
-            if(variantId != null) {
-                OfficerEditing.editOfficer(member, variantId, fleetCompId);
-            }
+            OfficerEditing.editOfficer(member, fleetCompId);
         }
     }
-    
-    public static void editOfficer(FleetMemberAPI fleetMember, String variantId, String fleetCompId)
+
+    // Edit all officers in a fleet to be in line with what is specified in variant_tags.csv
+    public static void editAllOfficers(CampaignFleetAPI fleet)
+    {
+        for(FleetMemberAPI member : fleet.getMembersWithFightersCopy()) {
+            OfficerEditing.editOfficer(member);
+        }
+    }
+
+    // If the "fleetMember" has a officer, edit it be be in line with variant_tags.csv
+    public static void editOfficer(FleetMemberAPI fleetMember)
     {
         if(!hasOfficer(fleetMember)) { // don't edit unofficered ships
             return;
         }
+
+        String variantId = VariantData.isRegisteredVariant(fleetMember);
+        
+        try{
+            Vector<String> officerSpec = null;
+            if(VariantData.VARIANT_DATA.containsKey(variantId)) {
+                officerSpec = VariantData.VARIANT_DATA.get(variantId).officerSpecifications;
+            } else { // don't edit unregistered variants
+                return;
+            }
+
+            Vector<String> skillEditQueue = new Vector<String>(10);
+            for(String tag : officerSpec) {
+                if(tag.equals(CommonStrings.DO_NOT_EDIT_OFFICER)) { // do not edit if this tag is present
+                    return;
+                } else if(CommonStrings.PERSONALITY_EDIT_TAGS.containsKey(tag)) { // edit personality if personality editing tag is identified
+                    fleetMember.getCaptain().setPersonality(CommonStrings.PERSONALITY_EDIT_TAGS.get(tag));
+                    // add flag to ensure it doesn't get overriden by an in battle feature
+                    MemoryAPI memory = fleetMember.getCaptain().getMemoryWithoutUpdate();
+                    if(memory != null && !memory.contains(CommonStrings.DO_NOT_CHANGE_PERSONALITY_KEY)) {
+                        memory.set(CommonStrings.DO_NOT_CHANGE_PERSONALITY_KEY, true);
+                    }
+                } else if(CommonStrings.SKILL_EDIT_TAGS.containsKey(tag)) { // put tags that require skill editing in a queue
+                    skillEditQueue.add(CommonStrings.SKILL_EDIT_TAGS.get(tag));
+                }
+            }
+            editSkills(skillEditQueue, fleetMember);
+        } catch(Exception e) {
+            log.debug("failed to edit " + variantId + " !?!?!?!?!");
+        }
+    }
+    
+    // If the "fleetMember" has a officer edit it be be in line with variant_tags.csv and the 
+    // defaultFleetWidePersonality field of a fleet json
+    public static void editOfficer(FleetMemberAPI fleetMember, String fleetCompId)
+    {
+        if(!hasOfficer(fleetMember)) { // don't edit unofficered ships
+            return;
+        }
+
+        String variantId = VariantData.isRegisteredVariant(fleetMember);
         
         try{
             Vector<String> officerSpec = null;
