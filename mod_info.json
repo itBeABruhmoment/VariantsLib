@@ -3,7 +3,7 @@
     "name": "Variants Lib",
     "author": "itBeABruhmoment",
     "utility": "false",
-    "version": "1.0",
+    "version": "0.1.1",
     "description": "library that aids adding more fleet variety",
     "gameVersion": "0.95.1a-RC6",
     "jars":["jars/VariantsLib/VariantsLib.jar"],
