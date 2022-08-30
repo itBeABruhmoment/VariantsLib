@@ -31,6 +31,7 @@ import variants_lib.data.FleetPartitionMember;
 import variants_lib.data.VariantData;
 import variants_lib.data.FactionData.FactionConfig;
 import variants_lib.data.VariantData.VariantDataMember;
+import variants_lib.scripts.HasHeavyIndustryTracker;
 
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
@@ -295,7 +296,8 @@ public class FleetBuilding {
             if(comp != null 
             && comp.maxDP >= info.originalDP 
             && info.originalDP >= comp.minDP 
-            && comp.spawnWeights.containsKey(fleetType)) {
+            && comp.spawnWeights.containsKey(fleetType)
+            && (comp.spawnIfNoIndustry || HasHeavyIndustryTracker.hasHeavyIndustry(factionId))) {
                 fleetComps.add(comp);
             }
         }
@@ -447,6 +449,10 @@ public class FleetBuilding {
         if(compInfo == null) {
             log.debug("fleet not edited");
             return null;
+        }
+
+        if(info.originalDP < compInfo.setDPToAtLeast) {
+            info.originalDP = compInfo.setDPToAtLeast;
         }
 
         if(fleetType == null) {
