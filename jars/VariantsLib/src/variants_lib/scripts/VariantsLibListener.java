@@ -11,6 +11,7 @@ import variants_lib.data.SettingsData;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.lazywizard.console.CommonStrings;
 
 public class VariantsLibListener extends BaseCampaignEventListener{
     private static final Logger log = Global.getLogger(variants_lib.scripts.VariantsLibListener.class);
@@ -25,6 +26,7 @@ public class VariantsLibListener extends BaseCampaignEventListener{
     @Override
     public void reportEconomyMonthEnd()
     {
+        log.debug(CommonStrings.MOD_ID + ": refreshing heavy industry tracker data");
         HasHeavyIndustryTracker.refreshHasHeavyIndustry();
         HasHeavyIndustryTracker.printEntries();
     }
