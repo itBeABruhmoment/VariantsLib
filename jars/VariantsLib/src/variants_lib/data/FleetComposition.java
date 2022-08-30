@@ -33,6 +33,8 @@ public class FleetComposition {
     public int minDP;
     public int maxDP;
     public String defaultFleetWidePersonality;
+    public boolean spawnIfNoIndustry;
+    public int setDPToAtLeast;
     
     // runcode Console.showMessage(data.BetterVariants_FleetBuildData.FleetData.get("bv_tritachyon_doomhyperion").toString());
     @Override
@@ -135,6 +137,9 @@ public class FleetComposition {
         if(minDP > maxDP) {
             throw new Exception(loadedFileInfo + " has \"maxDP\" field less than \"minDP\" field");
         }
+
+        spawnIfNoIndustry = getBool(fleetDataJson, "spawnIfNoIndustry", true);
+        setDPToAtLeast = getInt(fleetDataJson, "setDPToAtLeast", 0);
 
         // read defaultFleetWidePersonality field
         try {
@@ -264,5 +269,29 @@ public class FleetComposition {
             }
         }
         return strArr;
+    }
+
+    boolean getBool(JSONObject json, String key, boolean defaultVal) 
+    {
+        boolean returnVal = defaultVal;
+        try {
+            returnVal = json.getBoolean(key);
+        } catch(Exception e) {
+            returnVal = defaultVal;
+            log.debug(CommonStrings.MOD_ID + ":field with key \"" + key + "\" could not be read, set to " + defaultVal);
+        }
+        return returnVal;
+    }
+
+    int getInt(JSONObject json, String key, int defaultVal) 
+    {
+        int returnVal = defaultVal;
+        try {
+            returnVal = json.getInt(key);
+        } catch(Exception e) {
+            returnVal = defaultVal;
+            log.debug(CommonStrings.MOD_ID + ":field with key \"" + key + "\" could not be read, set to " + defaultVal);
+        }
+        return returnVal;
     }
 }

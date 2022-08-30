@@ -5,6 +5,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
+import com.fs.starfarer.api.impl.campaign.intel.punitive.PunitiveExpeditionIntel;
 
 import variants_lib.data.SettingsData;
 
@@ -19,6 +20,13 @@ public class VariantsLibListener extends BaseCampaignEventListener{
 
     public VariantsLibListener(boolean permaRegister) {
         super(permaRegister);
+    }
+
+    @Override
+    public void reportEconomyMonthEnd()
+    {
+        HasHeavyIndustryTracker.refreshHasHeavyIndustry();
+        HasHeavyIndustryTracker.printEntries();
     }
 
     @Override

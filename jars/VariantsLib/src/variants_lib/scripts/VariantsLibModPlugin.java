@@ -83,6 +83,9 @@ public class VariantsLibModPlugin extends BaseModPlugin {
         Global.getSector().addTransientListener(new VariantsLibListener(false));
         log.debug(CommonStrings.MOD_ID + ": initializing faction aggression values");
         UnofficeredPersonalitySetPlugin.innitDefaultAggressionValues();
+        log.debug(CommonStrings.MOD_ID + ": initializing HasHeavyIndustryTracker");
+        HasHeavyIndustryTracker.refreshHasHeavyIndustry();
+        HasHeavyIndustryTracker.printEntries();
         
         // BountyData.addBounty("bv_test", 999999.0f);
         // runcode com.fs.starfarer.api.impl.campaign.intel.bar.events.BarEventManager.getInstance().addEventCreator(new better_variants.bar_events.BetterVariantsBarEventCreator());
