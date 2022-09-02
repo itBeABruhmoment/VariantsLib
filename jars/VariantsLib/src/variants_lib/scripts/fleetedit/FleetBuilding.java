@@ -150,7 +150,7 @@ public class FleetBuilding {
 
             while(remainingDpThisPartition > 0) {
                 if(maxShipsThatCanBeAdded == 0) {
-                    return;
+                    break;
                 }
                 String variantId = pickVariant(fleetCompData.partitions[i], remainingDpThisPartition + MAX_OVERBUDGET);
                 if(variantId == null) {
@@ -622,6 +622,9 @@ public class FleetBuilding {
         FleetComposition comp = FleetBuildData.FLEET_DATA.get(params.fleetDataId);
         createFleet(fleet, buildData, comp);
         addSmods(fleet, params.averageSmods);
+
+        log.debug("1:" + fleet.getMembersWithFightersCopy().size());
+
         if(params.enableAutofit) {
             DefaultFleetInflaterParams inflaterParams = new DefaultFleetInflaterParams();
             inflaterParams.allWeapons = false;
@@ -657,6 +660,7 @@ public class FleetBuilding {
         fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, params.fleetDataId);
         fleetMemory.set(MemFlags.MEMORY_KEY_FLEET_TYPE, params.fleetType);
         
+        log.debug("2:" + fleet.getMembersWithFightersCopy().size());
         return fleet;
     }
 
