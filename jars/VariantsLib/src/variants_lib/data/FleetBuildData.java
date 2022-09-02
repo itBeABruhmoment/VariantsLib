@@ -15,6 +15,7 @@ import com.fs.starfarer.api.ModManagerAPI;
 import com.fs.starfarer.api.ModSpecAPI;
 
 import variants_lib.scripts.FleetEditingScript;
+import variants_lib.data.JsonUtils;
 
 
 // loads data on fleet types
@@ -76,7 +77,7 @@ public class FleetBuildData {
         }
 
         // check whether to load the fleet
-        String[] requiredMods = getStringArray("requiredMods", loadedFileInfo, fleetDataJson);
+        String[] requiredMods = JsonUtils.getStringArray("requiredMods", loadedFileInfo, fleetDataJson);
         boolean shouldLoad = false;
         if(requiredMods == null) {
             shouldLoad = true;
@@ -125,31 +126,6 @@ public class FleetBuildData {
                 }
             }
         }
-    }
-
-    private static String[] getStringArray(String key, String loadedFileInfo, JSONObject json) throws Exception
-    {
-        JSONArray jsonArr = null;
-        try {
-            jsonArr = json.getJSONArray(key);
-        } catch(Exception e) {
-            log.debug(loadedFileInfo + " could not have its \"" + key + "\" field read, set to null");
-            jsonArr = null;
-        }
-        if(jsonArr == null) {
-            return null;
-        }
-
-        String[] strArr = new String[jsonArr.length()];
-        for(int i = 0; i < jsonArr.length(); i++) {
-            try {
-                strArr[i] = jsonArr.getString(i);
-            } catch(Exception e) {
-                log.debug(loadedFileInfo + " had error while reading its \"" + key + "\" field read, set to null");
-                return null;
-            }
-        }
-        return strArr;
     }
     
     private FleetBuildData() {} // do nothing

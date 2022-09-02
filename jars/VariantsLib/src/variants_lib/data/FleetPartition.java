@@ -17,6 +17,8 @@ public class FleetPartition {
         log.setLevel(Level.ALL);
     }
 
+    public int maxDPForPartition;
+    public int maxShipsForPartition;
     public Vector<FleetPartitionMember> members;
     public float partitionWeight; // should be percentage after processing
 
@@ -48,6 +50,9 @@ public class FleetPartition {
         } catch(Exception e) {
             throw new Exception(loadedFileInfo + " fleet partion " + index + " has missing or invalid \"variants\" field");
         }
+
+        maxDPForPartition = JsonUtils.getInt(partitionData, "maxDPForPartition", Integer.MAX_VALUE);
+        maxShipsForPartition = JsonUtils.getInt(partitionData, "maxShipsForPartition", Integer.MAX_VALUE);
 
         // construct "members field"
         float variantWeightSum = 0.0f;

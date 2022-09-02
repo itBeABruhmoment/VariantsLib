@@ -112,9 +112,18 @@ public class FleetRandomizer {
         }
 
         // manage no autofit stuff
-        if(SettingsData.noAutofitFeaturesEnabled()
-        && FactionData.FACTION_DATA.get(factionId) != null 
-        && FactionData.FACTION_DATA.get(factionId).hasTag(CommonStrings.NO_AUTOFIT_TAG)) {
+        boolean autofitTheFleet = !(SettingsData.noAutofitFeaturesEnabled()
+            && FactionData.FACTION_DATA.get(factionId) != null 
+            && FactionData.FACTION_DATA.get(factionId).hasTag(CommonStrings.NO_AUTOFIT_TAG));
+        if(fleetCompId != null) {
+            FleetComposition.AutofitOption option = FleetBuildData.FLEET_DATA.get(fleetCompId).autofit;
+            if(option == FleetComposition.AutofitOption.AUTOFIT) {
+                autofitTheFleet = true;
+            } else if(option == FleetComposition.AutofitOption.NO_AUTOFIT){
+                autofitTheFleet = false;
+            }
+        }
+        if(!autofitTheFleet) {
             float quality = 1.0f;
             try {
                 quality = fleet.getInflater().getQuality();

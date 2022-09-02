@@ -34,8 +34,16 @@ public class FleetComposition {
     public int maxDP;
     public String defaultFleetWidePersonality;
     public boolean spawnIfNoIndustry;
-    public int setDPToAtLeast;
+    public AutofitOption autofit;
+    public int setDPToAtLeast; // set to zero if not defined
+    public float autoLogitsticsDP; //  set to negative number if not defined
     
+    public enum AutofitOption {
+        AUTOFIT,
+        NO_AUTOFIT,
+        NO_PREF
+    }
+
     // runcode Console.showMessage(data.BetterVariants_FleetBuildData.FleetData.get("bv_tritachyon_doomhyperion").toString());
     @Override
     public String toString() 
@@ -138,8 +146,20 @@ public class FleetComposition {
             throw new Exception(loadedFileInfo + " has \"maxDP\" field less than \"minDP\" field");
         }
 
-        spawnIfNoIndustry = getBool(fleetDataJson, "spawnIfNoIndustry", true);
-        setDPToAtLeast = getInt(fleetDataJson, "setDPToAtLeast", 0);
+        spawnIfNoIndustry = JsonUtils.getBool(fleetDataJson, "spawnIfNoIndustry", true);
+        setDPToAtLeast = JsonUtils.getInt(fleetDataJson, "setDPToAtLeast", 0);
+        autoLogitsticsDP = JsonUtils.getFloat(fleetDataJson, "autoLogitsticsDP", -1.0f);
+        
+        try {
+            boolean fieldBool = fleetDataJson.getBoolean("autofit");
+            if(fieldBool == true) {
+                autofit = AutofitOption.AUTOFIT;
+            } else {
+                autofit = AutofitOption.NO_AUTOFIT;
+            }
+        } catch(Exception e) {
+            autofit = AutofitOption.NO_PREF;
+        }
 
         // read defaultFleetWidePersonality field
         try {
@@ -152,13 +172,13 @@ public class FleetComposition {
         }
 
         // read "additionalCommanderSkills" field
-        commanderSkills = getStringArray("additionalCommanderSkills", loadedFileInfo, fleetDataJson);
+        commanderSkills = JsonUtils.getStringArray("additionalCommanderSkills", loadedFileInfo, fleetDataJson);
         if(commanderSkills != null && !skillIdsAreCorrect(commanderSkills)) {
             throw new Exception(loadedFileInfo + " has invalid skill in \"additionalCommanderSkills\" field");
         }
 
         // read "postModificationScripts"
-        postModificationScripts = getStringArray("postModificationScripts", loadedFileInfo, fleetDataJson);
+        postModificationScripts = JsonUtils.getStringArray("postModificationScripts", loadedFileInfo, fleetDataJson);
         if(postModificationScripts != null) {
             for(String script : postModificationScripts) {
                 FleetBuildData.addScriptToStore(script);
@@ -244,54 +264,5 @@ public class FleetComposition {
             }
         }
         return true;
-    }
-
-    private static String[] getStringArray(String key, String loadedFileInfo, JSONObject json) throws Exception
-    {
-        JSONArray jsonArr = null;
-        try {
-            jsonArr = json.getJSONArray(key);
-        } catch(Exception e) {
-            log.debug(loadedFileInfo + " could not have its \"" + key + "\" field read, set to null");
-            jsonArr = null;
-        }
-        if(jsonArr == null) {
-            return null;
-        }
-
-        String[] strArr = new String[jsonArr.length()];
-        for(int i = 0; i < jsonArr.length(); i++) {
-            try {
-                strArr[i] = jsonArr.getString(i);
-            } catch(Exception e) {
-                log.debug(loadedFileInfo + " had error while reading its \"" + key + "\" field read, set to null");
-                return null;
-            }
-        }
-        return strArr;
-    }
-
-    boolean getBool(JSONObject json, String key, boolean defaultVal) 
-    {
-        boolean returnVal = defaultVal;
-        try {
-            returnVal = json.getBoolean(key);
-        } catch(Exception e) {
-            returnVal = defaultVal;
-            log.debug(CommonStrings.MOD_ID + ":field with key \"" + key + "\" could not be read, set to " + defaultVal);
-        }
-        return returnVal;
-    }
-
-    int getInt(JSONObject json, String key, int defaultVal) 
-    {
-        int returnVal = defaultVal;
-        try {
-            returnVal = json.getInt(key);
-        } catch(Exception e) {
-            returnVal = defaultVal;
-            log.debug(CommonStrings.MOD_ID + ":field with key \"" + key + "\" could not be read, set to " + defaultVal);
-        }
-        return returnVal;
     }
 }

@@ -28,6 +28,7 @@ import variants_lib.data.FleetBuildData;
 import variants_lib.data.FleetComposition;
 import variants_lib.data.FleetPartition;
 import variants_lib.data.FleetPartitionMember;
+import variants_lib.data.SettingsData;
 import variants_lib.data.VariantData;
 import variants_lib.data.FactionData.FactionConfig;
 import variants_lib.data.VariantData.VariantDataMember;
@@ -126,7 +127,7 @@ public class FleetBuilding {
     {
         Vector<FleetMemberAPI> combatShips = new Vector<FleetMemberAPI>(30);
         Vector<FleetMemberAPI> civilianShips = new Vector<FleetMemberAPI>(10);
-        int maxShipsThatCanBeAdded = 30 - info.mothballedShips.size();
+        int maxShipsThatCanBeAdded = SettingsData.getMaxShipsInAIFleet() - info.mothballedShips.size();
         int totalDPRemaining = info.originalDP;
 
         if(fleetCompData.alwaysInclude != null) {
@@ -145,15 +146,17 @@ public class FleetBuilding {
         }
 
         for(int i = 0; i < fleetCompData.partitions.length; i++) {
+            // calculate dp for partition
             int remainingDpThisPartition = ((int)Math.round(totalDPRemaining * 
             (fleetCompData.partitions[i].partitionWeight / sumPartitionWeights(i, fleetCompData))));
+            if(remainingDpThisPartition > fleetCompData.partitions[i].maxDPForPartition) {
+                remainingDpThisPartition = fleetCompData.partitions[i].maxDPForPartition;
+            }
 
-            while(remainingDpThisPartition > 0) {
-                if(maxShipsThatCanBeAdded == 0) {
-                    break;
-                }
+            int shipsRemainingThisPartition = fleetCompData.partitions[i].maxShipsForPartition;
+            while(remainingDpThisPartition > 0 && maxShipsThatCanBeAdded > 0 && shipsRemainingThisPartition > 0) {
                 String variantId = pickVariant(fleetCompData.partitions[i], remainingDpThisPartition + MAX_OVERBUDGET);
-                if(variantId == null) {
+                if(variantId == null) { // no more variants can be spawned with the dp
                     break;
                 }
 
@@ -168,6 +171,7 @@ public class FleetBuilding {
                 remainingDpThisPartition -= DPofVariant;
                 totalDPRemaining -= DPofVariant;
                 maxShipsThatCanBeAdded--;
+                shipsRemainingThisPartition--;
             }
         }
 
