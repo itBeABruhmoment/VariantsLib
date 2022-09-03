@@ -36,7 +36,10 @@ public class FleetComposition {
     public boolean spawnIfNoIndustry;
     public AutofitOption autofit;
     public int setDPToAtLeast; // set to zero if not defined
-    public float autoLogitsticsDP; //  set to negative number if not defined
+    public float freighterDp;
+    public float linerDp;
+    public float tankerDp;
+    public float personnelDp;
     
     public enum AutofitOption {
         AUTOFIT,
@@ -148,7 +151,10 @@ public class FleetComposition {
 
         spawnIfNoIndustry = JsonUtils.getBool(fleetDataJson, "spawnIfNoIndustry", true);
         setDPToAtLeast = JsonUtils.getInt(fleetDataJson, "setDPToAtLeast", 0);
-        autoLogitsticsDP = JsonUtils.getFloat(fleetDataJson, "autoLogitsticsDP", -1.0f);
+        freighterDp = JsonUtils.getFloat(fleetDataJson, "autoLogitsticsFreighterDP", -1.0f);
+        tankerDp = JsonUtils.getFloat(fleetDataJson, "autoLogitsticsTankerDP", -1.0f);
+        personnelDp = JsonUtils.getFloat(fleetDataJson, "autoLogitsticsPersonnelDP", -1.0f);
+        linerDp = JsonUtils.getFloat(fleetDataJson, "autoLogitsticsLinerDP", -1.0f);
         
         try {
             boolean fieldBool = fleetDataJson.getBoolean("autofit");

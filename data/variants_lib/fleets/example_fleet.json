@@ -17,6 +17,11 @@
 	# DEFAULT: 0, DP is not changed
 	"setDPToAtLeast":100,
 
+	# Whether to allow auto fit on the fleet. The option here takes priority over all other features 
+	# in this mod that affect autofit
+	# DEFAUT: no preference, do what other settings around autofit say
+	"autofit":false,
+
 	# Whether to spawn this fleet json if the faction the fleets is spawning as has no heavy industry
 	# DEFAULT: true
 	"spawnIfNoIndustry":false,
@@ -24,9 +29,27 @@
 	# Personality unofficered ships in this fleet will have in combat
 	# DEFAULT: the factions officer aggressiveness specified in doctrine
 	"defaultFleetWidePersonality":"aggressive", 
+
 	# commander skills that will be added to the fleet's captain
 	# DEFAULT: no additional skills
 	"additionalCommanderSkills":["support_doctrine"], 
+
+	# automatically generate freighters for this fleet, with the float being the fraction of dp given to them
+	# DEFAULT: feature is not enabled
+	"autoLogitsticsFreighterDP":0.07,
+
+	# automatically generate tankers for this fleet, with the float being the fraction of dp given to them
+	# DEFAULT: feature is not enabled
+	"autoLogitsticsTankerDP":0.07,
+
+	# automatically generate personnel carriers for this fleet, with the float being the fraction of dp given to them
+	# DEFAULT: feature is not enabled
+	"autoLogitsticsPersonnelDP":0.04,
+
+	# automatically generate civilian liners for this fleet, with the float being the fraction of dp given to them
+	# DEFAULT: feature is not enabled
+	"autoLogitsticsLinerDP":0.04,
+
 	# variants and their amount to always add to fleets of this type
 	# DEFAULT: no additional ships
 	"alwaysInclude":{"ox_Standard":2, "atlas_Standard":1},
@@ -77,6 +100,14 @@
 			}
 		},
 		{
+			# Maximum amount of the fleet's dp that will be dedicated to ships in this partition.
+			# Useful for capping the amount of certain ships can spawn.
+			# DEFAULT: no limit on dp
+			"maxDPForPartition":12,
+			# Maximum amount of ships that will be dedicated to ships in this partition
+			# Useful for capping the amount of certain ships can spawn.
+			# DEFAULT: no limit on ships spawned
+			"maxShipsForPartition":3,
 			"partitionWeight":2,
 			"variants":{
 				"hound_Standard":100,

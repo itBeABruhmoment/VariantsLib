@@ -3,13 +3,13 @@ package variants_lib.scripts.fleetedit;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Collections;
 
 import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.fleet.RepairTrackerAPI;
+import com.fs.starfarer.api.fleet.ShipRolePick;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.impl.campaign.events.OfficerManagerEvent;
 import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflater;
@@ -43,8 +43,13 @@ import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.lazywizard.console.Console;
 
 public class FleetBuilding {
+    private static final String[] FREIGHTER_CLASSES_IN_ORDER = {"freighterLarge", "freighterMedium", "freighterSmall"};
+    private static final String[] TANKER_CLASSES_IN_ORDER = {"tankerLarge", "tankerMedium", "tankerSmall"};
+    private static final String[] LINER_CLASSES_IN_ORDER = {"linerLarge", "linerMedium", "linerSmall"};
+    private static final String[] PERSONNEL_CLASSES_IN_ORDER = {"personnelLarge", "personnelMedium", "personnelSmall"};
     private static final int MAX_OVERBUDGET = 3;
     private static final Random rand = new Random();
     private static final String[] FALLBACK_HULLMODS = {"hardenedshieldemitter", "fluxdistributor", 
@@ -63,6 +68,91 @@ public class FleetBuilding {
     private static double getDPDouble(String variantId)
     {
         return Global.getSettings().getVariant(variantId).getHullSpec().getSuppliesToRecover();
+    }
+
+    private static autoLogiReturn addShipType(FleetInfo info, Vector<FleetMemberAPI> combatShips, Vector<FleetMemberAPI> civilianShips, 
+    String[] shipClassList, FactionAPI faction, int dpAvailible, int numShips)
+    {
+        final int numShipsOriginal = numShips;
+        final int dpAvailibleOriginal = dpAvailible;
+        int shipClassOriginal = 0;
+        int shipClass = shipClassOriginal;
+        boolean continueLoop = true;
+        while(continueLoop) {
+            List<ShipRolePick> ship = faction.pickShip(shipClassList[shipClass], FactionAPI.ShipPickParams.priority());
+            boolean shipPicked = ship != null && ship.size() > 0;
+            boolean enoughDP = false;
+            if(shipPicked) {
+                String variantId = ship.get(0).variantId;
+                enoughDP = dpAvailible - getDPInt(variantId) + MAX_OVERBUDGET > 0;
+                if(enoughDP) {
+                    FleetMemberAPI newMember = createShip(variantId, info);
+                    if(newMember.isCivilian()) {
+                        civilianShips.add(newMember);
+                    } else {
+                        combatShips.add(newMember);
+                    }
+                    int shipDp = getDPInt(variantId);
+                    dpAvailible -= shipDp;
+                    numShips++;
+                }
+            }
+            if(!enoughDP || !shipPicked) {
+                shipClass++;
+            }
+            // if no dp is left or less than 20% of dp is unused coverage is sufficient
+            boolean sufficientCoverage = dpAvailible <= 0 || ((float) dpAvailible) / dpAvailibleOriginal < 0.2f;
+            continueLoop = numShips < SettingsData.getMaxShipsInAIFleet() && !sufficientCoverage && shipClass < shipClassList.length;
+        }
+        return new autoLogiReturn(numShips - numShipsOriginal, dpAvailibleOriginal - dpAvailible);
+    }
+
+    private static autoLogiReturn applyAutoLogistics(FleetInfo info, FleetComposition fleetCompData, 
+    Vector<FleetMemberAPI> combatShips, Vector<FleetMemberAPI> civilianShips) {
+        int freighterDp = Math.round(info.originalDP * fleetCompData.freighterDp);
+        int tankerDp = Math.round(info.originalDP * fleetCompData.tankerDp);
+        int linerDp = Math.round(info.originalDP * fleetCompData.linerDp);
+        int personnelDp = Math.round(info.originalDP * fleetCompData.personnelDp);
+        final int numShipsOriginal = combatShips.size() + civilianShips.size();
+        int numShips = numShipsOriginal;
+        int dpShipsAdded = 0;
+        FactionAPI faction = info.faction;
+        if(info.faction == null) {
+            faction = Global.getSector().getFaction("independent");
+        }
+
+        if(freighterDp > 0) {
+            autoLogiReturn returnInfo = addShipType(info, combatShips, civilianShips, FREIGHTER_CLASSES_IN_ORDER, faction, freighterDp, numShips);
+            numShips += returnInfo.shipsAdded;
+            dpShipsAdded += returnInfo.dpShipsAdded;
+        }
+        if(tankerDp > 0) {
+            autoLogiReturn returnInfo = addShipType(info, combatShips, civilianShips, TANKER_CLASSES_IN_ORDER, faction, tankerDp, numShips);
+            numShips += returnInfo.shipsAdded;
+            dpShipsAdded += returnInfo.dpShipsAdded;
+        }
+        if(linerDp > 0) {
+            autoLogiReturn returnInfo = addShipType(info, combatShips, civilianShips, LINER_CLASSES_IN_ORDER, faction, linerDp, numShips);
+            numShips += returnInfo.shipsAdded;
+            dpShipsAdded += returnInfo.dpShipsAdded;
+        }
+        if(personnelDp > 0) {
+            autoLogiReturn returnInfo = addShipType(info, combatShips, civilianShips, PERSONNEL_CLASSES_IN_ORDER, faction, personnelDp, numShips);
+            numShips += returnInfo.shipsAdded;
+            dpShipsAdded += returnInfo.dpShipsAdded;
+        }
+
+        return new autoLogiReturn(numShips - numShipsOriginal, dpShipsAdded);
+    }
+
+    private static class autoLogiReturn {
+        int shipsAdded;
+        int dpShipsAdded;
+
+        autoLogiReturn(int ShipsAdded, int DpShipsAdded) {
+            shipsAdded = ShipsAdded;
+            dpShipsAdded = DpShipsAdded;
+        }
     }
 
     private static int getDPInt(String variantId)
@@ -144,6 +234,11 @@ public class FleetBuilding {
                 }
             }
         }
+
+        // auto logistics
+        autoLogiReturn addedShipsInfo = applyAutoLogistics(info, fleetCompData, combatShips, civilianShips);
+        maxShipsThatCanBeAdded -= addedShipsInfo.shipsAdded;
+        totalDPRemaining -= addedShipsInfo.dpShipsAdded;
 
         for(int i = 0; i < fleetCompData.partitions.length; i++) {
             // calculate dp for partition
@@ -266,7 +361,7 @@ public class FleetBuilding {
             }
         }
 
-        return new FleetInfo(captain, officers, Math.round(totalDp), mothballedShips, isStationFleet);
+        return new FleetInfo(captain, officers, Math.round(totalDp), mothballedShips, isStationFleet, fleetAPI.getFaction());
     }
 
     // delete all members in fleet
@@ -517,15 +612,17 @@ public class FleetBuilding {
         public int originalDP;
         public Vector<FleetMemberAPI> mothballedShips;
         public boolean isStationFleet;
+        public FactionAPI faction;
 
         public FleetInfo(PersonAPI Captain, Vector<PersonAPI> Officers, int TotalDp, 
-        Vector<FleetMemberAPI> MothballedShips, boolean IsStationFleet)
+        Vector<FleetMemberAPI> MothballedShips, boolean IsStationFleet, FactionAPI Faction)
         {
             captain = Captain;
             officers = Officers;
             originalDP = TotalDp;
             mothballedShips = MothballedShips;
             isStationFleet = IsStationFleet;
+            faction = Faction;
         }
 
         @Override
@@ -617,7 +714,7 @@ public class FleetBuilding {
         }
 
         FleetInfo buildData = new FleetInfo(params.commander, officers, params.fleetPoints, 
-            new Vector<FleetMemberAPI>(), false);
+            new Vector<FleetMemberAPI>(), false, Global.getSector().getFaction(params.faction));
     
         CampaignFleetAPI fleet = Global.getFactory().createEmptyFleet(params.faction, params.fleetName, true);
         fleet.setCommander(params.commander);
