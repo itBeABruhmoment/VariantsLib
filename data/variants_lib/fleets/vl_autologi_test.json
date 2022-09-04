@@ -22,6 +22,7 @@
 	"autoLogitsticsLinerDP":0.04,
 	"fleetPartitions":[
 		{
+			"maxShipsForPartition":1,
 			"partitionWeight":37.74,
 			"variants":{
 				"onslaught_Standard_bv":16.58,
