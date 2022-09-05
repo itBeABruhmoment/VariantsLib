@@ -51,7 +51,7 @@ public class FleetBuilding {
     private static final String[] LINER_CLASSES_IN_ORDER = {"linerLarge", "linerMedium", "linerSmall"};
     private static final String[] PERSONNEL_CLASSES_IN_ORDER = {"personnelLarge", "personnelMedium", "personnelSmall"};
     private static final int MAX_OVERBUDGET = 3;
-    private static final Random rand = new Random();
+    private static final Random RAND = new Random();
     private static final String[] FALLBACK_HULLMODS = {"hardenedshieldemitter", "fluxdistributor", 
     "fluxbreakers", "reinforcedhull", "targetingunit", "solar_shielding"};
 
@@ -180,7 +180,7 @@ public class FleetBuilding {
         return sum;
     }
 
-    private static String pickVariant(FleetPartition partition, int DPLimit)
+    private static String pickVariant(FleetPartition partition, int DPLimit, Random rand)
     {
         Vector<FleetPartitionMember> pickableVariants = getPickableVariants(partition, DPLimit);
         if(pickableVariants.size() == 0) { // no elligible varaints because not enough dp to spawn them
@@ -213,7 +213,7 @@ public class FleetBuilding {
         return sum;
     }
 
-    private static void createFleet(CampaignFleetAPI fleetAPI, FleetInfo info, FleetComposition fleetCompData)
+    private static void createFleet(CampaignFleetAPI fleetAPI, FleetInfo info, FleetComposition fleetCompData, Random rand)
     {
         Vector<FleetMemberAPI> combatShips = new Vector<FleetMemberAPI>(30);
         Vector<FleetMemberAPI> civilianShips = new Vector<FleetMemberAPI>(10);
@@ -250,7 +250,7 @@ public class FleetBuilding {
 
             int shipsRemainingThisPartition = fleetCompData.partitions[i].maxShipsForPartition;
             while(remainingDpThisPartition > 0 && maxShipsThatCanBeAdded > 0 && shipsRemainingThisPartition > 0) {
-                String variantId = pickVariant(fleetCompData.partitions[i], remainingDpThisPartition + MAX_OVERBUDGET);
+                String variantId = pickVariant(fleetCompData.partitions[i], remainingDpThisPartition + MAX_OVERBUDGET, rand);
                 if(variantId == null) { // no more variants can be spawned with the dp
                     break;
                 }
@@ -403,7 +403,7 @@ public class FleetBuilding {
         return fleetComps;
     }
 
-    private static FleetComposition pickFleet(FleetInfo info, String factionId, String fleetType)
+    private static FleetComposition pickFleet(FleetInfo info, String factionId, String fleetType, Random rand)
     {
         if(!FactionData.FACTION_DATA.containsKey(factionId)) {
             log.debug(factionId + " not registered");
@@ -451,7 +451,7 @@ public class FleetBuilding {
         return null;
     }
 
-    public static void addSmods(CampaignFleetAPI fleet, float averageSmods)
+    public static void addSmods(CampaignFleetAPI fleet, float averageSmods, Random rand)
     {
         if(averageSmods < 0.01) {
             return;
@@ -508,7 +508,7 @@ public class FleetBuilding {
         }
     }
 
-    public static void addDmods(CampaignFleetAPI fleet, float quality)
+    public static void addDmods(CampaignFleetAPI fleet, float quality, Random rand)
     {
         // add dmods
         quality = quality + (0.05f * quality); // noticed an abnormal amount dmods in factions such as diktat
@@ -537,14 +537,15 @@ public class FleetBuilding {
         }
     }
 
-    public static String editFleet(CampaignFleetAPI fleetAPI) 
+    public static String editFleet(CampaignFleetAPI fleetAPI, Random rand) 
     {
         log.debug("editing " + fleetAPI.getFullName());
+        MemoryAPI fleetMemory = fleetAPI.getMemoryWithoutUpdate();
         String factionId = fleetAPI.getFaction().getId();
-        String fleetType = fleetAPI.getMemoryWithoutUpdate().getString(MemFlags.MEMORY_KEY_FLEET_TYPE);
+        String fleetType = fleetMemory.getString(MemFlags.MEMORY_KEY_FLEET_TYPE);
 
         FleetInfo info = getInfo(fleetAPI);
-        FleetComposition compInfo = pickFleet(info, factionId, fleetType);
+        FleetComposition compInfo = pickFleet(info, factionId, fleetType, rand);
         if(compInfo == null) {
             log.debug("fleet not edited");
             return null;
@@ -567,7 +568,7 @@ public class FleetBuilding {
 
         log.debug("changing to " + compInfo.id);
         clearMembers(fleetAPI);
-        createFleet(fleetAPI, info, compInfo);
+        createFleet(fleetAPI, info, compInfo, rand);
 
         return compInfo.id;
     }
@@ -592,7 +593,7 @@ public class FleetBuilding {
 
         log.debug("changing to " + compInfo.id);
         clearMembers(fleetAPI);
-        createFleet(fleetAPI, info, compInfo);
+        createFleet(fleetAPI, info, compInfo, RAND);
 
         return compInfo.id;
     }
@@ -704,7 +705,7 @@ public class FleetBuilding {
 
         Vector<PersonAPI> officers = new Vector<>();
         for(int i = 0; i < numOfficers; i++) {
-            int level = Math.round(averageOfficerLevel + (rand.nextFloat() - 0.5f));
+            int level = Math.round(averageOfficerLevel + (RAND.nextFloat() - 0.5f));
             if(level < 1) {
                 level = 1;
             } else if(level > 10) {
@@ -721,8 +722,8 @@ public class FleetBuilding {
         clearMembers(fleet);
 
         FleetComposition comp = FleetBuildData.FLEET_DATA.get(params.fleetDataId);
-        createFleet(fleet, buildData, comp);
-        addSmods(fleet, params.averageSmods);
+        createFleet(fleet, buildData, comp, RAND);
+        addSmods(fleet, params.averageSmods, RAND);
 
         log.debug("1:" + fleet.getMembersWithFightersCopy().size());
 
@@ -734,14 +735,14 @@ public class FleetBuilding {
             inflaterParams.mode = ShipPickMode.ALL;
             inflaterParams.quality = params.quality;
             inflaterParams.rProb = 1.0f - params.quality;
-            inflaterParams.seed = rand.nextLong();
+            inflaterParams.seed = RAND.nextLong();
             inflaterParams.persistent = false;
 
             DefaultFleetInflater inflater = new DefaultFleetInflater(inflaterParams);
             inflater.inflate(fleet);
             fleet.setInflated(true);
         } else {
-            addDmods(fleet, params.quality);
+            addDmods(fleet, params.quality, RAND);
             fleet.setInflated(true);
         }
         if(params.enableOfficerEditing) {

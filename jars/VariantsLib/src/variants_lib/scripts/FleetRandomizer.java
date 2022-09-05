@@ -23,6 +23,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.fs.starfarer.api.campaign.FleetInflater;
+import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 
 
 /*
@@ -86,25 +87,33 @@ public class FleetRandomizer {
     public static void modify(CampaignFleetAPI fleet)
     {
         String factionId = fleet.getFaction().getId();
+        MemoryAPI fleetMemory = fleet.getMemoryWithoutUpdate();
    
-        if(fleet.getMemoryWithoutUpdate().contains(CommonStrings.FLEET_EDITED_MEMKEY)) {
+        if(fleetMemory.contains(CommonStrings.FLEET_EDITED_MEMKEY)) {
             log.debug(CommonStrings.MOD_ID + ": fleet not edited, has " + CommonStrings.FLEET_EDITED_MEMKEY + " memkey");
             return;
         }
 
         log.debug("trying to modify " + fleet.getFullName());
-        fleet.getMemoryWithoutUpdate().set(CommonStrings.FLEET_EDITED_MEMKEY, true);
+        fleetMemory.set(CommonStrings.FLEET_EDITED_MEMKEY, true);
         if(!allowModificationFleet(fleet)) {
             log.debug("modification barred");
             return;
         }
 
+        Random rand = new Random();
+        if(fleetMemory.contains(MemFlags.SALVAGE_SEED)) {
+            rand = new Random(fleetMemory.getLong(MemFlags.SALVAGE_SEED));
+        } else {
+            log.debug("no salvage seed found, using static field random");
+        }
+
         // edit ships in fleet
         String fleetCompId = null;
         if(SettingsData.fleetEditingEnabled()) {
-            fleetCompId = FleetBuilding.editFleet(fleet);
+            fleetCompId = FleetBuilding.editFleet(fleet, rand);
             if(fleetCompId != null) {
-                fleet.getMemoryWithoutUpdate().set(CommonStrings.FLEET_VARIANT_KEY, fleetCompId);
+                fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, fleetCompId);
             }
         }
 
@@ -137,8 +146,8 @@ public class FleetRandomizer {
                 averageSMods = 0.0f;
                 log.debug("could not get average smods defaulting to none");
             }
-            FleetBuilding.addDmods(fleet, quality);
-            FleetBuilding.addSmods(fleet, averageSMods);
+            FleetBuilding.addDmods(fleet, quality, rand);
+            FleetBuilding.addSmods(fleet, averageSMods, rand);
             fleet.setInflated(true);
         }
 
