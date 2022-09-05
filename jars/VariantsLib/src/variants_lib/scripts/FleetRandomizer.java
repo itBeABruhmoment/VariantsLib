@@ -51,9 +51,6 @@ public class FleetRandomizer {
         add(MemFlags.ENTITY_MISSION_IMPORTANT); add(MemFlags.MEMORY_KEY_MISSION_IMPORTANT); add(MemFlags.STORY_CRITICAL);
         add(MemFlags.STATION_BASE_FLEET);       add(MemFlags.STATION_FLEET);
     }};
-    
-    private static HashMap<String, FleetInflater> inflators = new HashMap<String, FleetInflater>();
-    private static final Random rand = new Random();
 
     private static String getFleetType(CampaignFleetAPI fleet)
     {
