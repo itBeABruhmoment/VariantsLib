@@ -648,6 +648,7 @@ public class FleetBuilding {
         boolean enableAutofit;
         boolean enableOfficerEditing;
         boolean runAssociatedScripts; // whether to run the fleets post modification scripts
+        Random rand;
 
         // contructor with all the fields as arguments
         public VariantsLibFleetParams(String FleetName, String Faction, String FleetType, String FleetDataId, int FleetPoints, float Quality, float AverageSmods,
@@ -666,6 +667,8 @@ public class FleetBuilding {
             enableAutofit = EnableAutofit;
             enableOfficerEditing = EnableOfficerEditing;
             runAssociatedScripts = RunAssociatedScripts;
+
+            rand = new Random();
         }
 
         // constructor that auto generates a officer
@@ -685,6 +688,7 @@ public class FleetBuilding {
             runAssociatedScripts = RunAssociatedScripts;
 
             commander = OfficerManagerEvent.createOfficer(Global.getSector().getFaction(faction), Math.round(averageOfficerLevel));
+            rand = new Random();
         }
     }
 
@@ -705,7 +709,7 @@ public class FleetBuilding {
 
         Vector<PersonAPI> officers = new Vector<>();
         for(int i = 0; i < numOfficers; i++) {
-            int level = Math.round(averageOfficerLevel + (RAND.nextFloat() - 0.5f));
+            int level = Math.round(averageOfficerLevel + (params.rand.nextFloat() - 0.5f));
             if(level < 1) {
                 level = 1;
             } else if(level > 10) {
@@ -722,10 +726,8 @@ public class FleetBuilding {
         clearMembers(fleet);
 
         FleetComposition comp = FleetBuildData.FLEET_DATA.get(params.fleetDataId);
-        createFleet(fleet, buildData, comp, RAND);
-        addSmods(fleet, params.averageSmods, RAND);
-
-        log.debug("1:" + fleet.getMembersWithFightersCopy().size());
+        createFleet(fleet, buildData, comp, params.rand);
+        addSmods(fleet, params.averageSmods, params.rand);
 
         if(params.enableAutofit) {
             DefaultFleetInflaterParams inflaterParams = new DefaultFleetInflaterParams();
@@ -735,14 +737,14 @@ public class FleetBuilding {
             inflaterParams.mode = ShipPickMode.ALL;
             inflaterParams.quality = params.quality;
             inflaterParams.rProb = 1.0f - params.quality;
-            inflaterParams.seed = RAND.nextLong();
+            inflaterParams.seed = params.rand.nextLong();
             inflaterParams.persistent = false;
 
             DefaultFleetInflater inflater = new DefaultFleetInflater(inflaterParams);
             inflater.inflate(fleet);
             fleet.setInflated(true);
         } else {
-            addDmods(fleet, params.quality, RAND);
+            addDmods(fleet, params.quality, params.rand);
             fleet.setInflated(true);
         }
         if(params.enableOfficerEditing) {
@@ -762,7 +764,6 @@ public class FleetBuilding {
         fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, params.fleetDataId);
         fleetMemory.set(MemFlags.MEMORY_KEY_FLEET_TYPE, params.fleetType);
         
-        log.debug("2:" + fleet.getMembersWithFightersCopy().size());
         return fleet;
     }
 
