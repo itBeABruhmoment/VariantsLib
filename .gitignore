@@ -1,3 +1,4 @@
 /.git
 /jars/VariantsLib/bin/*
 /jars/VariantsLib/.vscode
+/jars/VariantsLib/random_test_code/*
