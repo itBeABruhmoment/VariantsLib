@@ -13,8 +13,6 @@ import com.fs.starfarer.api.ModSpecAPI;
 
 import variants_lib.scripts.FleetEditingScript;
 
-// TODO: finish merging features
-
 // loads settings for this mod
 public class SettingsData {
     private static final Logger log = Global.getLogger(variants_lib.data.SettingsData.class);
