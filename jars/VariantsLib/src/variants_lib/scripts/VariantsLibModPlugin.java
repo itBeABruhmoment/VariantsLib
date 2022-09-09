@@ -1,8 +1,6 @@
 package variants_lib.scripts;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
@@ -10,9 +8,6 @@ import com.fs.starfarer.api.Global;
 import variants_lib.data.CommonStrings;
 import variants_lib.data.FactionData;
 import variants_lib.data.FleetBuildData;
-import variants_lib.data.FleetComposition;
-import variants_lib.data.FleetPartition;
-import variants_lib.data.ModdedVariantsData;
 import variants_lib.data.SettingsData;
 import variants_lib.data.VariantData;
 
@@ -28,33 +23,6 @@ public class VariantsLibModPlugin extends BaseModPlugin {
         log.setLevel(Level.ALL);
     }
 
-    /*
-    //this doesn't want to work, probably because it uses reflection
-    @Override
-    public void onDevModeF8Reload() {
-        try {
-            //log.debug(CommonStrings.MOD_ID + ": loading settings");
-            //SettingsData.loadSettings();
-            //log.debug(CommonStrings.MOD_ID + ": loading faction data");
-            //FactionData.loadData();
-            // somewhat important for FleetBuildData to be loaded before VariantData
-            //log.debug(CommonStrings.MOD_ID + ": loading fleet build data");
-            //FleetBuildData.loadData();
-            //log.debug(CommonStrings.MOD_ID + ": loading variant data");
-            VariantData.loadData();
-        } catch(Exception e) {
-            //log.debug(CommonStrings.MOD_ID + ": failed to reload variants lib data");
-            //log.debug(e.getMessage());
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            String sStackTrace = sw.toString();
-            //log.debug(sStackTrace);
-        }
-    }
-    */
-    
-
     @Override
     public void onApplicationLoad() throws IOException, JSONException, Exception
     {
@@ -67,13 +35,6 @@ public class VariantsLibModPlugin extends BaseModPlugin {
         FleetBuildData.loadData();
         log.debug(CommonStrings.MOD_ID + ": loading variant data");
         VariantData.loadData();
-
-        //for(FleetComposition part : FleetBuildData.FLEET_DATA.values()) {
-        //    log.debug(part.toString());
-        //}
-        //log.debug("load test");
-        //log.debug(ModdedVariantsData.addShipToStore("afflictor_d_pirates_Strike_test", CommonStrings.MOD_ID));
-        //log.debug(ModdedVariantsData.VARIANTS.get("afflictor_d_pirates_Strike_test").getHullVariantId());
     }
 
     @Override
@@ -86,8 +47,5 @@ public class VariantsLibModPlugin extends BaseModPlugin {
         log.debug(CommonStrings.MOD_ID + ": initializing HasHeavyIndustryTracker");
         HasHeavyIndustryTracker.refreshHasHeavyIndustry();
         HasHeavyIndustryTracker.printEntries();
-        
-        // BountyData.addBounty("bv_test", 999999.0f);
-        // runcode com.fs.starfarer.api.impl.campaign.intel.bar.events.BarEventManager.getInstance().addEventCreator(new better_variants.bar_events.BetterVariantsBarEventCreator());
     }
 }
