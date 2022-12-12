@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+//group 'org.example'
+version '0.1.2'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    Properties localProps = new Properties()
+    localProps.load(new FileInputStream(file('local.properties'))) // See local.properties.example
+
+    // Local build environment config, set in local.properties
+    gameDir = localProps.getProperty('starSectorInstallDir')
+    consoleCommandsDir = localProps.getProperty('consoleCommandDir')
+}
+
+dependencies {
+    compileOnly files(gameDir + '/starfarer.api.jar')
+    compileOnly files(gameDir + '/xstream-1.4.10.jar')
+    compileOnly files(gameDir + '/log4j-1.2.9.jar')
+    compileOnly files(gameDir + '/json.jar')
+    compileOnly files(gameDir + '/lwjgl.jar')
+    compileOnly files(gameDir + '/xstream-1.4.10.jar')
+    compileOnly files(consoleCommandsDir + '/jars/lw_Console.jar')
+}
