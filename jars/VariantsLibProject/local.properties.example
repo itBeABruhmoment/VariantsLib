@@ -1,2 +1,2 @@
-starSectorInstallDir=/home/mz/Documents/starsector_linux-0.95.1a-RC6/starsector
-consoleCommandDir=/home/mz/Documents/starsector_linux-0.95.1a-RC6/starsector/mods/Console Commands
+starSectorInstallDir=/path/to/starsector/install/folder
+consoleCommandDir=/path/to/consolecommands/install/folder
