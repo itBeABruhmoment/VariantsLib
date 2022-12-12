@@ -1,4 +1,9 @@
 /.git
-/jars/VariantsLib/bin/*
-/jars/VariantsLib/.vscode
-/jars/VariantsLib/random_test_code/*
+/jars/VariantsLibProject/gradle/*
+/jars/VariantsLibProject/build/classes/*
+/jars/VariantsLibProject/build/genrated/*
+/jars/VariantsLibProject/build/tmp/*
+/jars/VariantsLibProject/local.properties
+/jars/VariantsLibProject/.gradle/*
+/jars/VariantsLibProject/.idea/*
+
