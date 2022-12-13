@@ -6,6 +6,27 @@ import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 
 // stores important strings
 public class CommonStrings {
+    // fleet json fields
+    public static final String REQUIRED_MODS = "requiredMods";
+    public static final String FLEET_DATA_ID = "fleetDataId";
+    public static final String MIN_DP = "minDP";
+    public static final String MAX_DP = "maxDP";
+    public static final String SET_DP_TO_AT_LEAST = "setDPToAtLeast";
+    public static final String AUTOFIT = "autofit";
+    public static final String SPAWN_IF_NO_INDUSTRY = "spawnIfNoIndustry";
+    public static final String DEFAULT_FLEET_WIDE_PERSONALITY = "defaultFleetWidePersonality";
+    public static final String ADDITIONAL_COMMANDER_SKILLS = "additionalCommanderSkills";
+    public static final String AUTO_LOGISTICS_FREIGHTER = "autoLogitsticsFreighterDP";
+    public static final String AUTO_LOGISTICS_PERSONNEL = "autoLogitsticsPersonnelDP";
+    public static final String AUTO_LOGISTICS_LINER = "autoLogitsticsLinerDP";
+    public static final String AUTO_LOGISTICS_TANKER = "autoLogitsticsTankerDP";
+    public static final String ALWAYS_INCLUDE = "alwaysInclude";
+    public static final String FLEET_PARTITIONS = "fleetPartitions";
+    public static final String PARTITION_WEIGHT = "partitionWeight";
+    public static final String VARIANTS = "variants";
+    public static final String MAX_DP_PARTITION = "maxDPForPartition";
+    public static final String MAX_SHIPS_PARTITION = "maxShipsForPartition";
+
     // file paths and other important mod info
     public static final String SETTINGS_FILE_NAME = "data/variants_lib/variants_lib_settings.json";
     public static final String VARIANT_TAGS_CSV_PATH = "data/variants_lib/variant_tags.csv";

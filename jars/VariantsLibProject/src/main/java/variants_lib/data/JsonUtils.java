@@ -12,9 +12,17 @@ public class JsonUtils {
     static {
         log.setLevel(Level.ALL);
     }
+
+    public static String getString(String key, String defaultVal, JSONObject json) {
+        try {
+            return json.getString(key);
+        } catch (Exception e) {
+            log.debug(CommonStrings.MOD_ID + ": failed to read " + key + " field, set to a default value");
+            return defaultVal;
+        }
+    }
     
-    public static String[] getStringArray(String key, String loadedFileInfo, JSONObject json)
-    {
+    public static String[] getStringArray(String key, String loadedFileInfo, JSONObject json) {
         JSONArray jsonArr = null;
         try {
             jsonArr = json.getJSONArray(key);
@@ -38,8 +46,7 @@ public class JsonUtils {
         return strArr;
     }
 
-    public static int getInt(JSONObject json, String key, int defaultVal)
-    {
+    public static int getInt(String key, int defaultVal, JSONObject json) {
         try {
             return json.getInt(key);
         } catch(Exception e) {
@@ -48,8 +55,7 @@ public class JsonUtils {
         }
     }
 
-    public static boolean getBool(JSONObject json, String key, boolean defaultVal)
-    {
+    public static boolean getBool(JSONObject json, String key, boolean defaultVal) {
         try {
             return json.getBoolean(key);
         } catch(Exception e) {
@@ -58,13 +64,20 @@ public class JsonUtils {
         }
     }
 
-    public static float getFloat(JSONObject json, String key, float defaultVal)
-    {
+    public static float getFloat(JSONObject json, String key, float defaultVal) {
         try {
             return (float) json.getDouble(key);
         } catch(Exception e) {
             log.debug(CommonStrings.MOD_ID + ": failed to read " + key + " field, set to a default value");
             return defaultVal;
         }
+    }
+
+    public static void forEachKey(JSONObject json, ForEachKey forEachKey) {
+        json.keys();
+    }
+
+    public static interface ForEachKey {
+        public void runOnEach(String key);
     }
 }

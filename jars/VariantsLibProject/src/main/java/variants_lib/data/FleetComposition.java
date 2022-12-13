@@ -18,6 +18,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 
+
 public class FleetComposition {
     private static final Logger log = Global.getLogger(variants_lib.data.FleetComposition.class);
     static {
@@ -150,7 +151,7 @@ public class FleetComposition {
         }
 
         spawnIfNoIndustry = JsonUtils.getBool(fleetDataJson, "spawnIfNoIndustry", true);
-        setDPToAtLeast = JsonUtils.getInt(fleetDataJson, "setDPToAtLeast", 0);
+        setDPToAtLeast = JsonUtils.getInt("setDPToAtLeast", 0, fleetDataJson);
         freighterDp = JsonUtils.getFloat(fleetDataJson, "autoLogitsticsFreighterDP", -1.0f);
         tankerDp = JsonUtils.getFloat(fleetDataJson, "autoLogitsticsTankerDP", -1.0f);
         personnelDp = JsonUtils.getFloat(fleetDataJson, "autoLogitsticsPersonnelDP", -1.0f);

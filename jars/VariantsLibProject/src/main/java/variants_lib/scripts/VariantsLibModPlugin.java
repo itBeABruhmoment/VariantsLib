@@ -5,11 +5,7 @@ import java.io.IOException;
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
 
-import variants_lib.data.CommonStrings;
-import variants_lib.data.FactionData;
-import variants_lib.data.FleetBuildData;
-import variants_lib.data.SettingsData;
-import variants_lib.data.VariantData;
+import variants_lib.data.*;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;

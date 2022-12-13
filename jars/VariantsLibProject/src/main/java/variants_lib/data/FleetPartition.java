@@ -51,8 +51,8 @@ public class FleetPartition {
             throw new Exception(loadedFileInfo + " fleet partion " + index + " has missing or invalid \"variants\" field");
         }
 
-        maxDPForPartition = JsonUtils.getInt(partitionData, "maxDPForPartition", Integer.MAX_VALUE);
-        maxShipsForPartition = JsonUtils.getInt(partitionData, "maxShipsForPartition", Integer.MAX_VALUE);
+        maxDPForPartition = JsonUtils.getInt("maxDPForPartition", Integer.MAX_VALUE, partitionData);
+        maxShipsForPartition = JsonUtils.getInt("maxShipsForPartition", Integer.MAX_VALUE, partitionData);
 
         // construct "members field"
         float variantWeightSum = 0.0f;
