@@ -4,6 +4,8 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,13 +23,13 @@ public class VariantsLibFleetFactory  {
         add("timid"); add("cautious"); add("steady"); add("reckless"); add("aggressive");
     }};
 
-    public ArrayList<AlwaysBuildMember> alwaysInclude = new ArrayList<>(5);
-    public ArrayList<FleetPartition> partitions = new ArrayList<>(5);
-    public ArrayList<String> commanderSkills = new ArrayList<>(5);
-    public String id = "";
-    public HashMap<String, Float> fleetTypeSpawnWeights = new HashMap<>();
+    @NotNull public ArrayList<AlwaysBuildMember> alwaysInclude = new ArrayList<>(5);
+    @NotNull public ArrayList<FleetPartition> partitions = new ArrayList<>(5);
+    @NotNull public ArrayList<String> commanderSkills = new ArrayList<>(5);
+    @NotNull public String id = "";
+    @NotNull public HashMap<String, Float> fleetTypeSpawnWeights = new HashMap<>();
     public int minDP = 0;
-    public int maxDP = 100000;
+    public int maxDP = Integer.MAX_VALUE;
     public String defaultFleetWidePersonality = "steady";
     public boolean spawnIfNoIndustry = true;
     public boolean autofit = true;
@@ -44,14 +46,21 @@ public class VariantsLibFleetFactory  {
      * @param modOfOrigin The mod the fleet json is from
      * @throws Exception An exception containing some message on fields that are set to invalid values or failed to load
      */
-    public VariantsLibFleetFactory(final JSONObject fleetJson, final JSONObject fleetJsonCsvRow, String modOfOrigin) throws Exception {
+    public VariantsLibFleetFactory(
+            @NotNull final JSONObject fleetJson,
+            @NotNull final JSONObject fleetJsonCsvRow,
+            @NotNull String modOfOrigin
+    ) throws Exception {
         id = JsonUtils.getString(CommonStrings.FLEET_DATA_ID, "", fleetJson);
         if(id.equals("")) {
             throw new Exception(CommonStrings.FLEET_DATA_ID + "field could not be read");
         }
+        /*
         if(FleetBuildData.FLEET_DATA.containsKey(id)) {
             throw new Exception("already a fleet json with the " + CommonStrings.FLEET_DATA_ID + " \""  + id + "\"");
         }
+
+         */
 
         minDP = JsonUtils.getInt(CommonStrings.MIN_DP, 0, fleetJson);
         if(minDP < 0) {
@@ -121,7 +130,7 @@ public class VariantsLibFleetFactory  {
             if(member.amount < 0) {
                 throw new Exception("the " + member.id + " field of " + CommonStrings.ALWAYS_INCLUDE + " has a negative amount");
             }
-            if(ModdedVariantsData.addVariantToStore(member.id, modOfOrigin)) {
+            if(Global.getSettings().getVariant(member.id) == null && ModdedVariantsData.addVariantToStore(member.id, modOfOrigin)) {
                 throw new Exception("the " + member.id + " field of " + CommonStrings.ALWAYS_INCLUDE + " is not a recognized variant");
             }
         }
@@ -180,25 +189,27 @@ public class VariantsLibFleetFactory  {
                 json.append(CommonStrings.ALWAYS_INCLUDE, new JSONObject().put(member.id, member.amount));
             }
             json.put(CommonStrings.ADDITIONAL_COMMANDER_SKILLS, commanderSkills);
+            for (FleetPartition part : partitions) {
+                json.append(CommonStrings.FLEET_PARTITIONS, part.toJson());
+            }
+            for(String fleetType: fleetTypeSpawnWeights.keySet()) {
+                final JSONObject weightAndFleetType = new JSONObject();
+                weightAndFleetType.put("fleetType", fleetType);
+                weightAndFleetType.put("weight", fleetTypeSpawnWeights.get(fleetType));
+                json.append("csvRow", weightAndFleetType);
+            }
             return json.toString();
         } catch (Exception e) {
             return "failed to convert to string";
         }
     }
 
-    public CampaignFleetAPI makeFleet(VariantsLibFleetParams params) {
+    @NotNull
+    public CampaignFleetAPI makeFleet(@NotNull VariantsLibFleetParams params) {
         return null;
     }
 
-    public void editFleet(CampaignFleetAPI original) {
+    public void editFleet(@NotNull CampaignFleetAPI original) {
 
     }
-
-    public enum AutofitOption {
-        AUTOFIT,
-        NO_AUTOFIT,
-        NO_PREF
-    }
-
-
 }

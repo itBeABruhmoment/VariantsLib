@@ -94,6 +94,9 @@ public class FleetBuildData {
         if(shouldLoad) {
             FleetComposition comp = new FleetComposition(fleetDataCSVRow, fleetDataJson, fleetDataId, loadedFileInfo, modId);
             FLEET_DATA.put(fleetDataId, comp);
+            // TODO: remove test code
+            VariantsLibFleetFactory test = new VariantsLibFleetFactory(fleetDataJson, fleetDataCSVRow, modId);
+            log.debug(test.toString());
         } else {
             log.debug(loadedFileInfo + " was not loaded due to unenabled required mods");
         }

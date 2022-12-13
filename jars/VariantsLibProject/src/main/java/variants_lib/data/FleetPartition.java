@@ -20,8 +20,8 @@ public class FleetPartition {
 
     public int maxDPForPartition = 10000;
     public int maxShipsForPartition = 1000;
-    public ArrayList<FleetPartitionMember> members;
-    public float partitionWeight; // should be percentage after processing
+    public ArrayList<FleetPartitionMember> members = new ArrayList<>();
+    public float partitionWeight = 10.0f; // should be percentage after processing
 
     private static final String PARTITION_WEIGHT = "partitionWeight";
     private static final String VARIANTS = "variants";
@@ -95,6 +95,11 @@ public class FleetPartition {
             json.put(CommonStrings.MAX_SHIPS_PARTITION, maxShipsForPartition);
             json.put(CommonStrings.MAX_DP_PARTITION, maxDPForPartition);
             json.put(CommonStrings.PARTITION_WEIGHT, (double) partitionWeight);
+            final JSONObject membersJson = new JSONObject();
+            for(FleetPartitionMember member : members) {
+                membersJson.put(member.id, member.weight);
+            }
+            json.put(CommonStrings.VARIANTS, membersJson);
         } catch (Exception e) {
             log.info("failed to convert partition to JSON");
         }

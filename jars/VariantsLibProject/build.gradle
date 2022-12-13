@@ -21,6 +21,7 @@ ext {
 }
 
 dependencies {
+    implementation 'org.jetbrains:annotations-java5:23.0.0'
     compileOnly files(gameDir + '/starfarer.api.jar')
     compileOnly files(gameDir + '/xstream-1.4.10.jar')
     compileOnly files(gameDir + '/log4j-1.2.9.jar')
