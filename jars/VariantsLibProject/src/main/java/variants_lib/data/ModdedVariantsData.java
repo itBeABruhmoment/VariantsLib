@@ -25,6 +25,10 @@ public class ModdedVariantsData {
 
     // return false if succeeded and true if failed
     public static boolean addVariantToStore(String variantId, String modId) throws Exception {
+        if(VARIANTS.containsKey(variantId)) {
+            return false;
+        }
+
         String path = CommonStrings.MODDED_VARIANTS_FOLDER_PATH + variantId + ".variant";
         ShipVariantAPI variant = loadVariant(modId, path);
         if(variant == null) { // search other mods

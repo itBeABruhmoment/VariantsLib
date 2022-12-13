@@ -209,7 +209,7 @@ public class FleetComposition {
         partitions = new FleetPartition[fleetPartitionsData.length()];
         for(int i = 0; i < fleetPartitionsData.length(); i++) {
             final JSONObject partitionData = fleetPartitionsData.getJSONObject(i);
-            partitions[i] = new FleetPartition(partitionData, loadedFileInfo, i, modId);
+            partitions[i] = new FleetPartition(partitionData, i, modId);
             partitionWeightSum += partitions[i].partitionWeight;
         }
 

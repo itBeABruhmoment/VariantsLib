@@ -7,6 +7,9 @@ import org.json.JSONObject;
 
 import com.fs.starfarer.api.Global;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 public class JsonUtils {
     private static final Logger log = Global.getLogger(variants_lib.data.JsonUtils.class);
     static {
@@ -21,7 +24,21 @@ public class JsonUtils {
             return defaultVal;
         }
     }
-    
+
+    public static ArrayList<String> getStringArrayList(String key, JSONObject json) {
+        try {
+            final JSONArray stringJsonArray = json.getJSONArray(key);
+            final ArrayList<String> stringArray = new ArrayList<>(stringJsonArray.length());
+            for(int i = 0; i < stringJsonArray.length(); i++) {
+                stringArray.add(stringJsonArray.getString(i));
+            }
+            return stringArray;
+        } catch (Exception e) {
+            log.debug(CommonStrings.MOD_ID + ": failed to read " + key + " field, set to a default value");
+            return new ArrayList<>();
+        }
+    }
+
     public static String[] getStringArray(String key, String loadedFileInfo, JSONObject json) {
         JSONArray jsonArr = null;
         try {
@@ -73,11 +90,15 @@ public class JsonUtils {
         }
     }
 
-    public static void forEachKey(JSONObject json, ForEachKey forEachKey) {
-        json.keys();
+    public static void forEachKey(JSONObject json, ForEachKey forEachKey) throws Exception{
+        Iterator<String> iterate = json.keys();
+        while (iterate.hasNext()) {
+            final String key = iterate.next();
+            forEachKey.runOnEach(key);
+        }
     }
 
     public static interface ForEachKey {
-        public void runOnEach(String key);
+        public void runOnEach(String key) throws Exception;
     }
 }

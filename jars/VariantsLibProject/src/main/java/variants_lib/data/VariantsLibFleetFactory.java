@@ -4,11 +4,13 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 public class VariantsLibFleetFactory  {
     protected static final Logger log = Global.getLogger(VariantsLibFleetFactory.class);
@@ -28,7 +30,7 @@ public class VariantsLibFleetFactory  {
     public int maxDP = 100000;
     public String defaultFleetWidePersonality = "steady";
     public boolean spawnIfNoIndustry = true;
-    public AutofitOption autofit = AutofitOption.NO_PREF;
+    public boolean autofit = true;
     public int setDPToAtLeast = 0; // set to zero if not defined
     public float freighterDp = 0.0f;
     public float linerDp = 0.0f;
@@ -36,10 +38,13 @@ public class VariantsLibFleetFactory  {
     public float personnelDp = 0.0f;
 
     /**
-     * Creates a default fleet factory from json
+     * Create a VariantsLibFleetFactory
      * @param fleetJson The fleet json
+     * @param fleetJsonCsvRow The fleet json's row in fleets.csv
+     * @param modOfOrigin The mod the fleet json is from
+     * @throws Exception An exception containing some message on fields that are set to invalid values or failed to load
      */
-    public VariantsLibFleetFactory(JSONObject fleetJson, JSONObject fleetJsonCsvRow) throws Exception {
+    public VariantsLibFleetFactory(final JSONObject fleetJson, final JSONObject fleetJsonCsvRow, String modOfOrigin) throws Exception {
         id = JsonUtils.getString(CommonStrings.FLEET_DATA_ID, "", fleetJson);
         if(id.equals("")) {
             throw new Exception(CommonStrings.FLEET_DATA_ID + "field could not be read");
@@ -67,17 +72,7 @@ public class VariantsLibFleetFactory  {
 
         spawnIfNoIndustry = JsonUtils.getBool(fleetJson, CommonStrings.SPAWN_IF_NO_INDUSTRY, true);
 
-        // set autofit field
-        try {
-            final boolean autofitJsonOption = fleetJson.getBoolean(CommonStrings.AUTOFIT);
-            if(autofitJsonOption) {
-                autofit = AutofitOption.AUTOFIT;
-            } else {
-                autofit = AutofitOption.NO_AUTOFIT;
-            }
-        } catch (Exception e) {
-            autofit = AutofitOption.NO_PREF;
-        }
+        autofit = JsonUtils.getBool(fleetJson, CommonStrings.AUTOFIT, true);
 
         setDPToAtLeast = JsonUtils.getInt(CommonStrings.SET_DP_TO_AT_LEAST, 0, fleetJson);
 
@@ -101,7 +96,94 @@ public class VariantsLibFleetFactory  {
             throw new Exception(CommonStrings.AUTO_LOGISTICS_LINER + " is set to an invalid value");
         }
 
+        // load alwaysInclude
+        JSONObject alwaysIncludeJson = null;
+        try {
+            alwaysIncludeJson = fleetJson.getJSONObject(CommonStrings.ALWAYS_INCLUDE);
+        } catch (Exception e) {
+            log.info(CommonStrings.MOD_ID + ": " + CommonStrings.ALWAYS_INCLUDE + "field could not be read, set to nothing");
+        }
+        if(alwaysIncludeJson != null) {
+            final JSONObject alwaysIncludeJsonTemp = alwaysIncludeJson;
+            JsonUtils.forEachKey(alwaysIncludeJson, new JsonUtils.ForEachKey() {
+                @Override
+                public void runOnEach(String key) throws Exception{
+                    try {
+                        final int amount = alwaysIncludeJsonTemp.getInt(key);
+                        alwaysInclude.add(new AlwaysBuildMember(key, amount));
+                    } catch (Exception e) {
+                        throw new Exception("could not read int in " + CommonStrings.ALWAYS_INCLUDE);
+                    }
+                }
+            });
+        }
+        for(AlwaysBuildMember member : alwaysInclude) {
+            if(member.amount < 0) {
+                throw new Exception("the " + member.id + " field of " + CommonStrings.ALWAYS_INCLUDE + " has a negative amount");
+            }
+            if(ModdedVariantsData.addVariantToStore(member.id, modOfOrigin)) {
+                throw new Exception("the " + member.id + " field of " + CommonStrings.ALWAYS_INCLUDE + " is not a recognized variant");
+            }
+        }
 
+        commanderSkills = JsonUtils.getStringArrayList(CommonStrings.ADDITIONAL_COMMANDER_SKILLS, fleetJson);
+
+        // load spawn weights
+        JsonUtils.forEachKey(fleetJsonCsvRow, new JsonUtils.ForEachKey() {
+            @Override
+            public void runOnEach(String key) throws Exception {
+                if(!key.equals(CommonStrings.FLEETS_CSV_FIRST_COLUMN_NAME)) {
+                    float weight = 0.0f;
+                    try {
+                        weight = (float) fleetJsonCsvRow.getDouble(key);
+                    } catch(Exception e) {
+                        log.info("invalid number in csv row, setting weight to zero");
+                        weight = 0.0f;
+                    }
+                    if(weight > 0.0f) {
+                        fleetTypeSpawnWeights.put(key, weight);
+                    }
+                }
+            }
+        });
+
+        JSONArray partitionsJSONArray = null;
+        try {
+            partitionsJSONArray = fleetJson.getJSONArray(CommonStrings.FLEET_PARTITIONS);
+        } catch (Exception e) {
+            log.info(CommonStrings.FLEET_PARTITIONS + " field could not be read, setting to nothing");
+        }
+
+        if(partitionsJSONArray != null) {
+            for(int i = 0; i < partitionsJSONArray.length(); i++) {
+                partitions.add(new FleetPartition(partitionsJSONArray.getJSONObject(i), i, modOfOrigin));
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        final JSONObject json = new JSONObject();
+        try {
+            json.put(CommonStrings.FLEET_DATA_ID, id);
+            json.put(CommonStrings.MIN_DP, minDP);
+            json.put(CommonStrings.MAX_DP, maxDP);
+            json.put(CommonStrings.DEFAULT_FLEET_WIDE_PERSONALITY, defaultFleetWidePersonality);
+            json.put(CommonStrings.SPAWN_IF_NO_INDUSTRY, spawnIfNoIndustry);
+            json.put(CommonStrings.AUTOFIT, autofit);
+            json.put(CommonStrings.SET_DP_TO_AT_LEAST, setDPToAtLeast);
+            json.put(CommonStrings.AUTO_LOGISTICS_FREIGHTER, freighterDp);
+            json.put(CommonStrings.AUTO_LOGISTICS_TANKER, tankerDp);
+            json.put(CommonStrings.AUTO_LOGISTICS_LINER, linerDp);
+            json.put(CommonStrings.AUTO_LOGISTICS_PERSONNEL, personnelDp);
+            for(AlwaysBuildMember member : alwaysInclude) {
+                json.append(CommonStrings.ALWAYS_INCLUDE, new JSONObject().put(member.id, member.amount));
+            }
+            json.put(CommonStrings.ADDITIONAL_COMMANDER_SKILLS, commanderSkills);
+            return json.toString();
+        } catch (Exception e) {
+            return "failed to convert to string";
+        }
     }
 
     public CampaignFleetAPI makeFleet(VariantsLibFleetParams params) {

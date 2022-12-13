@@ -5,6 +5,7 @@ import com.fs.starfarer.api.Global;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -17,9 +18,9 @@ public class FleetPartition {
         log.setLevel(Level.ALL);
     }
 
-    public int maxDPForPartition;
-    public int maxShipsForPartition;
-    public Vector<FleetPartitionMember> members;
+    public int maxDPForPartition = 10000;
+    public int maxShipsForPartition = 1000;
+    public ArrayList<FleetPartitionMember> members;
     public float partitionWeight; // should be percentage after processing
 
     private static final String PARTITION_WEIGHT = "partitionWeight";
@@ -31,16 +32,16 @@ public class FleetPartition {
     }
 
     // loadedFileInfo and index is just data for throwing descriptive error messages
-    public FleetPartition(JSONObject partitionData, String loadedFileInfo, int index, String modId) throws Exception
+    public FleetPartition(JSONObject partitionData, int index, String modId) throws Exception
     {
         // read "partitionWeight"
         try {
             partitionWeight = (float) partitionData.getDouble(PARTITION_WEIGHT);
         } catch(Exception e) {
-            throw new Exception(loadedFileInfo + " fleet partion " + index + " has missing or invalid \"partitionWeight\" field");
+            throw new Exception("fleet partion " + index + " has missing or invalid \"partitionWeight\" field");
         }
         if(partitionWeight < 0) {
-            throw new Exception(loadedFileInfo + " fleet partion " + index + " has negative \"partitionWeight\" field");
+            throw new Exception(" fleet partion " + index + " has negative \"partitionWeight\" field");
         }
 
         // read "variants"
@@ -48,7 +49,7 @@ public class FleetPartition {
         try {
             variants = partitionData.getJSONObject(VARIANTS);
         } catch(Exception e) {
-            throw new Exception(loadedFileInfo + " fleet partion " + index + " has missing or invalid \"variants\" field");
+            throw new Exception(" fleet partion " + index + " has missing or invalid \"variants\" field");
         }
 
         maxDPForPartition = JsonUtils.getInt("maxDPForPartition", Integer.MAX_VALUE, partitionData);
@@ -56,24 +57,24 @@ public class FleetPartition {
 
         // construct "members field"
         float variantWeightSum = 0.0f;
-        members = new Vector<FleetPartitionMember>();
+        members = new ArrayList<>();
         Iterator keys = variants.keys();
         while(keys.hasNext()) {
             String key = (String) keys.next();
             if(!key.equals(PARTITION_WEIGHT) && !key.equals(VARIANTS)) {
                 if(Global.getSettings().getVariant(key) == null && ModdedVariantsData.addVariantToStore(key, modId)) {
-                    throw new Exception(loadedFileInfo + " fleet partion " + index + " has unrecognised variant \"" + key + "\"");
+                    throw new Exception(" fleet partion " + index + " has unrecognised variant \"" + key + "\"");
                 }
 
                 float variantWeight = 0.0f;
                 try {
                     variantWeight = (float) variants.getDouble(key);
                 } catch(Exception e) {
-                    throw new Exception(loadedFileInfo + " fleet partion " + index + " failed to read the weight of the variant \"" + key + "\"");
+                    throw new Exception(" fleet partion " + index + " failed to read the weight of the variant \"" + key + "\"");
                 }
 
                 if(variantWeight < 0.0f) {
-                    throw new Exception(loadedFileInfo + " fleet partion " + index + " the weight of the variant \"" + key + "\" is less than zero");
+                    throw new Exception(" fleet partion " + index + " the weight of the variant \"" + key + "\" is less than zero");
                 }
 
                 members.add(new FleetPartitionMember(key, variantWeight));
@@ -86,5 +87,17 @@ public class FleetPartition {
         for(FleetPartitionMember member : members) {
             member.makeWeightPercentage(variantWeightSum);
         }
+    }
+
+    public JSONObject toJson() {
+        final JSONObject json = new JSONObject();
+        try {
+            json.put(CommonStrings.MAX_SHIPS_PARTITION, maxShipsForPartition);
+            json.put(CommonStrings.MAX_DP_PARTITION, maxDPForPartition);
+            json.put(CommonStrings.PARTITION_WEIGHT, (double) partitionWeight);
+        } catch (Exception e) {
+            log.info("failed to convert partition to JSON");
+        }
+        return json;
     }
 }
