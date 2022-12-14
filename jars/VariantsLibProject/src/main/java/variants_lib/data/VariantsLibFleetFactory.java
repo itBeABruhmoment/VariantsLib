@@ -2,8 +2,11 @@ package variants_lib.data;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.campaign.FleetDataAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
+import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import org.apache.log4j.Level;
@@ -12,11 +15,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import variants_lib.scripts.fleetedit.FleetBuilding;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 public class VariantsLibFleetFactory  {
     protected static final Logger log = Global.getLogger(VariantsLibFleetFactory.class);
@@ -27,6 +28,7 @@ public class VariantsLibFleetFactory  {
         add("timid"); add("cautious"); add("steady"); add("reckless"); add("aggressive");
     }};
 
+    // derived from loaded jsons and csv
     @NotNull public ArrayList<AlwaysBuildMember> alwaysInclude = new ArrayList<>(5);
     @NotNull public ArrayList<FleetPartition> partitions = new ArrayList<>(5);
     @NotNull public ArrayList<String> commanderSkills = new ArrayList<>(5);
@@ -42,6 +44,9 @@ public class VariantsLibFleetFactory  {
     public float linerDp = 0.0f;
     public float tankerDp = 0.0f;
     public float personnelDp = 0.0f;
+
+    // other fields
+    protected int maxOverBudget = 0;
 
     /**
      * Create a VariantsLibFleetFactory
@@ -59,7 +64,7 @@ public class VariantsLibFleetFactory  {
         if(id.equals("")) {
             throw new Exception(CommonStrings.FLEET_DATA_ID + "field could not be read");
         }
-        /*
+        /* TODO: uncomment
         if(FleetBuildData.FLEET_DATA.containsKey(id)) {
             throw new Exception("already a fleet json with the " + CommonStrings.FLEET_DATA_ID + " \""  + id + "\"");
         }
@@ -271,6 +276,210 @@ public class VariantsLibFleetFactory  {
      * @param original Fleet to edit
      */
     public void editFleet(@NotNull CampaignFleetAPI original) {
+        final VariantsLibFleetParams params = makeParamsFromFleet(original);
 
+    }
+
+    protected void clearMembers(CampaignFleetAPI fleetAPI) {
+        FleetDataAPI fleetData = fleetAPI.getFleetData();
+        List<FleetMemberAPI> members = fleetAPI.getMembersWithFightersCopy();
+        for(FleetMemberAPI member : members) {
+            fleetData.removeFleetMember(member);
+        }
+    }
+
+    protected void createFleet(
+            @NotNull CampaignFleetAPI fleetAPI,
+            @NotNull VariantsLibFleetParams params,
+            @NotNull ArrayList<FleetMemberAPI> membersToKeep,
+            @NotNull Random rand
+    ) {
+        ArrayList<FleetMemberAPI> combatShips = new ArrayList<>(30);
+        ArrayList<FleetMemberAPI> civilianShips = new ArrayList<>(30);
+        int numShipsThatCanBeAdded = SettingsData.getMaxShipsInAIFleet() - membersToKeep.size();
+        int totalDPRemaining = params.fleetPoints;
+
+        for(AlwaysBuildMember member : alwaysInclude) {
+            for(int i = 0; i < member.amount; i++) {
+                final FleetMemberAPI newMember = createShip(member.id);
+                if(newMember.isCivilian()) {
+                    civilianShips.add(newMember);
+                } else {
+                    combatShips.add(newMember);
+                }
+                totalDPRemaining -= Math.round(newMember.getBaseDeploymentCostSupplies());
+                numShipsThatCanBeAdded--;
+            }
+        }
+
+        // auto logistics
+        /*
+        FleetBuilding.autoLogiReturn addedShipsInfo = applyAutoLogistics(info, fleetCompData, combatShips, civilianShips);
+        numShipsThatCanBeAdded -= addedShipsInfo.shipsAdded;
+        totalDPRemaining -= addedShipsInfo.dpShipsAdded;
+
+         */
+
+        for(int i = 0; i < partitions.size(); i++) {
+            final FleetPartition partition = partitions.get(i);
+
+            // calculate dp for partition
+            int remainingDpThisPartition = ((int)Math.round(totalDPRemaining * (partition.partitionWeight / sumPartitionWeights(i))));
+            if(remainingDpThisPartition > partition.maxDPForPartition) {
+                remainingDpThisPartition = partition.maxDPForPartition;
+            }
+
+            int shipsRemainingThisPartition = partitions.get(i).maxShipsForPartition;
+            while(remainingDpThisPartition > 0 && numShipsThatCanBeAdded > 0 && shipsRemainingThisPartition > 0) {
+                String variantId = pickVariant(partition, remainingDpThisPartition + maxOverBudget, rand);
+                if(variantId == null) { // no more variants can be spawned with the dp
+                    break;
+                }
+
+                FleetMemberAPI newMember = createShip(variantId);
+                if(newMember.isCivilian()) {
+                    civilianShips.add(newMember);
+                } else {
+                    combatShips.add(newMember);
+                }
+
+                int DPofVariant = getDPInt(variantId);
+                remainingDpThisPartition -= DPofVariant;
+                totalDPRemaining -= DPofVariant;
+                numShipsThatCanBeAdded--;
+                shipsRemainingThisPartition--;
+            }
+        }
+
+        /*
+        // assign officers
+        if(combatShips.size() == 0) { // if there is only civilian ships for some reason
+            Collections.shuffle(civilianShips);
+            for(int i = 0; i < civilianShips.size() && i < info.officers.size(); i++) {
+                civilianShips.get(i).setCaptain(info.officers.get(i));
+            }
+
+            // ensure flagship is set
+            if(civilianShips.size() < info.officers.size()) {
+                civilianShips.get(0).setCaptain(info.captain);
+            }
+
+        } else {
+            // assign officers
+            Collections.shuffle(combatShips);
+            int flagShipIndex = -1;
+            for(int i = 0; i < combatShips.size() && i < info.officers.size(); i++) {
+                if(info.officers.get(i) == info.captain) {
+                    flagShipIndex = i;
+                }
+                combatShips.get(i).setCaptain(info.officers.get(i));
+            }
+
+            // find highest dp ship
+            int highestDP = getDPInt(combatShips.get(0).getVariant().getHullVariantId());
+            int highestDPIndex = 0;
+            for(int i = 1; i < combatShips.size(); i++) {
+                int dp = getDPInt(combatShips.get(i).getVariant().getHullVariantId());
+                if(highestDP < dp) {
+                    highestDP = dp;
+                    highestDPIndex = i;
+                }
+            }
+
+            // set flagship to highest dp ship
+            if(flagShipIndex == -1) {
+                combatShips.get(highestDPIndex).setCaptain(info.captain);
+            } else {
+                PersonAPI temp = combatShips.get(highestDPIndex).getCaptain();
+                combatShips.get(highestDPIndex).setCaptain(info.captain);
+                combatShips.get(flagShipIndex).setCaptain(temp);
+            }
+        }
+
+         */
+
+        Collections.sort(combatShips, new SortByDP());
+        Collections.sort(civilianShips, new SortByDP());
+
+        // add ships to fleet
+        for(FleetMemberAPI member : combatShips) {
+            //RepairTrackerAPI repairTracker = member.getRepairTracker();
+            //repairTracker.setCR(0.7f);
+            fleetAPI.getFleetData().addFleetMember(member);
+        }
+        for(FleetMemberAPI member : civilianShips) {
+            //RepairTrackerAPI repairTracker = member.getRepairTracker();
+            //repairTracker.setCR(0.7f);
+            fleetAPI.getFleetData().addFleetMember(member);
+        }
+        for(FleetMemberAPI member : membersToKeep) {
+            fleetAPI.getFleetData().addFleetMember(member);
+        }
+    }
+
+    protected FleetMemberAPI createShip(@NotNull String variantId) {
+        return Global.getFactory().createFleetMember(FleetMemberType.SHIP, variantId);
+    }
+
+    protected double sumPartitionWeights(int start) {
+        double sum = 0;
+        for(int i = start; i < partitions.size(); i++) {
+            sum += partitions.get(i).partitionWeight;
+        }
+        return sum;
+    }
+
+    @Nullable
+    protected String pickVariant(@NotNull FleetPartition partition, int DPLimit, Random rand) {
+        Vector<FleetPartitionMember> pickableVariants = getPickableVariants(partition, DPLimit);
+        if(pickableVariants.size() == 0) { // no eligible variants because not enough dp to spawn them
+            return null;
+        }
+
+        double random = rand.nextDouble();
+        double totalWeightsSum = sumWeights(pickableVariants);
+        double runningWeightsSum = 0;
+        for(FleetPartitionMember member : pickableVariants) {
+            runningWeightsSum += member.weight / totalWeightsSum;
+            if(runningWeightsSum >= random) {
+                return member.id;
+            }
+        }
+        return pickableVariants.get(pickableVariants.size() - 1).id; // handle possible edge case
+    }
+
+    protected double sumWeights(@NotNull Vector<FleetPartitionMember> members) {
+        double sum = 0;
+        for(FleetPartitionMember member : members) {
+            sum += member.weight;
+        }
+        return sum;
+    }
+
+    protected Vector<FleetPartitionMember> getPickableVariants(FleetPartition partition, int DPLimit) {
+        Vector<FleetPartitionMember> members = new Vector<FleetPartitionMember>(10);
+        for(FleetPartitionMember member : partition.members) {
+            if(getDPInt(member.id) <= DPLimit) {
+                members.add(member);
+            }
+        }
+        return members;
+    }
+
+    protected static int getDPInt(String variantId) {
+        return Math.round(Global.getSettings().getVariant(variantId).getHullSpec().getSuppliesToRecover());
+    }
+
+    protected static class SortByDP implements Comparator<FleetMemberAPI>
+    {
+        // Used for sorting in ascending order of
+        // roll number
+        public int compare(FleetMemberAPI a, FleetMemberAPI b)
+        {
+            if(b.getVariant().getHullVariantId() == null || a.getVariant().getHullVariantId() == null) {
+                log.debug("no variant found rippy dippy");
+            }
+            return getDPInt(b.getVariant().getHullVariantId()) - getDPInt(a.getVariant().getHullVariantId());
+        }
     }
 }
