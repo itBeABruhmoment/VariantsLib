@@ -2,6 +2,10 @@ package variants_lib.data;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.campaign.rules.MemoryAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
+import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -205,10 +209,67 @@ public class VariantsLibFleetFactory  {
     }
 
     @NotNull
+    public static VariantsLibFleetParams makeParamsFromFleet(@NotNull CampaignFleetAPI fleet) {
+        final VariantsLibFleetParams params = new VariantsLibFleetParams();
+        final MemoryAPI fleetMemory = fleet.getMemoryWithoutUpdate();
+
+        params.fleetName = fleet.getName();
+        params.faction = fleet.getFaction().getId();
+        if(fleetMemory.contains(MemFlags.MEMORY_KEY_FLEET_TYPE)) {
+            params.fleetType = fleetMemory.getString(MemFlags.MEMORY_KEY_FLEET_TYPE);
+        }
+        if(fleetMemory.contains(MemFlags.SALVAGE_SEED)) {
+            params.seed = fleetMemory.getLong(MemFlags.SALVAGE_SEED);
+        }
+
+        int numOfficers = 0;
+        int sumOfficerLevels = 0;
+        int totalDP = 0;
+        for(FleetMemberAPI member : fleet.getMembersWithFightersCopy()) {
+            if(!member.isFighterWing()) {
+                totalDP += member.getBaseDeploymentCostSupplies();
+                // there isn't a hasOfficer method in the API. Let's get creative!
+                final int level = member.getCaptain().getStats().getLevel();
+                if(level <= 1) {
+                    numOfficers++;
+                    sumOfficerLevels += level;
+                }
+            }
+        }
+        params.fleetPoints = totalDP;
+        params.numOfficers = numOfficers;
+        params.averageOfficerLevel = ((float) sumOfficerLevels) / numOfficers;
+
+        try {
+            DefaultFleetInflaterParams inflaterParams = (DefaultFleetInflaterParams)fleet.getInflater().getParams();
+            params.averageSMods = params.averageSMods;
+        } catch(Exception e) {
+            log.info("could not get average smods defaulting to none");
+        }
+
+        try {
+            params.quality = fleet.getInflater().getQuality();
+        } catch(Exception e) {
+            log.info("could not get quality defaulting to max");
+        }
+
+        return params;
+    }
+
+    /**
+     * Creates a fleet from parameters
+     * @param params
+     * @return
+     */
+    @NotNull
     public CampaignFleetAPI makeFleet(@NotNull VariantsLibFleetParams params) {
         return null;
     }
 
+    /**
+     * Edits a fleet based on the original fleet's composition
+     * @param original Fleet to edit
+     */
     public void editFleet(@NotNull CampaignFleetAPI original) {
 
     }

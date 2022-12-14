@@ -2,6 +2,7 @@ package variants_lib.data;
 
 import com.fs.starfarer.api.Global;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -20,11 +21,10 @@ public class FleetPartition {
 
     public int maxDPForPartition = 10000;
     public int maxShipsForPartition = 1000;
+
+    @NotNull
     public ArrayList<FleetPartitionMember> members = new ArrayList<>();
     public float partitionWeight = 10.0f; // should be percentage after processing
-
-    private static final String PARTITION_WEIGHT = "partitionWeight";
-    private static final String VARIANTS = "variants";
 
     public void makePartitionWeightPercentage(float outOf)
     {
@@ -36,7 +36,7 @@ public class FleetPartition {
     {
         // read "partitionWeight"
         try {
-            partitionWeight = (float) partitionData.getDouble(PARTITION_WEIGHT);
+            partitionWeight = (float) partitionData.getDouble(CommonStrings.PARTITION_WEIGHT);
         } catch(Exception e) {
             throw new Exception("fleet partion " + index + " has missing or invalid \"partitionWeight\" field");
         }
@@ -47,7 +47,7 @@ public class FleetPartition {
         // read "variants"
         JSONObject variants = null;
         try {
-            variants = partitionData.getJSONObject(VARIANTS);
+            variants = partitionData.getJSONObject(CommonStrings.VARIANTS);
         } catch(Exception e) {
             throw new Exception(" fleet partion " + index + " has missing or invalid \"variants\" field");
         }
@@ -61,7 +61,7 @@ public class FleetPartition {
         Iterator keys = variants.keys();
         while(keys.hasNext()) {
             String key = (String) keys.next();
-            if(!key.equals(PARTITION_WEIGHT) && !key.equals(VARIANTS)) {
+            if(!key.equals(CommonStrings.PARTITION_WEIGHT) && !key.equals(CommonStrings.VARIANTS)) {
                 if(Global.getSettings().getVariant(key) == null && ModdedVariantsData.addVariantToStore(key, modId)) {
                     throw new Exception(" fleet partion " + index + " has unrecognised variant \"" + key + "\"");
                 }
