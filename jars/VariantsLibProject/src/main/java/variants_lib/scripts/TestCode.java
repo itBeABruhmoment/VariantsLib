@@ -16,6 +16,7 @@ import variants_lib.scripts.fleetedit.FleetBuilding;
 
 // code for testing stuff that you shouldn't touch
 public class TestCode {
+    /*
 
     // runcode variants_lib.scripts.TestCode.spanFleetWithSmods();
     public static void spanFleetWithSmods()
@@ -76,4 +77,6 @@ public class TestCode {
                 Global.getSector().getPlayerFleet(), offset.x, offset.y, toSpawn);
         Global.getSector().addPing(toSpawn, "danger");
     }
+
+     */
 }

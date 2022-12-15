@@ -47,6 +47,8 @@ public class FleetRandomizer {
         log.setLevel(Level.ALL);
     }
 
+    /*
+
     public boolean scriptEnded = false;
     private static final HashSet<String> DISALLOW_FLEET_MODS_FLAGS = new HashSet<String>() {{
         add(MemFlags.ENTITY_MISSION_IMPORTANT); add(MemFlags.MEMORY_KEY_MISSION_IMPORTANT); add(MemFlags.STORY_CRITICAL);
@@ -175,6 +177,8 @@ public class FleetRandomizer {
     }
 
     private FleetRandomizer() {}
+
+     */
 }
 /*
 SectorEntityToken yourFleet = Global.getSector().getPlayerFleet();

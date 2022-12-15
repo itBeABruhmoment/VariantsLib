@@ -46,6 +46,7 @@ import org.apache.log4j.Logger;
 import org.lazywizard.console.Console;
 
 public class FleetBuilding {
+    /*
     private static final String[] FREIGHTER_CLASSES_IN_ORDER = {"freighterLarge", "freighterMedium", "freighterSmall"};
     private static final String[] TANKER_CLASSES_IN_ORDER = {"tankerLarge", "tankerMedium", "tankerSmall"};
     private static final String[] LINER_CLASSES_IN_ORDER = {"linerLarge", "linerMedium", "linerSmall"};
@@ -768,4 +769,6 @@ public class FleetBuilding {
     }
 
     private FleetBuilding() {} // do nothing
+
+     */
 }

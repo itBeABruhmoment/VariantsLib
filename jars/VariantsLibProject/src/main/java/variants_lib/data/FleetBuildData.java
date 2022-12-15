@@ -25,7 +25,7 @@ public class FleetBuildData {
         log.setLevel(Level.ALL);
     }
 
-    public static final HashMap<String, FleetComposition> FLEET_DATA = new HashMap<>();
+    public static final HashMap<String, VariantsLibFleetFactory> FLEET_DATA = new HashMap<>();
     public static final HashMap<String, FleetEditingScript> SCRIPTS = new HashMap<>();
 
     /*public static void testJson() throws JSONException, IOException
@@ -92,11 +92,11 @@ public class FleetBuildData {
         }
 
         if(shouldLoad) {
-            FleetComposition comp = new FleetComposition(fleetDataCSVRow, fleetDataJson, fleetDataId, loadedFileInfo, modId);
-            FLEET_DATA.put(fleetDataId, comp);
+            //FleetComposition comp = new FleetComposition(fleetDataCSVRow, fleetDataJson, fleetDataId, loadedFileInfo, modId);
             // TODO: remove test code
-            VariantsLibFleetFactory test = new VariantsLibFleetFactory(fleetDataJson, fleetDataCSVRow, modId);
-            log.debug(test.toString());
+            VariantsLibFleetFactory fleetFactory = new VariantsLibFleetFactory(fleetDataJson, fleetDataCSVRow, modId);
+            FLEET_DATA.put(fleetDataId, fleetFactory);
+            log.debug(fleetFactory.toString());
         } else {
             log.debug(loadedFileInfo + " was not loaded due to unenabled required mods");
         }

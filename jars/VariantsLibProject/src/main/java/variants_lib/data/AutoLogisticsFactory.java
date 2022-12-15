@@ -5,6 +5,8 @@ import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.fleet.ShipRolePick;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import variants_lib.scripts.fleetedit.FleetBuilding;
 
@@ -16,6 +18,11 @@ import java.util.Vector;
  * Create FleetMemberAPIs for the auto logistics feature
  */
 public class AutoLogisticsFactory {
+    protected static final Logger log = Global.getLogger(AutoLogisticsFactory.class);
+    static {
+        log.setLevel(Level.ALL);
+    }
+
     /**
      * portion of dp dedicated to tankers
      */
@@ -44,7 +51,7 @@ public class AutoLogisticsFactory {
     /**
      * max amount over the dp limit for a particular category of logistical ships can go over
      */
-    public int maxOverBudget = 0;
+    public int maxOverBudget = 3;
 
     protected static final String[] FREIGHTER_CLASSES_IN_ORDER = {"freighterLarge", "freighterMedium", "freighterSmall"};
     protected static final String[] TANKER_CLASSES_IN_ORDER = {"tankerLarge", "tankerMedium", "tankerSmall"};

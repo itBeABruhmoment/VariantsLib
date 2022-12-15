@@ -45,7 +45,7 @@ public class VariantsLibFleetFactory  {
     public float tankerDp = 0.0f;
     public float personnelDp = 0.0f;
 
-    // other fields
+    // fields for fleet building process
     protected int maxOverBudget = 0;
 
     /**
@@ -64,12 +64,9 @@ public class VariantsLibFleetFactory  {
         if(id.equals("")) {
             throw new Exception(CommonStrings.FLEET_DATA_ID + "field could not be read");
         }
-        /* TODO: uncomment
         if(FleetBuildData.FLEET_DATA.containsKey(id)) {
             throw new Exception("already a fleet json with the " + CommonStrings.FLEET_DATA_ID + " \""  + id + "\"");
         }
-
-         */
 
         minDP = JsonUtils.getInt(CommonStrings.MIN_DP, 0, fleetJson);
         if(minDP < 0) {
@@ -291,49 +288,37 @@ public class VariantsLibFleetFactory  {
         }
     }
 
+    /**
+     * Create a fleet
+     * @param fleetAPI Some empty CampaignFleetAPI which will contain the new fleet
+     * @param params Params on how to generate fleet
+     * @param membersToKeep Ships to always add to the fleet
+     * @param rand Random number generator used to generate fleet
+     */
     protected void createFleet(
             @NotNull CampaignFleetAPI fleetAPI,
             @NotNull VariantsLibFleetParams params,
             @NotNull ArrayList<FleetMemberAPI> membersToKeep,
             @NotNull Random rand
     ) {
-        ArrayList<FleetMemberAPI> combatShips = new ArrayList<>(30);
-        ArrayList<FleetMemberAPI> civilianShips = new ArrayList<>(30);
-        int numShipsThatCanBeAdded = SettingsData.getMaxShipsInAIFleet() - membersToKeep.size();
-        int totalDPRemaining = params.fleetPoints;
+        CreateFleetVariables vars = new CreateFleetVariables();
+        vars.numShipsThatCanBeAdded = SettingsData.getMaxShipsInAIFleet() - membersToKeep.size();
+        vars.totalDPRemaining = params.fleetPoints;
 
-        for(AlwaysBuildMember member : alwaysInclude) {
-            for(int i = 0; i < member.amount; i++) {
-                final FleetMemberAPI newMember = createShip(member.id);
-                if(newMember.isCivilian()) {
-                    civilianShips.add(newMember);
-                } else {
-                    combatShips.add(newMember);
-                }
-                totalDPRemaining -= Math.round(newMember.getBaseDeploymentCostSupplies());
-                numShipsThatCanBeAdded--;
-            }
-        }
-
-        // auto logistics
-        /*
-        FleetBuilding.autoLogiReturn addedShipsInfo = applyAutoLogistics(info, fleetCompData, combatShips, civilianShips);
-        numShipsThatCanBeAdded -= addedShipsInfo.shipsAdded;
-        totalDPRemaining -= addedShipsInfo.dpShipsAdded;
-
-         */
+        addAlwaysIncludeMembers(vars);
+        addAutoLogistics(vars, params);
 
         for(int i = 0; i < partitions.size(); i++) {
             final FleetPartition partition = partitions.get(i);
 
             // calculate dp for partition
-            int remainingDpThisPartition = ((int)Math.round(totalDPRemaining * (partition.partitionWeight / sumPartitionWeights(i))));
+            int remainingDpThisPartition = ((int)Math.round(vars.totalDPRemaining * (partition.partitionWeight / sumPartitionWeights(i))));
             if(remainingDpThisPartition > partition.maxDPForPartition) {
                 remainingDpThisPartition = partition.maxDPForPartition;
             }
 
             int shipsRemainingThisPartition = partitions.get(i).maxShipsForPartition;
-            while(remainingDpThisPartition > 0 && numShipsThatCanBeAdded > 0 && shipsRemainingThisPartition > 0) {
+            while(remainingDpThisPartition > 0 && vars.numShipsThatCanBeAdded > 0 && shipsRemainingThisPartition > 0) {
                 String variantId = pickVariant(partition, remainingDpThisPartition + maxOverBudget, rand);
                 if(variantId == null) { // no more variants can be spawned with the dp
                     break;
@@ -341,15 +326,15 @@ public class VariantsLibFleetFactory  {
 
                 FleetMemberAPI newMember = createShip(variantId);
                 if(newMember.isCivilian()) {
-                    civilianShips.add(newMember);
+                    vars.civilianShips.add(newMember);
                 } else {
-                    combatShips.add(newMember);
+                    vars.combatShips.add(newMember);
                 }
 
                 int DPofVariant = getDPInt(variantId);
                 remainingDpThisPartition -= DPofVariant;
-                totalDPRemaining -= DPofVariant;
-                numShipsThatCanBeAdded--;
+                vars.totalDPRemaining -= DPofVariant;
+                vars.numShipsThatCanBeAdded--;
                 shipsRemainingThisPartition--;
             }
         }
@@ -401,22 +386,77 @@ public class VariantsLibFleetFactory  {
 
          */
 
-        Collections.sort(combatShips, new SortByDP());
-        Collections.sort(civilianShips, new SortByDP());
+        Collections.sort(vars.combatShips, new SortByDP());
+        Collections.sort(vars.civilianShips, new SortByDP());
 
         // add ships to fleet
-        for(FleetMemberAPI member : combatShips) {
+        for(FleetMemberAPI member : vars.combatShips) {
             //RepairTrackerAPI repairTracker = member.getRepairTracker();
             //repairTracker.setCR(0.7f);
             fleetAPI.getFleetData().addFleetMember(member);
         }
-        for(FleetMemberAPI member : civilianShips) {
+        for(FleetMemberAPI member : vars.civilianShips) {
             //RepairTrackerAPI repairTracker = member.getRepairTracker();
             //repairTracker.setCR(0.7f);
             fleetAPI.getFleetData().addFleetMember(member);
         }
         for(FleetMemberAPI member : membersToKeep) {
             fleetAPI.getFleetData().addFleetMember(member);
+        }
+    }
+
+    /**
+     * Generate and add ships for auto logistics feature and update fields of vars accordingly. Called in createFleet method
+     * @param vars variables to update
+     */
+    protected void addAutoLogistics(@NotNull CreateFleetVariables vars, @NotNull VariantsLibFleetParams params) {
+        final AutoLogisticsFactory makeAutoLogistics = new AutoLogisticsFactory();
+        makeAutoLogistics.faction = params.faction;
+        makeAutoLogistics.percentagePersonnel = personnelDp;
+        makeAutoLogistics.percentageTankers = tankerDp;
+        makeAutoLogistics.percentageFreighters = freighterDp;
+        makeAutoLogistics.percentageLiners = linerDp;
+        makeAutoLogistics.fleetDP = vars.totalDPRemaining;
+        final AutoLogisticsFactory.AutoLogisticsReturn logisticsShips = makeAutoLogistics.createLogisticalShips();
+
+        addShipsToVars(vars, logisticsShips.freighters);
+        addShipsToVars(vars, logisticsShips.tankers);
+        addShipsToVars(vars, logisticsShips.personnel);
+        addShipsToVars(vars, logisticsShips.liners);
+    }
+
+    /**
+     * Create and add always include members and update vars accordingly. Called in createFleet method
+     * @param vars Vars to update
+     */
+    protected void addAlwaysIncludeMembers(@NotNull CreateFleetVariables vars) {
+        for(AlwaysBuildMember member : alwaysInclude) {
+            for(int i = 0; i < member.amount; i++) {
+                final FleetMemberAPI newMember = createShip(member.id);
+                if(newMember.isCivilian()) {
+                    vars.civilianShips.add(newMember);
+                } else {
+                    vars.combatShips.add(newMember);
+                }
+                vars.totalDPRemaining -= Math.round(newMember.getBaseDeploymentCostSupplies());
+                vars.numShipsThatCanBeAdded--;
+            }
+        }
+    }
+
+    private void addShipsToVars(@NotNull CreateFleetVariables vars, @NotNull List<FleetMemberAPI> ships) {
+        for(FleetMemberAPI member : ships) {
+            if(vars.totalDPRemaining > 0 && vars.numShipsThatCanBeAdded > 0) {
+                if(member.isCivilian()) {
+                    vars.civilianShips.add(member);
+                } else {
+                    vars.combatShips.add(member);
+                }
+                vars.totalDPRemaining -= Math.round(member.getBaseDeploymentCostSupplies());
+                vars.numShipsThatCanBeAdded--;
+            } else {
+                break;
+            }
         }
     }
 
@@ -484,5 +524,17 @@ public class VariantsLibFleetFactory  {
             }
             return getDPInt(b.getVariant().getHullVariantId()) - getDPInt(a.getVariant().getHullVariantId());
         }
+    }
+
+    /**
+     * Variables that need to be passed around in the createFleet method
+     */
+    protected static class CreateFleetVariables {
+        @NotNull
+        ArrayList<FleetMemberAPI> combatShips = new ArrayList<>(30);
+        @NotNull
+        ArrayList<FleetMemberAPI> civilianShips = new ArrayList<>(30);
+        int numShipsThatCanBeAdded = 0;
+        int totalDPRemaining = 0;
     }
 }

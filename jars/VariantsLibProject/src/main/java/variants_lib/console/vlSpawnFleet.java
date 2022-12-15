@@ -9,6 +9,7 @@ import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 
 import variants_lib.data.FleetBuildData;
+import variants_lib.data.VariantsLibFleetParams;
 import variants_lib.scripts.fleetedit.FleetBuilding;
 
 public class vlSpawnFleet implements BaseCommand{
@@ -45,22 +46,17 @@ public class vlSpawnFleet implements BaseCommand{
             return CommandResult.ERROR;
         }
 
-        FleetBuilding.VariantsLibFleetParams params = new FleetBuilding.VariantsLibFleetParams(
-            "fleet",
-            splited[0],
-            FleetTypes.PATROL_LARGE,
-            splited[1],
-            fp,
-            1.0f,
-            0.0f,
-            8,
-            5.0f,
-            false,
-            true,
-            true
-        );
+        final VariantsLibFleetParams params = new VariantsLibFleetParams();
+        params.fleetName = "fleet";
+        params.faction = splited[0];
+        params.fleetType = FleetTypes.PATROL_LARGE;
+        params.fleetPoints = fp;
+        params.quality = 1.0f;
+        params.averageSMods = 0.0f;
+        params.averageOfficerLevel = 5;
+        params.numOfficers = 5;
 
-        CampaignFleetAPI toSpawn = FleetBuilding.createFleet(params);
+        CampaignFleetAPI toSpawn = FleetBuildData.FLEET_DATA.get(splited[1]).makeFleet(params);
 
         // Spawn fleet around player
         final Vector2f offset = new Vector2f(0, 0);

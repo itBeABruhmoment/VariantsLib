@@ -32,6 +32,8 @@ public class OfficerEditing {
     static {
         log.setLevel(Level.ALL);
     }
+
+    /*
     
     // used to store skills that can be changed
     private static final HashSet<String> MODIFYABLE_SKILLS = new HashSet<String>() {{
@@ -234,6 +236,8 @@ public class OfficerEditing {
     }
 
     private OfficerEditing() {} // do nothing
+
+     */
 }
 
 
