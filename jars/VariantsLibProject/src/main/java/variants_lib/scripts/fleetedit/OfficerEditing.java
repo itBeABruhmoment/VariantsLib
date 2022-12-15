@@ -34,7 +34,7 @@ public class OfficerEditing {
     }
 
 
-    
+    /*
     // used to store skills that can be changed
     private static final HashSet<String> MODIFYABLE_SKILLS = new HashSet<String>() {{
         add("helmsmanship");        add("combat_endurance");    add("impact_mitigation");   add("damage_control"); 
@@ -237,6 +237,8 @@ public class OfficerEditing {
 
     private OfficerEditing() {} // do nothing
 
+
+     */
 
 }
 

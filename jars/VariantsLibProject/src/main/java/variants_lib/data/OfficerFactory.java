@@ -34,16 +34,25 @@ public class OfficerFactory {
     public ArrayList<String> skillsToAdd = new ArrayList<>();
     public int level = 5;
     public float percentEliteSkills = 0.25f;
+    @NotNull
     public Random rand = new Random();
 
     public OfficerFactory(@NotNull FactionAPI faction) {
         this.faction = faction;
     }
 
+    /**
+     * Make officer using variables in fields
+     * @return An officer
+     */
+
+    @NotNull
     public PersonAPI makeOfficer() {
         final PersonAPI officer = faction.createRandomPerson(rand);
         final MutableCharacterStatsAPI stats = officer.getStats();
         int skillsAdded = 0;
+
+        officer.setPersonality(personality);
 
         // add skills in skillsToAdd until done or level does not allow it
         while(skillsAdded < level && skillsAdded < skillsToAdd.size()) {
@@ -79,7 +88,8 @@ public class OfficerFactory {
         return officer;
     }
 
-    protected int[] createRandomNumberSequence(int length, Random rand) {
+    @NotNull
+    protected int[] createRandomNumberSequence(int length, @NotNull Random rand) {
         final int[] sequence = new int[length];
         for(int i = 0; i < sequence.length; i++) {
             sequence[i] = i;
