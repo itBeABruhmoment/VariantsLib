@@ -27,6 +27,7 @@ public class VariantsLibFleetFactory  {
     protected static final HashSet<String> VALID_PERSONALITIES = new HashSet<String>() {{
         add("timid"); add("cautious"); add("steady"); add("reckless"); add("aggressive");
     }};
+    protected static final int MAX_NUM_COMBAT_SKILLS = 14;
 
     // derived from loaded jsons and csv
     @NotNull public ArrayList<AlwaysBuildMember> alwaysInclude = new ArrayList<>(5);
@@ -305,40 +306,10 @@ public class VariantsLibFleetFactory  {
         vars.numShipsThatCanBeAdded = SettingsData.getMaxShipsInAIFleet() - membersToKeep.size();
         vars.totalDPRemaining = params.fleetPoints;
 
-        addAlwaysIncludeMembers(vars);
+        addAlwaysIncludeMembers(vars, params);
         addAutoLogistics(vars, params);
-
-        for(int i = 0; i < partitions.size(); i++) {
-            final FleetPartition partition = partitions.get(i);
-
-            // calculate dp for partition
-            int remainingDpThisPartition = ((int)Math.round(vars.totalDPRemaining * (partition.partitionWeight / sumPartitionWeights(i))));
-            if(remainingDpThisPartition > partition.maxDPForPartition) {
-                remainingDpThisPartition = partition.maxDPForPartition;
-            }
-
-            int shipsRemainingThisPartition = partitions.get(i).maxShipsForPartition;
-            while(remainingDpThisPartition > 0 && vars.numShipsThatCanBeAdded > 0 && shipsRemainingThisPartition > 0) {
-                String variantId = pickVariant(partition, remainingDpThisPartition + maxOverBudget, rand);
-                if(variantId == null) { // no more variants can be spawned with the dp
-                    break;
-                }
-
-                FleetMemberAPI newMember = createShip(variantId);
-                if(newMember.isCivilian()) {
-                    vars.civilianShips.add(newMember);
-                } else {
-                    vars.combatShips.add(newMember);
-                }
-
-                int DPofVariant = getDPInt(variantId);
-                remainingDpThisPartition -= DPofVariant;
-                vars.totalDPRemaining -= DPofVariant;
-                vars.numShipsThatCanBeAdded--;
-                shipsRemainingThisPartition--;
-            }
-        }
-
+        addPartitionShips(vars, params, rand);
+        ArrayList<FleetMemberAPI> shipsToOfficer = chooseShipsToOfficer(vars, params);
         /*
         // assign officers
         if(combatShips.size() == 0) { // if there is only civilian ships for some reason
@@ -408,6 +379,7 @@ public class VariantsLibFleetFactory  {
     /**
      * Generate and add ships for auto logistics feature and update fields of vars accordingly. Called in createFleet method
      * @param vars variables to update
+     * @param params params used to make fleet
      */
     protected void addAutoLogistics(@NotNull CreateFleetVariables vars, @NotNull VariantsLibFleetParams params) {
         final AutoLogisticsFactory makeAutoLogistics = new AutoLogisticsFactory();
@@ -427,9 +399,10 @@ public class VariantsLibFleetFactory  {
 
     /**
      * Create and add always include members and update vars accordingly. Called in createFleet method
-     * @param vars Vars to update
+     * @param vars vars to update
+     * @param params params for making the fleet
      */
-    protected void addAlwaysIncludeMembers(@NotNull CreateFleetVariables vars) {
+    protected void addAlwaysIncludeMembers(@NotNull CreateFleetVariables vars, @NotNull VariantsLibFleetParams params) {
         for(AlwaysBuildMember member : alwaysInclude) {
             for(int i = 0; i < member.amount; i++) {
                 final FleetMemberAPI newMember = createShip(member.id);
@@ -440,6 +413,49 @@ public class VariantsLibFleetFactory  {
                 }
                 vars.totalDPRemaining -= Math.round(newMember.getBaseDeploymentCostSupplies());
                 vars.numShipsThatCanBeAdded--;
+            }
+        }
+    }
+
+    /**
+     * Create members based on fleet partitions and update vars accordingly. Called in createFleet method
+     * @param vars vars to update
+     * @param params params used to make fleet
+     * @param rand random number generator to use
+     */
+    protected void addPartitionShips(
+            @NotNull CreateFleetVariables vars,
+            @NotNull VariantsLibFleetParams params,
+            @NotNull Random rand
+    ) {
+        for(int i = 0; i < partitions.size(); i++) {
+            final FleetPartition partition = partitions.get(i);
+
+            // calculate dp for partition
+            int remainingDpThisPartition = ((int)Math.round(vars.totalDPRemaining * (partition.partitionWeight / sumPartitionWeights(i))));
+            if(remainingDpThisPartition > partition.maxDPForPartition) {
+                remainingDpThisPartition = partition.maxDPForPartition;
+            }
+
+            int shipsRemainingThisPartition = partitions.get(i).maxShipsForPartition;
+            while(remainingDpThisPartition > 0 && vars.numShipsThatCanBeAdded > 0 && shipsRemainingThisPartition > 0) {
+                String variantId = pickVariant(partition, remainingDpThisPartition + maxOverBudget, rand);
+                if(variantId == null) { // no more variants can be spawned with the dp
+                    break;
+                }
+
+                FleetMemberAPI newMember = createShip(variantId);
+                if(newMember.isCivilian()) {
+                    vars.civilianShips.add(newMember);
+                } else {
+                    vars.combatShips.add(newMember);
+                }
+
+                int DPofVariant = getDPInt(variantId);
+                remainingDpThisPartition -= DPofVariant;
+                vars.totalDPRemaining -= DPofVariant;
+                vars.numShipsThatCanBeAdded--;
+                shipsRemainingThisPartition--;
             }
         }
     }
@@ -460,6 +476,90 @@ public class VariantsLibFleetFactory  {
         }
     }
 
+    /**
+     * Choose fleet members to give officers, with the first in the list being the flagship
+     * @param vars vars for providing selection of fleet members to officer
+     * @param params params used to generate fleet
+     * @return list of fleet members to give officers with first being the flagship
+     */
+    @NotNull
+    protected ArrayList<FleetMemberAPI> chooseShipsToOfficer(@NotNull CreateFleetVariables vars, @NotNull VariantsLibFleetParams params) {
+        if(vars.civilianShips.size() + vars.combatShips.size() < 1 || params.numOfficers < 1) {
+            return new ArrayList<>();
+        }
+        int numShipsToOfficer = params.numOfficers;
+        final ArrayList<FleetMemberAPI> shipsToOfficer = new ArrayList<>(numShipsToOfficer);
+
+        // find ship to use as flagship
+        FleetMemberAPI flagShip = null;
+        if(vars.combatShips.size() > 0) {
+            int maxIndex = 0;
+            for(int i = 1; i < vars.combatShips.size(); i++) {
+                if(vars.combatShips.get(i).getBaseDeploymentCostSupplies() > vars.combatShips.get(maxIndex).getBaseDeploymentCostSupplies()) {
+                    maxIndex = i;
+                }
+            }
+            flagShip = vars.combatShips.get(maxIndex);
+        } else {
+            int maxIndex = 0;
+            for(int i = 1; i < vars.civilianShips.size(); i++) {
+                if(vars.civilianShips.get(i).getBaseDeploymentCostSupplies() > vars.civilianShips.get(maxIndex).getBaseDeploymentCostSupplies()) {
+                    maxIndex = i;
+                }
+            }
+            flagShip = vars.civilianShips.get(maxIndex);
+        }
+        numShipsToOfficer--;
+        shipsToOfficer.add(flagShip);
+
+        // choose the rest of the ships to officer
+        Collections.shuffle(vars.combatShips);
+        Collections.shuffle(vars.civilianShips);
+
+        for(int i = 0; i < vars.combatShips.size() && numShipsToOfficer > 0; i++) {
+            final FleetMemberAPI member = vars.combatShips.get(i);
+            if(member != flagShip) {
+                shipsToOfficer.add(member);
+                numShipsToOfficer--;
+            }
+        }
+        for(int i = 0; i < vars.civilianShips.size() && numShipsToOfficer > 0; i++) {
+            final FleetMemberAPI member = vars.civilianShips.get(i);
+            if(member != flagShip) {
+                shipsToOfficer.add(member);
+                numShipsToOfficer--;
+            }
+        }
+        return shipsToOfficer;
+    }
+
+
+
+    /**
+     * Create list of officers for the fleet based on params, with the first officer in the list being the commander
+     * @param params params to base officer generation off of
+     * @return the list of officers created, with the commander being the first in the list
+     */
+
+    @NotNull
+    protected ArrayList<PersonAPI> createOfficers(@NotNull VariantsLibFleetParams params) {
+        final ArrayList<PersonAPI> officers = new ArrayList<>(params.numOfficers);
+        final OfficerFactory officerFactory = new OfficerFactory(Global.getSector().getFaction(params.faction));
+
+        // make commander
+        final ArrayList<String> emptyList = officerFactory.skillsToAdd;
+        officerFactory.level = Math.round(params.averageOfficerLevel + 1.0f);
+        if(officerFactory.level > 10) {
+            officerFactory.level = 10;
+        }
+        officerFactory.skillsToAdd = commanderSkills;
+        officerFactory.rand = null;
+
+        return officers;
+
+
+    }
+
     protected FleetMemberAPI createShip(@NotNull String variantId) {
         return Global.getFactory().createFleetMember(FleetMemberType.SHIP, variantId);
     }
@@ -473,7 +573,7 @@ public class VariantsLibFleetFactory  {
     }
 
     @Nullable
-    protected String pickVariant(@NotNull FleetPartition partition, int DPLimit, Random rand) {
+    protected String pickVariant(@NotNull FleetPartition partition, int DPLimit, @NotNull Random rand) {
         Vector<FleetPartitionMember> pickableVariants = getPickableVariants(partition, DPLimit);
         if(pickableVariants.size() == 0) { // no eligible variants because not enough dp to spawn them
             return null;
@@ -499,7 +599,7 @@ public class VariantsLibFleetFactory  {
         return sum;
     }
 
-    protected Vector<FleetPartitionMember> getPickableVariants(FleetPartition partition, int DPLimit) {
+    protected @NotNull Vector<FleetPartitionMember> getPickableVariants(@NotNull FleetPartition partition, int DPLimit) {
         Vector<FleetPartitionMember> members = new Vector<FleetPartitionMember>(10);
         for(FleetPartitionMember member : partition.members) {
             if(getDPInt(member.id) <= DPLimit) {
@@ -509,7 +609,7 @@ public class VariantsLibFleetFactory  {
         return members;
     }
 
-    protected static int getDPInt(String variantId) {
+    protected static int getDPInt(@NotNull String variantId) {
         return Math.round(Global.getSettings().getVariant(variantId).getHullSpec().getSuppliesToRecover());
     }
 
