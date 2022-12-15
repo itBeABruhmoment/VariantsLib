@@ -7,6 +7,7 @@ import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.fleet.FleetMemberType;
+import com.fs.starfarer.api.fleet.RepairTrackerAPI;
 import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import org.apache.log4j.Level;
@@ -319,65 +320,19 @@ public class VariantsLibFleetFactory  {
         for(FleetMemberAPI member : vars.civilianShips) {
             log.info(member.getVariant().getOriginalVariant());
         }
-        /*
-        // assign officers
-        if(combatShips.size() == 0) { // if there is only civilian ships for some reason
-            Collections.shuffle(civilianShips);
-            for(int i = 0; i < civilianShips.size() && i < info.officers.size(); i++) {
-                civilianShips.get(i).setCaptain(info.officers.get(i));
-            }
-
-            // ensure flagship is set
-            if(civilianShips.size() < info.officers.size()) {
-                civilianShips.get(0).setCaptain(info.captain);
-            }
-
-        } else {
-            // assign officers
-            Collections.shuffle(combatShips);
-            int flagShipIndex = -1;
-            for(int i = 0; i < combatShips.size() && i < info.officers.size(); i++) {
-                if(info.officers.get(i) == info.captain) {
-                    flagShipIndex = i;
-                }
-                combatShips.get(i).setCaptain(info.officers.get(i));
-            }
-
-            // find highest dp ship
-            int highestDP = getDPInt(combatShips.get(0).getVariant().getHullVariantId());
-            int highestDPIndex = 0;
-            for(int i = 1; i < combatShips.size(); i++) {
-                int dp = getDPInt(combatShips.get(i).getVariant().getHullVariantId());
-                if(highestDP < dp) {
-                    highestDP = dp;
-                    highestDPIndex = i;
-                }
-            }
-
-            // set flagship to highest dp ship
-            if(flagShipIndex == -1) {
-                combatShips.get(highestDPIndex).setCaptain(info.captain);
-            } else {
-                PersonAPI temp = combatShips.get(highestDPIndex).getCaptain();
-                combatShips.get(highestDPIndex).setCaptain(info.captain);
-                combatShips.get(flagShipIndex).setCaptain(temp);
-            }
-        }
-
-         */
 
         Collections.sort(vars.combatShips, new SortByDP());
         Collections.sort(vars.civilianShips, new SortByDP());
 
         // add ships to fleet
         for(FleetMemberAPI member : vars.combatShips) {
-            //RepairTrackerAPI repairTracker = member.getRepairTracker();
-            //repairTracker.setCR(0.7f);
+            RepairTrackerAPI repairTracker = member.getRepairTracker();
+            repairTracker.setCR(0.7f);
             fleetAPI.getFleetData().addFleetMember(member);
         }
         for(FleetMemberAPI member : vars.civilianShips) {
-            //RepairTrackerAPI repairTracker = member.getRepairTracker();
-            //repairTracker.setCR(0.7f);
+            RepairTrackerAPI repairTracker = member.getRepairTracker();
+            repairTracker.setCR(0.7f);
             fleetAPI.getFleetData().addFleetMember(member);
         }
         for(FleetMemberAPI member : membersToKeep) {
