@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import variants_lib.scripts.fleetedit.FleetBuilding;
+import variants_lib.scripts.UnofficeredPersonalitySetPlugin;
 
 import java.util.*;
 
@@ -310,6 +310,8 @@ public class VariantsLibFleetFactory  {
         addAutoLogistics(vars, params);
         addPartitionShips(vars, params, rand);
         ArrayList<FleetMemberAPI> shipsToOfficer = chooseShipsToOfficer(vars, params);
+        createOfficers(params, shipsToOfficer, rand);
+        fleetAPI.setCommander(shipsToOfficer.get(0).getCaptain());
 
         for(FleetMemberAPI member : vars.combatShips) {
             log.info(member.getVariant().getOriginalVariant());
@@ -540,37 +542,75 @@ public class VariantsLibFleetFactory  {
         return shipsToOfficer;
     }
 
-
-
     /**
-     * Create list of officers for the fleet based on params, with the first officer in the list being the commander
-     * @param params params to base officer generation off of
-     * @return the list of officers created, with the commander being the first in the list
+     * Create officers for the list of FleetMemberAPIs passed in, with the first in the list containing the fleet's commander
+     * @param params params used to make fleet
+     * @param shipsToOfficer ships to generate officers for
+     * @param rand random number generator used
      */
-
-    @NotNull
-    protected ArrayList<PersonAPI> createOfficers(
+    protected void createOfficers(
             @NotNull VariantsLibFleetParams params,
             @NotNull ArrayList<FleetMemberAPI> shipsToOfficer,
             @NotNull Random rand
     ) {
-        final ArrayList<PersonAPI> officers = new ArrayList<>(params.numOfficers);
         final OfficerFactory officerFactory = new OfficerFactory(Global.getSector().getFaction(params.faction));
 
-        final ArrayList<String> emptyList = officerFactory.skillsToAdd;
         officerFactory.rand = rand;
         // make commander
+        {
+            officerFactory.level = Math.round(params.averageOfficerLevel + 1.0f);
+            if(officerFactory.level > 10) {
+                officerFactory.level = 10;
+            }
 
-        officerFactory.level = Math.round(params.averageOfficerLevel + 1.0f);
-        if(officerFactory.level > 10) {
-            officerFactory.level = 10;
+            final String factionDefaultPersonality = UnofficeredPersonalitySetPlugin.getDefaultPersonality(params.faction);
+            if(factionDefaultPersonality != null) {
+                officerFactory.personality = factionDefaultPersonality;
+            }
+
+            officerFactory.skillsToAdd.addAll(commanderSkills);
+            final VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(shipsToOfficer.get(0).getVariant().getOriginalVariant());
+            if(variantData != null) {
+                for(String tag : variantData.officerSpecifications) {
+                    final String skill = CommonStrings.SKILL_EDIT_TAGS.get(tag);
+                    final String personality = CommonStrings.PERSONALITY_EDIT_TAGS.get(tag);
+                    if(skill != null) {
+                        officerFactory.skillsToAdd.add(skill);
+                    } else if(personality != null) {
+                        officerFactory.personality = personality;
+                    }
+                }
+            }
+            shipsToOfficer.get(0).setCaptain(officerFactory.makeOfficer());
         }
-        officerFactory.skillsToAdd = commanderSkills;
 
+        // make other officers
+        for(int i = 1; i < shipsToOfficer.size(); i++) {
+            final FleetMemberAPI toOfficer = shipsToOfficer.get(i);
+            officerFactory.level = Math.round(params.averageOfficerLevel + rand.nextFloat() - 0.5f);
+            if (officerFactory.level < 1) {
+                officerFactory.level = 1;
+            }
 
-        return officers;
+            final String factionDefaultPersonality = UnofficeredPersonalitySetPlugin.getDefaultPersonality(params.faction);
+            if (factionDefaultPersonality != null) {
+                officerFactory.personality = factionDefaultPersonality;
+            }
 
-
+            final VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(shipsToOfficer.get(0).getVariant().getOriginalVariant());
+            if (variantData != null) {
+                for (String tag : variantData.officerSpecifications) {
+                    final String skill = CommonStrings.SKILL_EDIT_TAGS.get(tag);
+                    final String personality = CommonStrings.PERSONALITY_EDIT_TAGS.get(tag);
+                    if (skill != null) {
+                        officerFactory.skillsToAdd.add(skill);
+                    } else if (personality != null) {
+                        officerFactory.personality = personality;
+                    }
+                }
+            }
+            toOfficer.setCaptain(officerFactory.makeOfficer());
+        }
     }
 
     protected FleetMemberAPI createShip(@NotNull String variantId) {

@@ -5,7 +5,6 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
-import com.fs.starfarer.api.impl.campaign.intel.punitive.PunitiveExpeditionIntel;
 
 import variants_lib.data.SettingsData;
 
@@ -43,9 +42,9 @@ public class VariantsLibListener extends BaseCampaignEventListener{
         for(CampaignFleetAPI fleet : battle.getNonPlayerSide()) {
             FactionAPI faction = fleet.getFaction();
             String factionId = faction.getId();
-            if(UnofficeredPersonalitySetPlugin.FACTION_DEFAULT_AGRESSION.containsKey(factionId)) {
+            if(UnofficeredPersonalitySetPlugin.FACTION_DEFAULT_AGGRESSION.containsKey(factionId)) {
                 log.debug("resetting aggresion of " + factionId);
-                faction.getDoctrine().setAggression(UnofficeredPersonalitySetPlugin.FACTION_DEFAULT_AGRESSION.get(factionId));
+                faction.getDoctrine().setAggression(UnofficeredPersonalitySetPlugin.FACTION_DEFAULT_AGGRESSION.get(factionId));
             }
         }
     }

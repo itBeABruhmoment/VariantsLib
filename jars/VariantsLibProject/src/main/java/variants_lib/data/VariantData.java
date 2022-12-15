@@ -1,9 +1,11 @@
 package variants_lib.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.IOException;
 import java.util.Vector;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +47,7 @@ public class VariantData {
         return null;
     }
 
-    private static boolean hasDuplicate(String original, Vector<String> strings)
+    private static boolean hasDuplicate(String original, ArrayList<String> strings)
     {
         int duplicateCount = 0;
         for(String str : strings) {
@@ -60,7 +62,7 @@ public class VariantData {
         return false;
     }
 
-    private static boolean hasDuplicateTags(Vector<String> strings)
+    private static boolean hasDuplicateTags(ArrayList<String> strings)
     {
         for(String str : strings) {
             if(hasDuplicate(str, strings)) {
@@ -70,10 +72,10 @@ public class VariantData {
         return false;
     }
 
-    private static Vector<String> processTags(String tagsRaw)
+    private static ArrayList<String> processTags(String tagsRaw)
     {
         String[] tagsMediumRare = tagsRaw.split(",");
-        Vector<String> tagsDone = new Vector<String>();
+        ArrayList<String> tagsDone = new ArrayList<>();
         for(String tag : tagsMediumRare) {
             String trimmed = tag.trim();
             if(!trimmed.equals("")) {
@@ -85,7 +87,7 @@ public class VariantData {
     }
 
     // check if all tags are recognised
-    private static String hasInvalidOfficerSpecTags(Vector<String> officerSpec)
+    private static String hasInvalidOfficerSpecTags(ArrayList<String> officerSpec)
     {
         for(String tag : officerSpec) {
             if(!CommonStrings.SKILL_EDIT_TAGS.containsKey(tag)
@@ -98,7 +100,7 @@ public class VariantData {
     }
 
     // check if all tags are recognised
-    private static String hasInvalidSmodTags(Vector<String> smods)
+    private static String hasInvalidSmodTags(ArrayList<String> smods)
     {
         for(String tag : smods) {
             try {
@@ -145,7 +147,7 @@ public class VariantData {
                     }
     
                     String officerSpecRaw = row.optString(CSV_SECOND_COLUMN_NAME);
-                    Vector<String> officerSpec = processTags(officerSpecRaw);
+                    ArrayList<String> officerSpec = processTags(officerSpecRaw);
                     officerSpec.trimToSize();
     
                     if(hasDuplicateTags(officerSpec)) {
@@ -160,7 +162,7 @@ public class VariantData {
                     }
     
                     String smodsRaw = row.optString(CSV_THIRD_COLUMN_NAME);
-                    Vector<String> smods = processTags(smodsRaw);
+                    ArrayList<String> smods = processTags(smodsRaw);
                     smods.trimToSize();
     
                     if(hasDuplicateTags(smods)) {
@@ -181,13 +183,15 @@ public class VariantData {
     }
 
     public static class VariantDataMember {
-        public Vector<String> officerSpecifications;
-        public Vector<String> smods;
+        @NotNull
+        public ArrayList<String> officerSpecifications;
+        @NotNull
+        public ArrayList<String> smods;
 
-        public VariantDataMember(Vector<String> OfficerSpecifications, Vector<String> Smods)
+        public VariantDataMember(@NotNull ArrayList<String> officerSpecifications, @NotNull ArrayList<String> smods)
         {
-            officerSpecifications = OfficerSpecifications;
-            smods = Smods;
+            this.officerSpecifications = officerSpecifications;
+            this.smods = smods;
         }
     }
 

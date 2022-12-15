@@ -52,6 +52,7 @@ public class OfficerFactory {
         final MutableCharacterStatsAPI stats = officer.getStats();
         int skillsAdded = 0;
 
+        stats.setLevel(level);
         officer.setPersonality(personality);
 
         // add skills in skillsToAdd until done or level does not allow it

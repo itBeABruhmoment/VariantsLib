@@ -12,6 +12,8 @@ import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Personalities;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import variants_lib.data.CommonStrings;
 import variants_lib.data.FleetBuildData;
 import variants_lib.data.SettingsData;
@@ -46,12 +48,15 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin {
         log.setLevel(Level.ALL);
     }
 
-    public static HashMap<String, Integer> FACTION_DEFAULT_AGRESSION;
+    public static HashMap<String, Integer> FACTION_DEFAULT_AGGRESSION;
 
-    private static final HashMap<String, Integer> AGRESSION = new HashMap<String, Integer>() {{
+    private static final HashMap<String, Integer> AGGRESSION = new HashMap<String, Integer>() {{
         put(Personalities.CAUTIOUS, 1);     put(Personalities.TIMID, 2);    put(Personalities.STEADY, 3);
         put(Personalities.AGGRESSIVE, 4);   put(Personalities.RECKLESS, 5);
     }};
+
+    private static final String[] AGGRESSION_TO_PERSONALITY = {null, Personalities.CAUTIOUS, Personalities.TIMID,
+            Personalities.STEADY, Personalities.AGGRESSIVE, Personalities.RECKLESS};
     /*
     static void test()
     {
@@ -65,11 +70,20 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin {
     }
     */
 
+    @Nullable
+    public static String getDefaultPersonality(@NotNull String faction) {
+        final Integer aggression = FACTION_DEFAULT_AGGRESSION.get(faction);
+        if(aggression != null && aggression > 0 && aggression <= 5) {
+            return AGGRESSION_TO_PERSONALITY[aggression];
+        }
+        return null;
+    }
+
     public static void innitDefaultAggressionValues()
     {
-        FACTION_DEFAULT_AGRESSION = new HashMap<String, Integer>();
+        FACTION_DEFAULT_AGGRESSION = new HashMap<String, Integer>();
         for(FactionAPI faction : Global.getSector().getAllFactions()) {
-            FACTION_DEFAULT_AGRESSION.put(faction.getId(), faction.getDoctrine().getAggression());
+            FACTION_DEFAULT_AGGRESSION.put(faction.getId(), faction.getDoctrine().getAggression());
         }
     }
 
@@ -102,24 +116,24 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin {
             log.debug(CommonStrings.MOD_ID + ": fleet is of type " + fleetType + " with personality " + fleetWidePersonality);
         } else {
             String factionId = enemyFleet.getFaction().getId();
-            if(factionId != null && FACTION_DEFAULT_AGRESSION.containsKey(factionId)) {
-                enemyFleet.getFaction().getDoctrine().setAggression(FACTION_DEFAULT_AGRESSION.get(factionId));
+            if(factionId != null && FACTION_DEFAULT_AGGRESSION.containsKey(factionId)) {
+                enemyFleet.getFaction().getDoctrine().setAggression(FACTION_DEFAULT_AGGRESSION.get(factionId));
             }
             log.debug(CommonStrings.MOD_ID + ": fleet has no default personality, set to default");
             return;
         }
         if(fleetWidePersonality == null) {
             String factionId = enemyFleet.getFaction().getId();
-            if(factionId != null && FACTION_DEFAULT_AGRESSION.containsKey(factionId)) {
-                enemyFleet.getFaction().getDoctrine().setAggression(FACTION_DEFAULT_AGRESSION.get(factionId));
+            if(factionId != null && FACTION_DEFAULT_AGGRESSION.containsKey(factionId)) {
+                enemyFleet.getFaction().getDoctrine().setAggression(FACTION_DEFAULT_AGGRESSION.get(factionId));
             }
             log.debug(CommonStrings.MOD_ID + ": fleet has no default personality, set to default");
             return;
         }
 
-        if(AGRESSION.containsKey(fleetWidePersonality)) {
+        if(AGGRESSION.containsKey(fleetWidePersonality)) {
             log.debug(CommonStrings.MOD_ID + ": setting aggression to \"" + fleetWidePersonality + "\"");
-            int agressionValue = AGRESSION.get(fleetWidePersonality);
+            int agressionValue = AGGRESSION.get(fleetWidePersonality);
             enemyFleet.getFaction().getDoctrine().setAggression(agressionValue);
         } else {
             log.debug(CommonStrings.MOD_ID + ": combat script not run, personality \"" + fleetWidePersonality + "\" not registered");
