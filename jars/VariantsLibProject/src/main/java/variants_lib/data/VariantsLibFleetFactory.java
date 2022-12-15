@@ -310,6 +310,13 @@ public class VariantsLibFleetFactory  {
         addAutoLogistics(vars, params);
         addPartitionShips(vars, params, rand);
         ArrayList<FleetMemberAPI> shipsToOfficer = chooseShipsToOfficer(vars, params);
+
+        for(FleetMemberAPI member : vars.combatShips) {
+            log.info(member.getVariant().getOriginalVariant());
+        }
+        for(FleetMemberAPI member : vars.civilianShips) {
+            log.info(member.getVariant().getOriginalVariant());
+        }
         /*
         // assign officers
         if(combatShips.size() == 0) { // if there is only civilian ships for some reason
@@ -542,18 +549,24 @@ public class VariantsLibFleetFactory  {
      */
 
     @NotNull
-    protected ArrayList<PersonAPI> createOfficers(@NotNull VariantsLibFleetParams params) {
+    protected ArrayList<PersonAPI> createOfficers(
+            @NotNull VariantsLibFleetParams params,
+            @NotNull ArrayList<FleetMemberAPI> shipsToOfficer,
+            @NotNull Random rand
+    ) {
         final ArrayList<PersonAPI> officers = new ArrayList<>(params.numOfficers);
         final OfficerFactory officerFactory = new OfficerFactory(Global.getSector().getFaction(params.faction));
 
-        // make commander
         final ArrayList<String> emptyList = officerFactory.skillsToAdd;
+        officerFactory.rand = rand;
+        // make commander
+
         officerFactory.level = Math.round(params.averageOfficerLevel + 1.0f);
         if(officerFactory.level > 10) {
             officerFactory.level = 10;
         }
         officerFactory.skillsToAdd = commanderSkills;
-        officerFactory.rand = null;
+
 
         return officers;
 
@@ -561,7 +574,9 @@ public class VariantsLibFleetFactory  {
     }
 
     protected FleetMemberAPI createShip(@NotNull String variantId) {
-        return Global.getFactory().createFleetMember(FleetMemberType.SHIP, variantId);
+        final FleetMemberAPI ship = Global.getFactory().createFleetMember(FleetMemberType.SHIP, variantId);
+        ship.getVariant().setOriginalVariant(variantId);
+        return ship;
     }
 
     protected double sumPartitionWeights(int start) {

@@ -117,7 +117,9 @@ public class AutoLogisticsFactory {
     }
 
     protected FleetMemberAPI createShip(@NotNull String variantId) {
-        return Global.getFactory().createFleetMember(FleetMemberType.SHIP, variantId);
+        final FleetMemberAPI ship = Global.getFactory().createFleetMember(FleetMemberType.SHIP, variantId);
+        ship.getVariant().setOriginalVariant(variantId);
+        return ship;
     }
 
     public static class AutoLogisticsReturn {
