@@ -268,7 +268,9 @@ public class VariantsLibFleetFactory  {
      */
     @NotNull
     public CampaignFleetAPI makeFleet(@NotNull VariantsLibFleetParams params) {
-        return null;
+        CampaignFleetAPI fleet = Global.getFactory().createEmptyFleet(params.faction, params.fleetName, true);
+        createFleet(fleet, params, new ArrayList<FleetMemberAPI>(), new Random(params.seed));
+        return fleet;
     }
 
     /**
@@ -277,7 +279,8 @@ public class VariantsLibFleetFactory  {
      */
     public void editFleet(@NotNull CampaignFleetAPI original) {
         final VariantsLibFleetParams params = makeParamsFromFleet(original);
-
+        clearMembers(original);
+        createFleet(original, params, new ArrayList<FleetMemberAPI>(), new Random(params.seed));
     }
 
     protected void clearMembers(CampaignFleetAPI fleetAPI) {
