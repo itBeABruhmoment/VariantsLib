@@ -54,8 +54,7 @@ public class VariantsLibListener extends BaseCampaignEventListener{
         for(FleetEditingScript script : SettingsData.universalPreModificationScripts.values()) {
             script.run(fleet);
         }
-        // TODO: fix
-        //FleetRandomizer.modify(fleet);
+        FleetRandomizer.modify(fleet);
         for(FleetEditingScript script : SettingsData.universalPostModificationScripts.values()) {
             script.run(fleet);
         }
