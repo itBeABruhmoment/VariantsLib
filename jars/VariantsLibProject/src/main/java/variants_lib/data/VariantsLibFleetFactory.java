@@ -20,7 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import variants_lib.scripts.HasHeavyIndustryTracker;
 import variants_lib.scripts.UnofficeredPersonalitySetPlugin;
+import variants_lib.scripts.fleetedit.FleetBuilding;
 
 import java.util.*;
 
@@ -183,6 +185,71 @@ public class VariantsLibFleetFactory  {
         }
     }
 
+    /**
+     * Choose a random fleet to spawn based on spawn weights in factions.csv and fleets.csv
+     * @param params Specifications to base selection on
+     * @return a fleet factory that meets specifications, or null if non could be found
+     */
+    @Nullable
+    public static VariantsLibFleetFactory pickFleetFactory(@NotNull VariantsLibFleetParams params) {
+        if(!FactionData.FACTION_DATA.containsKey(params.faction)) {
+            log.debug(params.faction + " not a recognised faction");
+            return null;
+        }
+        final Random rand = new Random(params.seed);
+
+        // get correct special fleet spawn rate
+        double specialFleetSpawnRate = 0.0;
+        final FactionData.FactionConfig config = FactionData.FACTION_DATA.get(params.faction);
+        if(config.specialFleetSpawnRateOverrides.containsKey(params.fleetType)) {
+            specialFleetSpawnRate = config.specialFleetSpawnRateOverrides.get(params.fleetType);
+        } else {
+            specialFleetSpawnRate = config.specialFleetSpawnRate;
+        }
+
+        if(specialFleetSpawnRate < rand.nextDouble()) {
+            return null;
+        }
+
+        final ArrayList<VariantsLibFleetFactory> validFleetComps = getValidFleetChoices(params);
+
+        if(validFleetComps.size() == 0) {
+            return null;
+        }
+
+        final float random = rand.nextFloat();
+        float totalWeightsSum = 0;
+        for(VariantsLibFleetFactory factory : validFleetComps) {
+            totalWeightsSum += factory.fleetTypeSpawnWeights.get(params.fleetType);
+        }
+        //log.debug("rand: " + random + " weightSum: " + totalWeightsSum);
+        float runningWeightsSum = 0;
+        for(VariantsLibFleetFactory factory : validFleetComps) {
+            //log.debug("add: " + comp.spawnWeight / totalWeightsSum);
+            runningWeightsSum += factory.fleetTypeSpawnWeights.get(params.fleetType) / totalWeightsSum;
+            if(runningWeightsSum > random) {
+                return factory;
+            }
+        }
+        return null;
+    }
+
+    @NotNull
+    private static ArrayList<VariantsLibFleetFactory> getValidFleetChoices(@NotNull VariantsLibFleetParams params) {
+        ArrayList<VariantsLibFleetFactory> fleetFactories = new ArrayList<>(10);
+        for(String factoryId : FactionData.FACTION_DATA.get(params.faction).customFleetIds) {
+            final VariantsLibFleetFactory factory = FleetBuildData.FLEET_DATA.get(factoryId);
+            if(factory != null
+                    && factory.maxDP >= params.fleetPoints
+                    && params.fleetPoints >= factory.minDP
+                    && factory.fleetTypeSpawnWeights.containsKey(params.fleetType)
+                    && (factory.spawnIfNoIndustry || HasHeavyIndustryTracker.hasHeavyIndustry(params.faction))) {
+                fleetFactories.add(factory);
+            }
+        }
+        return fleetFactories;
+    }
+
     @Override
     public String toString() {
         final JSONObject json = new JSONObject();
@@ -217,58 +284,10 @@ public class VariantsLibFleetFactory  {
         }
     }
 
-    @NotNull
-    public static VariantsLibFleetParams makeParamsFromFleet(@NotNull CampaignFleetAPI fleet) {
-        final VariantsLibFleetParams params = new VariantsLibFleetParams();
-        final MemoryAPI fleetMemory = fleet.getMemoryWithoutUpdate();
-
-        params.fleetName = fleet.getName();
-        params.faction = fleet.getFaction().getId();
-        if(fleetMemory.contains(MemFlags.MEMORY_KEY_FLEET_TYPE)) {
-            params.fleetType = fleetMemory.getString(MemFlags.MEMORY_KEY_FLEET_TYPE);
-        }
-        if(fleetMemory.contains(MemFlags.SALVAGE_SEED)) {
-            params.seed = fleetMemory.getLong(MemFlags.SALVAGE_SEED);
-        }
-
-        int numOfficers = 0;
-        int sumOfficerLevels = 0;
-        int totalDP = 0;
-        for(FleetMemberAPI member : fleet.getMembersWithFightersCopy()) {
-            if(!member.isFighterWing()) {
-                totalDP += member.getBaseDeploymentCostSupplies();
-                // there isn't a hasOfficer method in the API. Let's get creative!
-                final int level = member.getCaptain().getStats().getLevel();
-                if(level <= 1) {
-                    numOfficers++;
-                    sumOfficerLevels += level;
-                }
-            }
-        }
-        params.fleetPoints = totalDP;
-        params.numOfficers = numOfficers;
-        params.averageOfficerLevel = ((float) sumOfficerLevels) / numOfficers;
-
-        try {
-            DefaultFleetInflaterParams inflaterParams = (DefaultFleetInflaterParams)fleet.getInflater().getParams();
-            params.averageSMods = params.averageSMods;
-        } catch(Exception e) {
-            log.info("could not get average smods defaulting to none");
-        }
-
-        try {
-            params.quality = fleet.getInflater().getQuality();
-        } catch(Exception e) {
-            log.info("could not get quality defaulting to max");
-        }
-
-        return params;
-    }
-
     /**
      * Creates a fleet from parameters
-     * @param params
-     * @return
+     * @param params Params to use
+     * @return Fleet created based off of params
      */
     @NotNull
     public CampaignFleetAPI makeFleet(@NotNull VariantsLibFleetParams params) {
@@ -278,13 +297,18 @@ public class VariantsLibFleetFactory  {
     }
 
     /**
-     * Edits a fleet based on the original fleet's composition
+     * Edits a fleet based on the original fleet's composition. Preserves mothballed ships
      * @param original Fleet to edit
      */
     public void editFleet(@NotNull CampaignFleetAPI original) {
-        final VariantsLibFleetParams params = makeParamsFromFleet(original);
+        final VariantsLibFleetParams params = new VariantsLibFleetParams(original);
         clearMembers(original);
         createFleet(original, params, new ArrayList<FleetMemberAPI>(), new Random(params.seed), true);
+    }
+
+    public void editFleet(@NotNull CampaignFleetAPI fleet, @NotNull VariantsLibFleetParams params) {
+        clearMembers(fleet);
+        createFleet(fleet, params, new ArrayList<FleetMemberAPI>(), new Random(params.seed), true);
     }
 
     protected void clearMembers(CampaignFleetAPI fleetAPI) {
