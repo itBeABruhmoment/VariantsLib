@@ -51,8 +51,8 @@ public class vlSpawnFleet implements BaseCommand{
         params.faction = splited[0];
         params.fleetType = FleetTypes.PATROL_LARGE;
         params.fleetPoints = fp;
-        params.quality = 1.0f;
-        params.averageSMods = 0.0f;
+        params.quality = 0.75f;
+        params.averageSMods = 2.0f;
         params.averageOfficerLevel = 5;
         params.numOfficers = 5;
 

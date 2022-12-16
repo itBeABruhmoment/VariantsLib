@@ -1,29 +1,19 @@
 package variants_lib.scripts;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Random;
-
 import com.fs.starfarer.api.Global;
+
+import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
-
-import variants_lib.data.CommonStrings;
-import variants_lib.data.FactionData;
-import variants_lib.data.FleetBuildData;
-import variants_lib.data.FleetComposition;
-import variants_lib.data.SettingsData;
-import variants_lib.scripts.fleetedit.FleetBuilding;
-import variants_lib.scripts.fleetedit.OfficerEditing;
-
-import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflater;
-import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import variants_lib.data.FactionData;
+import variants_lib.data.CommonStrings;
+import variants_lib.data.SettingsData;
 
-import com.fs.starfarer.api.campaign.FleetInflater;
-import com.fs.starfarer.api.campaign.rules.MemoryAPI;
+import java.util.HashSet;
+import java.util.Random;
 
 
 /*
@@ -47,8 +37,6 @@ public class FleetRandomizer {
         log.setLevel(Level.ALL);
     }
 
-    /*
-
     public boolean scriptEnded = false;
     private static final HashSet<String> DISALLOW_FLEET_MODS_FLAGS = new HashSet<String>() {{
         add(MemFlags.ENTITY_MISSION_IMPORTANT); add(MemFlags.MEMORY_KEY_MISSION_IMPORTANT); add(MemFlags.STORY_CRITICAL);
@@ -66,7 +54,6 @@ public class FleetRandomizer {
 
     private static boolean allowModificationFleet(CampaignFleetAPI fleet)
     {
-        
         // don't modify fleets from unregistered factions
         if(!FactionData.FACTION_DATA.containsKey(fleet.getFaction().getId())) {
             log.debug("refused to modify fleet because faction is not registered");
@@ -81,6 +68,12 @@ public class FleetRandomizer {
             }
         }
 
+        for(FleetMemberAPI member : fleet.getMembersWithFightersCopy()) {
+            if(member.isStation()) {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -88,6 +81,7 @@ public class FleetRandomizer {
 
     public static void modify(CampaignFleetAPI fleet)
     {
+        /*
         String factionId = fleet.getFaction().getId();
         MemoryAPI fleetMemory = fleet.getMemoryWithoutUpdate();
    
@@ -169,6 +163,8 @@ public class FleetRandomizer {
                 }
             }
         }
+
+         */
     }
 
     public static boolean alreadyModified(CampaignFleetAPI fleet)
@@ -177,8 +173,6 @@ public class FleetRandomizer {
     }
 
     private FleetRandomizer() {}
-
-     */
 }
 /*
 SectorEntityToken yourFleet = Global.getSector().getPlayerFleet();

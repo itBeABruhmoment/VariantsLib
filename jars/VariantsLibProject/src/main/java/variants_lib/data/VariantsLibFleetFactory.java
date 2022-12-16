@@ -2,12 +2,16 @@ package variants_lib.data;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.FleetDataAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
+import com.fs.starfarer.api.impl.campaign.DModManager;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.fleet.RepairTrackerAPI;
+import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflater;
 import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import org.apache.log4j.Level;
@@ -28,7 +32,8 @@ public class VariantsLibFleetFactory  {
     protected static final HashSet<String> VALID_PERSONALITIES = new HashSet<String>() {{
         add("timid"); add("cautious"); add("steady"); add("reckless"); add("aggressive");
     }};
-    protected static final int MAX_NUM_COMBAT_SKILLS = 14;
+    protected static final String[] FALLBACK_HULLMODS = {"hardenedshieldemitter", "fluxdistributor",
+            "fluxbreakers", "reinforcedhull", "targetingunit", "solar_shielding"};
 
     // derived from loaded jsons and csv
     @NotNull public ArrayList<AlwaysBuildMember> alwaysInclude = new ArrayList<>(5);
@@ -268,7 +273,7 @@ public class VariantsLibFleetFactory  {
     @NotNull
     public CampaignFleetAPI makeFleet(@NotNull VariantsLibFleetParams params) {
         CampaignFleetAPI fleet = Global.getFactory().createEmptyFleet(params.faction, params.fleetName, true);
-        createFleet(fleet, params, new ArrayList<FleetMemberAPI>(), new Random(params.seed));
+        createFleet(fleet, params, new ArrayList<FleetMemberAPI>(), new Random(params.seed), false);
         return fleet;
     }
 
@@ -279,7 +284,7 @@ public class VariantsLibFleetFactory  {
     public void editFleet(@NotNull CampaignFleetAPI original) {
         final VariantsLibFleetParams params = makeParamsFromFleet(original);
         clearMembers(original);
-        createFleet(original, params, new ArrayList<FleetMemberAPI>(), new Random(params.seed));
+        createFleet(original, params, new ArrayList<FleetMemberAPI>(), new Random(params.seed), true);
     }
 
     protected void clearMembers(CampaignFleetAPI fleetAPI) {
@@ -301,7 +306,8 @@ public class VariantsLibFleetFactory  {
             @NotNull CampaignFleetAPI fleetAPI,
             @NotNull VariantsLibFleetParams params,
             @NotNull ArrayList<FleetMemberAPI> membersToKeep,
-            @NotNull Random rand
+            @NotNull Random rand,
+            boolean calledFromEditFleet
     ) {
         CreateFleetVariables vars = new CreateFleetVariables();
         vars.numShipsThatCanBeAdded = SettingsData.getMaxShipsInAIFleet() - membersToKeep.size();
@@ -337,6 +343,22 @@ public class VariantsLibFleetFactory  {
         }
         for(FleetMemberAPI member : membersToKeep) {
             fleetAPI.getFleetData().addFleetMember(member);
+        }
+
+        addSMods(fleetAPI, params, rand);
+        if(autofit) {
+            if(!calledFromEditFleet) {
+                DefaultFleetInflaterParams inflaterParams = new DefaultFleetInflaterParams();
+                inflaterParams.factionId = params.faction;
+                inflaterParams.seed = params.seed;
+                inflaterParams.quality = params.quality;
+                inflaterParams.mode = FactionAPI.ShipPickMode.PRIORITY_THEN_ALL;
+                fleetAPI.setInflater(new DefaultFleetInflater(inflaterParams));
+            }
+            fleetAPI.getInflater().inflate(fleetAPI);
+            fleetAPI.setInflated(true);
+        } else {
+            addDMods(fleetAPI, params, rand);
         }
     }
 
@@ -513,7 +535,7 @@ public class VariantsLibFleetFactory  {
         officerFactory.rand = rand;
         // make commander
         {
-            officerFactory.level = Math.round(params.averageOfficerLevel + 1.0f);
+            officerFactory.level = Math.round(params.averageOfficerLevel + 2.0f);
             if(officerFactory.level > 10) {
                 officerFactory.level = 10;
             }
@@ -542,7 +564,7 @@ public class VariantsLibFleetFactory  {
         // make other officers
         for(int i = 1; i < shipsToOfficer.size(); i++) {
             final FleetMemberAPI toOfficer = shipsToOfficer.get(i);
-            officerFactory.level = Math.round(params.averageOfficerLevel + rand.nextFloat() - 0.5f);
+            officerFactory.level = Math.round(params.averageOfficerLevel + 2 * rand.nextFloat() - 1.0f);
             if (officerFactory.level < 1) {
                 officerFactory.level = 1;
             }
@@ -617,6 +639,92 @@ public class VariantsLibFleetFactory  {
             }
         }
         return members;
+    }
+
+    protected void addSMods(CampaignFleetAPI fleet, VariantsLibFleetParams params, Random rand)
+    {
+        if(params.averageSMods <= 0.0f) {
+            return;
+        }
+        for(FleetMemberAPI ship : fleet.getMembersWithFightersCopy()) {
+            if(!ship.isFighterWing() && !ship.isStation() && !ship.isCivilian()) {
+                int numSmodsToAdd = (int) Math.round(params.averageSMods + (rand.nextFloat() - 0.5));
+                if(numSmodsToAdd < 1) {
+                    continue;
+                }
+
+                String variantId = VariantData.isRegisteredVariant(ship);
+                VariantData.VariantDataMember variantData = null;
+                if(variantId != null) {
+                    variantData = VariantData.VARIANT_DATA.get(variantId);
+                }
+
+                if(variantData == null || variantData.smods.size() == 0) {
+                    ShipVariantAPI variant  = ship.getVariant();
+                    Collection<String> hullMods = variant.getNonBuiltInHullmods();
+                    int start = rand.nextInt() & Integer.MAX_VALUE; // get positive int
+                    start = start % FALLBACK_HULLMODS.length;
+                    int numHullModsAdded = 0;
+                    for(int i = 0; i < FALLBACK_HULLMODS.length && numHullModsAdded < numSmodsToAdd; i++) {
+                        int index = (start + i) % FALLBACK_HULLMODS.length;
+                        if(!hullMods.contains(FALLBACK_HULLMODS[index])) {
+                            variant.addPermaMod(FALLBACK_HULLMODS[index], true);
+                            numHullModsAdded++;
+                        }
+                    }
+                } else {
+                    ShipVariantAPI variant  = ship.getVariant();
+                    Collection<String> hullMods = variant.getNonBuiltInHullmods();
+                    int numSmodsAdded = 0;
+                    while(numSmodsAdded < numSmodsToAdd && numSmodsAdded < variantData.smods.size()) {
+                        if(!hullMods.contains(variantData.smods.get(numSmodsAdded))) {
+                            variant.addPermaMod(variantData.smods.get(numSmodsAdded), true);
+                            numSmodsAdded++;
+                        }
+                    }
+                    // fill in remaining hullmods
+                    hullMods = variant.getNonBuiltInHullmods();
+                    int start = rand.nextInt() & Integer.MAX_VALUE; // get positive int
+                    start = start % FALLBACK_HULLMODS.length;
+                    for(int i = 0; i < FALLBACK_HULLMODS.length && numSmodsAdded < numSmodsToAdd; i++) {
+                        int index = (start + i) % FALLBACK_HULLMODS.length;
+                        if(!hullMods.contains(FALLBACK_HULLMODS[index])) {
+                            variant.addPermaMod(FALLBACK_HULLMODS[index], true);
+                            numSmodsAdded++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    protected void addDMods(CampaignFleetAPI fleet, VariantsLibFleetParams params, Random rand)
+    {
+        // add dmods
+        float quality = params.quality + (0.05f * params.quality); // noticed an abnormal amount dmods in factions such as diktat
+        for(FleetMemberAPI ship : fleet.getMembersWithFightersCopy()) {
+            if(!ship.isFighterWing() && !ship.isStation()) {
+                int numExistingDmods = DModManager.getNumDMods(ship.getVariant());
+                if(quality <= 0.0f) {
+                    int numDmods = 5 - numExistingDmods;
+                    if(numDmods > 0) {
+                        DModManager.addDMods(ship, true, numDmods, rand);
+                    } // otherwise do nothing
+                } else if(quality <= 1.0f) {
+                    int numDmods = Math.round(5.0f - (quality + (rand.nextFloat() / 5.0f - 0.1f)) * 5.0f);
+                    if(numDmods < 0) {
+                        numDmods = 0;
+                    }
+                    if(numDmods > 5) {
+                        numDmods = 5;
+                    }
+                    numDmods = numDmods - numExistingDmods;
+                    if(numDmods > 0) {
+                        DModManager.addDMods(ship, true, numDmods, rand);
+                    }
+                }
+            }
+        }
     }
 
     protected static int getDPInt(@NotNull String variantId) {
