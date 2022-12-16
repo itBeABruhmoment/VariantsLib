@@ -30,3 +30,7 @@ dependencies {
     compileOnly files(gameDir + '/xstream-1.4.10.jar')
     compileOnly files(consoleCommandsDir + '/jars/lw_Console.jar')
 }
+
+jar {
+    destinationDirectory.set(file("$buildDir/../../"))
+}

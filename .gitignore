@@ -1,8 +1,6 @@
 /.git
 /jars/VariantsLibProject/gradle/*
-/jars/VariantsLibProject/build/classes/*
-/jars/VariantsLibProject/build/genrated/*
-/jars/VariantsLibProject/build/tmp/*
+/jars/VariantsLibProject/build/*
 /jars/VariantsLibProject/local.properties
 /jars/VariantsLibProject/.gradle/*
 /jars/VariantsLibProject/.idea/*
