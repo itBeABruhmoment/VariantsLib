@@ -6,6 +6,6 @@
     "version": "0.1.2",
     "description": "library that aids adding more fleet variety",
     "gameVersion": "0.95.1a-RC6",
-    "jars":["jars/VariantsLibProject.jar"],
+    "jars":["jars/VariantsLib.jar"],
     "modPlugin":"variants_lib.scripts.VariantsLibModPlugin"
 }
