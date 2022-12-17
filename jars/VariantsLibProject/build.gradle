@@ -18,6 +18,7 @@ ext {
     // Local build environment config, set in local.properties
     gameDir = localProps.getProperty('starSectorInstallDir')
     consoleCommandsDir = localProps.getProperty('consoleCommandDir')
+    lazyLibDir = localProps.getProperty('lazyLibDir')
 }
 
 dependencies {
@@ -28,7 +29,10 @@ dependencies {
     compileOnly files(gameDir + '/json.jar')
     compileOnly files(gameDir + '/lwjgl_util.jar')
     compileOnly files(gameDir + '/xstream-1.4.10.jar')
+    compileOnly files(gameDir + "/lwjgl.jar")
     compileOnly files(consoleCommandsDir + '/jars/lw_Console.jar')
+    compileOnly files(lazyLibDir + '/jars/LazyLib.jar')
+    compileOnly files(lazyLibDir + '/jars/LazyLib-Kotlin.jar')
 }
 
 jar {
