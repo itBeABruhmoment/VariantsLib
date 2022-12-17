@@ -80,8 +80,7 @@ public class FleetRandomizer {
     }
 
     public static void modify(CampaignFleetAPI fleet) {
-        String factionId = fleet.getFaction().getId();
-        MemoryAPI fleetMemory = fleet.getMemoryWithoutUpdate();
+        final MemoryAPI fleetMemory = fleet.getMemoryWithoutUpdate();
 
         log.info("trying to modify " + fleet.getFullName());
         fleetMemory.set(CommonStrings.FLEET_EDITED_MEMKEY, true);
@@ -93,7 +92,6 @@ public class FleetRandomizer {
         final VariantsLibFleetFactory useToEdit = VariantsLibFleetFactory.pickFleetFactory(params);
         if(useToEdit != null) {
             useToEdit.editFleet(fleet, params);
-            fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, useToEdit.id);
             log.info("fleet edited");
         } else {
             log.info("fleet not edited");

@@ -384,6 +384,10 @@ public class VariantsLibFleetFactory  {
         } else {
             addDMods(fleetAPI, params, rand);
         }
+
+        final MemoryAPI fleetMemory = fleetAPI.getMemoryWithoutUpdate();
+        fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, id);
+        fleetMemory.set(MemFlags.MEMORY_KEY_FLEET_TYPE, params.fleetType);
     }
 
     /**
