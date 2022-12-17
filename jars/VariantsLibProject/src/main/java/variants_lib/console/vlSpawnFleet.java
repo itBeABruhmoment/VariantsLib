@@ -10,7 +10,6 @@ import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 
 import variants_lib.data.FleetBuildData;
 import variants_lib.data.VariantsLibFleetParams;
-import variants_lib.scripts.fleetedit.FleetBuilding;
 
 public class vlSpawnFleet implements BaseCommand{
     @Override

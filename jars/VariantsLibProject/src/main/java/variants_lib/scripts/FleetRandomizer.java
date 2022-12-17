@@ -5,6 +5,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -83,17 +84,33 @@ public class FleetRandomizer {
         final MemoryAPI fleetMemory = fleet.getMemoryWithoutUpdate();
 
         log.info("trying to modify " + fleet.getFullName());
-        fleetMemory.set(CommonStrings.FLEET_EDITED_MEMKEY, true);
         if(!allowModificationFleet(fleet)) {
             return;
         }
+        fleetMemory.set(CommonStrings.FLEET_EDITED_MEMKEY, true);
 
         final VariantsLibFleetParams params = new VariantsLibFleetParams(fleet);
         final VariantsLibFleetFactory useToEdit = VariantsLibFleetFactory.pickFleetFactory(params);
-        if(useToEdit != null) {
+
+        // get correct special fleet spawn rate
+        double specialFleetSpawnRate = 0.0;
+        final FactionData.FactionConfig config = FactionData.FACTION_DATA.get(params.faction);
+        if(config.specialFleetSpawnRateOverrides.containsKey(params.fleetType)) {
+            specialFleetSpawnRate = config.specialFleetSpawnRateOverrides.get(params.fleetType);
+        } else {
+            specialFleetSpawnRate = config.specialFleetSpawnRate;
+        }
+
+        final Random rand = new Random(params.seed);
+        if(useToEdit != null && rand.nextDouble() < specialFleetSpawnRate) {
             useToEdit.editFleet(fleet, params);
             log.info("fleet edited");
         } else {
+            if(FactionData.FACTION_DATA.get(params.faction).hasTag(CommonStrings.NO_AUTOFIT_TAG)) {
+                fleet.setInflated(true);
+                FleetBuildingUtils.addDMods(fleet, rand, params.quality);
+                FleetBuildingUtils.addSMods(fleet, rand, params.averageSMods);
+            }
             log.info("fleet not edited");
         }
     }

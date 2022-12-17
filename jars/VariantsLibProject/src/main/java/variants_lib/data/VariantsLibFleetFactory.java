@@ -22,7 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import variants_lib.scripts.HasHeavyIndustryTracker;
 import variants_lib.scripts.UnofficeredPersonalitySetPlugin;
-import variants_lib.scripts.fleetedit.FleetBuilding;
 
 import java.util.*;
 
@@ -186,9 +185,9 @@ public class VariantsLibFleetFactory  {
     }
 
     /**
-     * Choose a random fleet to spawn based on spawn weights in factions.csv and fleets.csv
+     * Choose a random fleet to spawn based on spawn weights in factions.csv
      * @param params Specifications to base selection on
-     * @return a fleet factory that meets specifications, or null if non could be found
+     * @return a fleet factory that meets specifications, or null if no factories could be found
      */
     @Nullable
     public static VariantsLibFleetFactory pickFleetFactory(@NotNull VariantsLibFleetParams params) {
@@ -197,20 +196,6 @@ public class VariantsLibFleetFactory  {
             return null;
         }
         final Random rand = new Random(params.seed);
-
-        // get correct special fleet spawn rate
-        double specialFleetSpawnRate = 0.0;
-        final FactionData.FactionConfig config = FactionData.FACTION_DATA.get(params.faction);
-        if(config.specialFleetSpawnRateOverrides.containsKey(params.fleetType)) {
-            specialFleetSpawnRate = config.specialFleetSpawnRateOverrides.get(params.fleetType);
-        } else {
-            specialFleetSpawnRate = config.specialFleetSpawnRate;
-        }
-
-        if(specialFleetSpawnRate < rand.nextDouble()) {
-            return null;
-        }
-
         final ArrayList<VariantsLibFleetFactory> validFleetComps = getValidFleetChoices(params);
 
         if(validFleetComps.size() == 0) {
@@ -669,8 +654,7 @@ public class VariantsLibFleetFactory  {
         return members;
     }
 
-    protected void addSMods(CampaignFleetAPI fleet, VariantsLibFleetParams params, Random rand)
-    {
+    protected void addSMods(CampaignFleetAPI fleet, VariantsLibFleetParams params, Random rand) {
         if(params.averageSMods <= 0.0f) {
             return;
         }
@@ -726,8 +710,7 @@ public class VariantsLibFleetFactory  {
         }
     }
 
-    protected void addDMods(CampaignFleetAPI fleet, VariantsLibFleetParams params, Random rand)
-    {
+    protected void addDMods(CampaignFleetAPI fleet, VariantsLibFleetParams params, Random rand) {
         // add dmods
         float quality = params.quality + (0.05f * params.quality); // noticed an abnormal amount dmods in factions such as diktat
         for(FleetMemberAPI ship : fleet.getMembersWithFightersCopy()) {

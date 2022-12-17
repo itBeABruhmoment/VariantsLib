@@ -8,8 +8,6 @@ import com.fs.starfarer.api.fleet.ShipRolePick;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import variants_lib.scripts.fleetedit.FleetBuilding;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
