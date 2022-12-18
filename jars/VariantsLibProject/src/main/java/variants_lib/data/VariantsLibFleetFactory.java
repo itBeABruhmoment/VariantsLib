@@ -329,13 +329,6 @@ public class VariantsLibFleetFactory  {
         createOfficers(params, shipsToOfficer, rand);
         fleetAPI.setCommander(shipsToOfficer.get(0).getCaptain());
 
-        for(FleetMemberAPI member : vars.combatShips) {
-            log.info(member.getVariant().getOriginalVariant());
-        }
-        for(FleetMemberAPI member : vars.civilianShips) {
-            log.info(member.getVariant().getOriginalVariant());
-        }
-
         Collections.sort(vars.combatShips, new SortByDP());
         Collections.sort(vars.civilianShips, new SortByDP());
 
@@ -368,6 +361,7 @@ public class VariantsLibFleetFactory  {
             fleetAPI.setInflated(true);
         } else {
             addDMods(fleetAPI, params, rand);
+            fleetAPI.setInflated(true);
         }
 
         final MemoryAPI fleetMemory = fleetAPI.getMemoryWithoutUpdate();
