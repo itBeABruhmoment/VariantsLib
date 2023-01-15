@@ -57,12 +57,13 @@ public class VariantsLibFleetFactory  {
     protected int maxOverBudget = 0;
 
     /**
-     * Create a VariantsLibFleetFactory with fields set to some default values
+     * Create a VariantsLibFleetFactory with fields set to some default values. The resulting factory won't be able to
+     * create fleets and needs to be initialized (ie. by calling initializeFromJson())
      */
     public VariantsLibFleetFactory() {}
 
     /**
-     * Create a VariantsLibFleetFactory
+     * Create a VariantsLibFleetFactory. Calls initializeFromJson()
      * @param fleetJson The fleet json
      * @param fleetJsonCsvRow The fleet json's row in fleets.csv
      * @param modOfOrigin The mod the fleet json is from
@@ -73,6 +74,20 @@ public class VariantsLibFleetFactory  {
             @NotNull final JSONObject fleetJsonCsvRow,
             @NotNull String modOfOrigin
     ) throws Exception {
+        initializeFromJson(fleetJson, fleetJsonCsvRow, modOfOrigin);
+    }
+
+    /**
+     * Initialize the fields of this factory based of the JSON parameters.
+     * @param fleetJson The fleet json
+     * @param fleetJsonCsvRow The fleet json's row in fleets.csv
+     * @param modOfOrigin The mod the fleet json is from
+     * @throws Exception An exception containing some message on fields that are set to invalid values or failed to load
+     */
+    public void initializeFromJson(
+            @NotNull final JSONObject fleetJson,
+            @NotNull final JSONObject fleetJsonCsvRow,
+            @NotNull String modOfOrigin) throws Exception {
         id = JsonUtils.getString(CommonStrings.FLEET_DATA_ID, "", fleetJson);
         if(id.equals("")) {
             throw new Exception(CommonStrings.FLEET_DATA_ID + "field could not be read");

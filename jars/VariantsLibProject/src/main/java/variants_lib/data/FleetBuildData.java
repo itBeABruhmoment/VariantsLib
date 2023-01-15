@@ -1,7 +1,7 @@
 package variants_lib.data;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
-import java.util.List;
 import java.io.IOException;
 
 import org.json.JSONArray;
@@ -12,11 +12,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.ModManagerAPI;
 import com.fs.starfarer.api.ModSpecAPI;
 
 import variants_lib.scripts.FleetEditingScript;
-import variants_lib.data.JsonUtils;
 
 
 // loads data on fleet types
@@ -89,19 +87,19 @@ public class FleetBuildData {
             }
 
             if(factoryTypeClassPath == null) {
-                final VariantsLibFleetFactory fleetFactory = new VariantsLibFleetFactory(fleetDataJson, fleetDataCSVRow, modId);
+                final VariantsLibFleetFactory fleetFactory = new VariantsLibFleetFactory();
+                fleetFactory.initializeFromJson(fleetDataJson, fleetDataCSVRow, modId);
                 FLEET_DATA.put(fleetDataId, fleetFactory);
                 log.info(fleetFactory.toString());
             } else {
                 try {
-                    /*
-                    final VariantsLibFleetFactory fleetFactory = (VariantsLibFleetFactory) Class.forName(factoryTypeClassPath)
-                            .getConstructor(JSONObject.class, JSONObject.class, String.class)
-                            .newInstance(fleetDataJson, fleetDataCSVRow, modId);
-
-                     */
-                    final VariantsLibFleetFactory fleetFactory = (VariantsLibFleetFactory) Global.getSettings().getScriptClassLoader().loadClass(factoryTypeClassPath).newInstance();
-                    //FLEET_DATA.put(fleetDataId, fleetFactory);
+                    final VariantsLibFleetFactory fleetFactory = (VariantsLibFleetFactory) Global
+                            .getSettings()
+                            .getScriptClassLoader()
+                            .loadClass(factoryTypeClassPath)
+                            .newInstance();
+                    fleetFactory.initializeFromJson(fleetDataJson, fleetDataCSVRow, modId);
+                    FLEET_DATA.put(fleetDataId, fleetFactory);
                     log.info(fleetFactory.toString());
                 } catch(ClassNotFoundException e) {
                     throw new Exception(CommonStrings.MOD_ID + ": failed to find the class \"" + factoryTypeClassPath + "\"\n" + e);
