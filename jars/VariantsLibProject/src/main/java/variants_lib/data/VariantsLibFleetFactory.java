@@ -57,6 +57,11 @@ public class VariantsLibFleetFactory  {
     protected int maxOverBudget = 0;
 
     /**
+     * Create a VariantsLibFleetFactory with fields set to some default values
+     */
+    public VariantsLibFleetFactory() {}
+
+    /**
      * Create a VariantsLibFleetFactory
      * @param fleetJson The fleet json
      * @param fleetJsonCsvRow The fleet json's row in fleets.csv
@@ -537,6 +542,10 @@ public class VariantsLibFleetFactory  {
             @NotNull ArrayList<FleetMemberAPI> shipsToOfficer,
             @NotNull Random rand
     ) {
+        if(shipsToOfficer.size() < 1) {
+            return;
+        }
+
         final OfficerFactory officerFactory = new OfficerFactory(Global.getSector().getFaction(params.faction));
 
         officerFactory.rand = rand;

@@ -5,6 +5,7 @@ import java.util.List;
 import java.io.IOException;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.apache.log4j.Level;
@@ -27,18 +28,6 @@ public class FleetBuildData {
 
     public static final HashMap<String, VariantsLibFleetFactory> FLEET_DATA = new HashMap<>();
     public static final HashMap<String, FleetEditingScript> SCRIPTS = new HashMap<>();
-
-    /*public static void testJson() throws JSONException, IOException
-    {
-        org.json.JSONObject data = Global.getSettings().loadJSON("data/bettervariants/fleets/why.json", "better_variants");
-        org.json.JSONObject data = Global.getSettings().loadJSON("mod_info.json", "better_variants");
-        Global.getSettings().loadJSON("data/config/settings.json");
-        Console.showMessage(data);
-        org.json.JSONArray partitions = data.getJSONArray("fleetPartitions");
-        org.json.JSONObject partition1 = partitions.getJSONObject(0);
-        org.json.JSONArray variants = partition1.getJSONArray("variants");
-        Console.showMessage(variants.getJSONObject(0).getInt("weight"));
-    }*/
 
     public static void addScriptToStore(String classPath) throws Exception
     {
@@ -92,13 +81,38 @@ public class FleetBuildData {
         }
 
         if(shouldLoad) {
-            //FleetComposition comp = new FleetComposition(fleetDataCSVRow, fleetDataJson, fleetDataId, loadedFileInfo, modId);
-            // TODO: remove test code
-            VariantsLibFleetFactory fleetFactory = new VariantsLibFleetFactory(fleetDataJson, fleetDataCSVRow, modId);
-            FLEET_DATA.put(fleetDataId, fleetFactory);
-            log.debug(fleetFactory.toString());
+            String factoryTypeClassPath = null;
+            try {
+                factoryTypeClassPath = fleetDataJson.getString(CommonStrings.USING_FACTORY);
+            } catch (JSONException e) {
+                log.info("no factory type field, using default");
+            }
+
+            if(factoryTypeClassPath == null) {
+                final VariantsLibFleetFactory fleetFactory = new VariantsLibFleetFactory(fleetDataJson, fleetDataCSVRow, modId);
+                FLEET_DATA.put(fleetDataId, fleetFactory);
+                log.info(fleetFactory.toString());
+            } else {
+                try {
+                    /*
+                    final VariantsLibFleetFactory fleetFactory = (VariantsLibFleetFactory) Class.forName(factoryTypeClassPath)
+                            .getConstructor(JSONObject.class, JSONObject.class, String.class)
+                            .newInstance(fleetDataJson, fleetDataCSVRow, modId);
+
+                     */
+                    final VariantsLibFleetFactory fleetFactory = (VariantsLibFleetFactory) Global.getSettings().getScriptClassLoader().loadClass(factoryTypeClassPath).newInstance();
+                    //FLEET_DATA.put(fleetDataId, fleetFactory);
+                    log.info(fleetFactory.toString());
+                } catch(ClassNotFoundException e) {
+                    throw new Exception(CommonStrings.MOD_ID + ": failed to find the class \"" + factoryTypeClassPath + "\"\n" + e);
+                } catch(ClassCastException e) {
+                    throw new Exception(CommonStrings.MOD_ID + ": \"" + factoryTypeClassPath + "\" is not a class that extends \"VariantsLibFleetFactory\"\n" + e);
+                } catch(Exception e) {
+                    throw e;
+                }
+            }
         } else {
-            log.debug(loadedFileInfo + " was not loaded due to unenabled required mods");
+            log.info(loadedFileInfo + " was not loaded due to unenabled required mods");
         }
     }
 
