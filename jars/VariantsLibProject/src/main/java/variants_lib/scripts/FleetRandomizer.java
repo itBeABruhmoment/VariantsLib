@@ -117,17 +117,3 @@ public class FleetRandomizer {
 
     private FleetRandomizer() {}
 }
-/*
-SectorEntityToken yourFleet = Global.getSector().getPlayerFleet();
-        LocationAPI currentSystem = (LocationAPI)yourFleet.getContainingLocation();
-        List<CampaignFleetAPI> fleets = currentSystem.getFleets();
-        for(CampaignFleetAPI fleetAPI : fleets) {
-            try {
-                Console.showMessage(fleetAPI.getInflater());
-                Console.showMessage(fleetAPI.getFullName() + " " + fleetAPI.getInflater().getQuality());
-            } catch(Exception e) {
-
-            }
-            
-        }
-*/
