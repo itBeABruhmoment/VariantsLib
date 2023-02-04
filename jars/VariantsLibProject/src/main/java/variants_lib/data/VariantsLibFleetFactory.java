@@ -769,7 +769,21 @@ public class VariantsLibFleetFactory  {
 
         // first try building in any hullmods the ship may have
         int numHullModsAdded = 0;
-        final Iterator<String> presentHullMods = variant.getHullMods().iterator();
+        //final Iterator<String> presentHullMods = variant.getNonBuiltInHullmods();
+        for(String hullMod : variant.getNonBuiltInHullmods()) {
+            if(numHullModsAdded >= numSMods) {
+                break;
+            }
+
+            final int hullModCost = Global.getSettings().getHullModSpec(hullMod).getCostFor(hullSize);
+            if(hullModCost >= minDpToConsiderSModding && !hullMod.equals(HullMods.SAFETYOVERRIDES)) {
+                // make into SMod
+                variant.removeMod(hullMod);
+                variant.addPermaMod(hullMod, true);
+                numHullModsAdded++;
+            }
+        }
+        /*
         while(numHullModsAdded < numSMods && presentHullMods.hasNext()) {
             final String hullMod = presentHullMods.next();
             final int hullModCost = Global.getSettings().getHullModSpec(hullMod).getCostFor(hullSize);
@@ -780,6 +794,8 @@ public class VariantsLibFleetFactory  {
                 numHullModsAdded++;
             }
         }
+
+         */
 
         // some special cases based off hull
         if(numHullModsAdded < numSMods && !variant.hasHullMod(HullMods.HARDENED_SUBSYSTEMS) && lowCr) {
