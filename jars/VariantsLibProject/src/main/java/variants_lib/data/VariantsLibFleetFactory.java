@@ -6,6 +6,8 @@ import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.FleetDataAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
+import com.fs.starfarer.api.combat.ShipAPI;
+import com.fs.starfarer.api.combat.ShipHullSpecAPI;
 import com.fs.starfarer.api.impl.campaign.DModManager;
 import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
@@ -13,7 +15,10 @@ import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.fleet.RepairTrackerAPI;
 import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflater;
 import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
+import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
+import com.fs.starfarer.api.impl.campaign.missions.academy.GADeliverVIP;
+import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.plugins.impl.CoreAutofitPlugin;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -673,16 +678,17 @@ public class VariantsLibFleetFactory  {
         return members;
     }
 
-    protected void addSMods(final CampaignFleetAPI fleet, final VariantsLibFleetParams params, final Random rand) {
+    protected void addSMods(@NotNull final CampaignFleetAPI fleet, @NotNull final VariantsLibFleetParams params, @NotNull final Random rand) {
         if(params.averageSMods <= 0.0f) {
             return;
         }
         for(final FleetMemberAPI ship : fleet.getMembersWithFightersCopy()) {
             if(!ship.isFighterWing() && !ship.isStation() && !ship.isCivilian()) {
                 final int numSmodsToAdd = (int) Math.round(params.averageSMods + (rand.nextFloat() - 0.5));
-                if(numSmodsToAdd < 1) {
-                    continue;
+                if(numSmodsToAdd > 0) {
+                    addRandomSModsToVariant(fleet.getCommander(), ship.getVariant(), rand, numSmodsToAdd);
                 }
+                /*
 
                 String variantId = VariantData.isRegisteredVariant(ship);
                 VariantData.VariantDataMember variantData = null;
@@ -725,13 +731,89 @@ public class VariantsLibFleetFactory  {
                         }
                     }
                 }
+
+                 */
             }
         }
     }
 
-    protected void addRandomSModsToVariant(final ShipVariantAPI variant, final int number) {
-        for(final String hullMod : variant.getNonBuiltInHullmods()) {
+    // TODO: add docs
+    protected void addRandomSModsToVariant(
+            @NotNull final PersonAPI captain,
+            @NotNull final ShipVariantAPI variant,
+            @NotNull Random rand,
+            final int numSMods
+    ) {
+        final ShipHullSpecAPI specs = variant.getHullSpec();
 
+        // init some values to consider when adding hullmods
+        final boolean lowCr = specs.getNoCRLossSeconds() < 200.0f || variant.hasHullMod(HullMods.SAFETYOVERRIDES);
+        boolean reliesOnArmour = specs.getArmorRating() >= 350.0f;
+
+        final ShipAPI.HullSize hullSize = specs.getHullSize();
+        int minDpToConsiderSModding = 5;
+        switch(hullSize) {
+            case DESTROYER:
+                minDpToConsiderSModding = 10;
+                reliesOnArmour = specs.getArmorRating() >= 650.0f;
+                break;
+            case CRUISER:
+                minDpToConsiderSModding = 15;
+                reliesOnArmour = specs.getArmorRating() >= 1200.0f;
+                break;
+            case CAPITAL_SHIP:
+                minDpToConsiderSModding = 20;
+                reliesOnArmour = specs.getArmorRating() >= 1450.0f;
+                break;
+        }
+
+        // first try building in any hullmods the ship may have
+        int numHullModsAdded = 0;
+        final Iterator<String> presentHullMods = variant.getHullMods().iterator();
+        while(numHullModsAdded < numSMods && presentHullMods.hasNext()) {
+            final String hullMod = presentHullMods.next();
+            final int hullModCost = Global.getSettings().getHullModSpec(hullMod).getCostFor(hullSize);
+            if(hullModCost >= minDpToConsiderSModding && !hullMod.equals(HullMods.SAFETYOVERRIDES)) {
+                // make into SMod
+                variant.removeMod(hullMod);
+                variant.addPermaMod(hullMod, true);
+                numHullModsAdded++;
+            }
+        }
+
+        // some special cases based off hull
+        if(numHullModsAdded < numSMods && !variant.hasHullMod(HullMods.HARDENED_SUBSYSTEMS) && lowCr) {
+            variant.addPermaMod(HullMods.HARDENED_SUBSYSTEMS, true);
+            numHullModsAdded++;
+        }
+        if(numHullModsAdded < numSMods && !variant.hasHullMod(HullMods.HEAVYARMOR) && reliesOnArmour) {
+            variant.addPermaMod(HullMods.HEAVYARMOR, true);
+            numHullModsAdded++;
+        }
+
+        // fill with some expensive always applicable hullmods
+        final int[] randomIndices = Util.createRandomNumberSequence(FALLBACK_HULLMODS.length, rand);
+        if(numHullModsAdded < numSMods) {
+            int i = 0;
+            while(i < FALLBACK_HULLMODS.length && numHullModsAdded < numSMods) {
+                final String hullMod = FALLBACK_HULLMODS[randomIndices[i]];
+                if(!variant.hasHullMod(hullMod)) {
+                    variant.addPermaMod(hullMod, true);
+                    numHullModsAdded++;
+                }
+                i++;
+            }
+        }
+
+        // fill remaining dp
+        final CoreAutofitPlugin autoFit = new CoreAutofitPlugin(captain);
+        autoFit.addExtraVents(variant);
+        autoFit.addExtraCaps(variant);
+    }
+
+    protected void addHullModIfNotPresent(@NotNull final String hullMod, @NotNull final ShipVariantAPI variant) {
+        if(!variant.hasHullMod(hullMod)) {
+            variant.addMod(hullMod);
         }
     }
 
@@ -790,16 +872,5 @@ public class VariantsLibFleetFactory  {
         ArrayList<FleetMemberAPI> civilianShips = new ArrayList<>(30);
         int numShipsThatCanBeAdded = 0;
         int totalDPRemaining = 0;
-    }
-
-    /**
-     * Access protected methods
-     */
-    protected static class CoreAutofitPluginWrapper extends CoreAutofitPlugin {
-        public CoreAutofitPluginWrapper(PersonAPI fleetCommander) {
-            super(fleetCommander);
-        }
-
-
     }
 }

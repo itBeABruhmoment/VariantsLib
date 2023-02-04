@@ -56,9 +56,9 @@ public class OfficerFactory {
         officer.setPersonality(personality);
 
         // add skills in skillsToAdd until done or level does not allow it
-        while(skillsAdded < level && skillsAdded < skillsToAdd.size()) {
+        while (skillsAdded < level && skillsAdded < skillsToAdd.size()) {
             final String skill = skillsToAdd.get(skillsAdded);
-            if(VALID_ELITE_SKILLS.contains(skill) && rand.nextFloat() < percentEliteSkills) {
+            if (VALID_ELITE_SKILLS.contains(skill) && rand.nextFloat() < percentEliteSkills) {
                 stats.setSkillLevel(skill, 2.0f);
             } else {
                 stats.setSkillLevel(skill, 1.0f);
@@ -67,14 +67,14 @@ public class OfficerFactory {
         }
 
         // fill remaining levels with empty skills
-        if(skillsAdded < level) {
-            final int[] randomIndices = createRandomNumberSequence(FILLER_SKILLS.length, rand);
+        if (skillsAdded < level) {
+            final int[] randomIndices = Util.createRandomNumberSequence(FILLER_SKILLS.length, rand);
             int i = 0;
-            while(i < randomIndices.length && skillsAdded < level) {
+            while (i < randomIndices.length && skillsAdded < level) {
                 final String skill = FILLER_SKILLS[randomIndices[i]];
-                if(!stats.hasSkill(skill)) {
+                if (!stats.hasSkill(skill)) {
                     float skillLevel;
-                    if(rand.nextFloat() < percentEliteSkills) {
+                    if (rand.nextFloat() < percentEliteSkills) {
                         skillLevel = 2.0f;
                     } else {
                         skillLevel = 1.0f;
@@ -87,23 +87,5 @@ public class OfficerFactory {
         }
 
         return officer;
-    }
-
-    @NotNull
-    protected int[] createRandomNumberSequence(int length, @NotNull Random rand) {
-        final int[] sequence = new int[length];
-        for(int i = 0; i < sequence.length; i++) {
-            sequence[i] = i;
-        }
-
-        // shuffle
-        for (int i = sequence.length - 1; i > 0; i--) {
-            int index = rand.nextInt(i + 1);
-            // Simple swap
-            int temp = sequence[index];
-            sequence[index] = sequence[i];
-            sequence[i] = temp;
-        }
-        return sequence;
     }
 }
