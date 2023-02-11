@@ -20,7 +20,7 @@ public class VariantsLibModPlugin extends BaseModPlugin {
     }
 
     @Override
-    public void onApplicationLoad() throws IOException, JSONException, Exception
+    public void onApplicationLoad() throws Exception
     {
         log.debug(CommonStrings.MOD_ID + ": loading settings");
         SettingsData.loadSettings();
