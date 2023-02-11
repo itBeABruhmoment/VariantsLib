@@ -1,7 +1,6 @@
 package variants_lib.data;
 
 import com.fs.starfarer.api.Global;
-import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.FleetDataAPI;
@@ -19,7 +18,6 @@ import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
-import com.fs.starfarer.api.impl.campaign.missions.academy.GADeliverVIP;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.plugins.impl.CoreAutofitPlugin;
 import org.apache.log4j.Level;
@@ -688,55 +686,36 @@ public class VariantsLibFleetFactory  {
             if(!ship.isFighterWing() && !ship.isStation() && !ship.isCivilian()) {
                 final int numSmodsToAdd = (int) Math.round(params.averageSMods + (rand.nextFloat() - 0.5));
                 if(numSmodsToAdd > 0) {
-                    addRandomSModsToVariant(fleet.getCommander(), ship.getVariant(), rand, numSmodsToAdd);
-                }
-                /*
-
-                String variantId = VariantData.isRegisteredVariant(ship);
-                VariantData.VariantDataMember variantData = null;
-                if(variantId != null) {
-                    variantData = VariantData.VARIANT_DATA.get(variantId);
-                }
-
-                if(variantData == null || variantData.smods.size() == 0) {
-                    ShipVariantAPI variant  = ship.getVariant();
-                    Collection<String> hullMods = variant.getNonBuiltInHullmods();
-                    int start = rand.nextInt() & Integer.MAX_VALUE; // get positive int
-                    start = start % FALLBACK_HULLMODS.length;
-                    int numHullModsAdded = 0;
-                    for(int i = 0; i < FALLBACK_HULLMODS.length && numHullModsAdded < numSmodsToAdd; i++) {
-                        int index = (start + i) % FALLBACK_HULLMODS.length;
-                        if(!hullMods.contains(FALLBACK_HULLMODS[index])) {
-                            variant.addPermaMod(FALLBACK_HULLMODS[index], true);
-                            numHullModsAdded++;
-                        }
+                    final String variantId = VariantData.isRegisteredVariant(ship);
+                    VariantData.VariantDataMember variantData = null;
+                    if(variantId != null) {
+                        variantData = VariantData.VARIANT_DATA.get(variantId);
                     }
-                } else {
-                    ShipVariantAPI variant  = ship.getVariant();
-                    Collection<String> hullMods = variant.getNonBuiltInHullmods();
-                    int numSmodsAdded = 0;
-                    while(numSmodsAdded < numSmodsToAdd && numSmodsAdded < variantData.smods.size()) {
-                        if(!hullMods.contains(variantData.smods.get(numSmodsAdded))) {
-                            variant.addPermaMod(variantData.smods.get(numSmodsAdded), true);
-                            numSmodsAdded++;
-                        }
+                    int numAdded =  0;
+                    if(variantData != null) {
+                        numAdded = addVariantDataSMods(ship.getVariant(), variantData, fleet.getCommander(), numSmodsToAdd);
                     }
-                    // fill in remaining hullmods
-                    hullMods = variant.getNonBuiltInHullmods();
-                    int start = rand.nextInt() & Integer.MAX_VALUE; // get positive int
-                    start = start % FALLBACK_HULLMODS.length;
-                    for(int i = 0; i < FALLBACK_HULLMODS.length && numSmodsAdded < numSmodsToAdd; i++) {
-                        int index = (start + i) % FALLBACK_HULLMODS.length;
-                        if(!hullMods.contains(FALLBACK_HULLMODS[index])) {
-                            variant.addPermaMod(FALLBACK_HULLMODS[index], true);
-                            numSmodsAdded++;
-                        }
-                    }
+                    addRandomSModsToVariant(fleet.getCommander(), ship.getVariant(), rand, numSmodsToAdd - numAdded);
                 }
-
-                 */
             }
         }
+    }
+
+    protected int addVariantDataSMods(
+            @NotNull final ShipVariantAPI variant,
+            @NotNull final VariantData.VariantDataMember variantData,
+            @NotNull final PersonAPI captain,
+            final int amount
+    ) {
+       int i = 0;
+       int hullModsAdded = 0;
+       while(i < variantData.smods.size() && i < amount) {
+           if(attemptToAddHullMod(variant, variantData.smods.get(i), captain, true)) {
+               hullModsAdded++;
+           }
+           i++;
+       }
+       return hullModsAdded;
     }
 
     /**
@@ -798,8 +777,8 @@ public class VariantsLibFleetFactory  {
 
         // fill with some expensive always applicable hullmods
         final int[] randomIndices = Util.createRandomNumberSequence(FALLBACK_HULLMODS.length, rand);
+        int i = 0; // reused for adding hullmods to fill dp
         if(numHullModsAdded < numSMods) {
-            int i = 0;
             while(i < FALLBACK_HULLMODS.length && numHullModsAdded < numSMods) {
                 final String hullMod = FALLBACK_HULLMODS[randomIndices[i]];
                 if(attemptToAddHullMod(variant, hullMod, captain, true)) {
@@ -809,7 +788,11 @@ public class VariantsLibFleetFactory  {
             }
         }
 
-        // fill remaining dp
+        // try to fill remaining dp
+        while(variant.getUnusedOP(captain.getStats()) > 15 && i < randomIndices.length) {
+            attemptToAddHullMod(variant, FALLBACK_HULLMODS[i], captain, false);
+            i++;
+        }
         final CoreAutofitPlugin autoFit = new CoreAutofitPlugin(captain);
         autoFit.addExtraVents(variant);
         autoFit.addExtraCaps(variant);
@@ -840,7 +823,7 @@ public class VariantsLibFleetFactory  {
             variant.addPermaMod(hullMod, true);
         } else {
             final int unusedDP = variant.getUnusedOP(captain.getStats());
-            if(variant.hasHullMod(hullMod) || hullModSpecs.getCostFor(variant.getHullSize()) <= unusedDP) {
+            if(variant.hasHullMod(hullMod) || hullModSpecs.getCostFor(variant.getHullSize()) > unusedDP) {
                 return false;
             }
             variant.addMod(hullMod);
