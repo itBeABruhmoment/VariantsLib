@@ -1,6 +1,7 @@
 package variants_lib.data;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.SettingsAPI;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.FleetDataAPI;
@@ -17,6 +18,7 @@ import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflater;
 import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
+import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.impl.campaign.missions.academy.GADeliverVIP;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.plugins.impl.CoreAutofitPlugin;
@@ -737,7 +739,13 @@ public class VariantsLibFleetFactory  {
         }
     }
 
-    // TODO: add docs
+    /**
+     * Adds random(ish) hullMods to a variant. First tries to build in existing hullmods, then random hullmods that are generally useful. Tries filling any unused dp
+     * @param captain
+     * @param variant
+     * @param rand
+     * @param numSMods
+     */
     protected void addRandomSModsToVariant(
             @NotNull final PersonAPI captain,
             @NotNull final ShipVariantAPI variant,
@@ -769,41 +777,22 @@ public class VariantsLibFleetFactory  {
 
         // first try building in any hullmods the ship may have
         int numHullModsAdded = 0;
-        //final Iterator<String> presentHullMods = variant.getNonBuiltInHullmods();
         for(String hullMod : variant.getNonBuiltInHullmods()) {
             if(numHullModsAdded >= numSMods) {
                 break;
             }
 
             final int hullModCost = Global.getSettings().getHullModSpec(hullMod).getCostFor(hullSize);
-            if(hullModCost >= minDpToConsiderSModding && !hullMod.equals(HullMods.SAFETYOVERRIDES)) {
-                // make into SMod
-                variant.removeMod(hullMod);
-                variant.addPermaMod(hullMod, true);
+            if(hullModCost >= minDpToConsiderSModding && attemptToAddHullMod(variant, hullMod, captain, true)) {
                 numHullModsAdded++;
             }
         }
-        /*
-        while(numHullModsAdded < numSMods && presentHullMods.hasNext()) {
-            final String hullMod = presentHullMods.next();
-            final int hullModCost = Global.getSettings().getHullModSpec(hullMod).getCostFor(hullSize);
-            if(hullModCost >= minDpToConsiderSModding && !hullMod.equals(HullMods.SAFETYOVERRIDES)) {
-                // make into SMod
-                variant.removeMod(hullMod);
-                variant.addPermaMod(hullMod, true);
-                numHullModsAdded++;
-            }
-        }
-
-         */
 
         // some special cases based off hull
-        if(numHullModsAdded < numSMods && !variant.hasHullMod(HullMods.HARDENED_SUBSYSTEMS) && lowCr) {
-            variant.addPermaMod(HullMods.HARDENED_SUBSYSTEMS, true);
+        if(numHullModsAdded < numSMods && lowCr && attemptToAddHullMod(variant, HullMods.HARDENED_SUBSYSTEMS, captain, true)) {
             numHullModsAdded++;
         }
-        if(numHullModsAdded < numSMods && !variant.hasHullMod(HullMods.HEAVYARMOR) && reliesOnArmour) {
-            variant.addPermaMod(HullMods.HEAVYARMOR, true);
+        if(numHullModsAdded < numSMods && reliesOnArmour && attemptToAddHullMod(variant, HullMods.HEAVYARMOR, captain, true)) {
             numHullModsAdded++;
         }
 
@@ -813,8 +802,7 @@ public class VariantsLibFleetFactory  {
             int i = 0;
             while(i < FALLBACK_HULLMODS.length && numHullModsAdded < numSMods) {
                 final String hullMod = FALLBACK_HULLMODS[randomIndices[i]];
-                if(!variant.hasHullMod(hullMod)) {
-                    variant.addPermaMod(hullMod, true);
+                if(attemptToAddHullMod(variant, hullMod, captain, true)) {
                     numHullModsAdded++;
                 }
                 i++;
@@ -827,10 +815,37 @@ public class VariantsLibFleetFactory  {
         autoFit.addExtraCaps(variant);
     }
 
-    protected void addHullModIfNotPresent(@NotNull final String hullMod, @NotNull final ShipVariantAPI variant) {
-        if(!variant.hasHullMod(hullMod)) {
+    /**
+     * Add hullmod if present
+     * @param variant
+     * @param hullMod
+     * @param captain
+     * @param smod true to add as a smod, false otherwise
+     * @return whether the hullmod was not present before and successfully added
+     */
+    protected boolean attemptToAddHullMod(
+            @NotNull final ShipVariantAPI variant,
+            @NotNull final String hullMod,
+            @NotNull final PersonAPI captain,
+            final boolean smod
+    ) {
+        final HullModSpecAPI hullModSpecs = Global.getSettings().getHullModSpec(hullMod);
+        if(smod) {
+            if(hullModSpecs.hasTag(Tags.HULLMOD_NO_BUILD_IN) || variant.getSMods().contains(hullMod)) {
+                return false;
+            }
+            if(variant.hasHullMod(hullMod)) {
+                variant.removeMod(hullMod);
+            }
+            variant.addPermaMod(hullMod, true);
+        } else {
+            final int unusedDP = variant.getUnusedOP(captain.getStats());
+            if(variant.hasHullMod(hullMod) || hullModSpecs.getCostFor(variant.getHullSize()) <= unusedDP) {
+                return false;
+            }
             variant.addMod(hullMod);
         }
+        return true;
     }
 
     protected void addDMods(final CampaignFleetAPI fleet, final VariantsLibFleetParams params, final Random rand) {
