@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.io.IOException;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,6 +80,10 @@ public class FleetBuildData {
         }
 
         if(shouldLoad) {
+            if(FleetBuildData.FLEET_DATA.containsKey(fleetDataId)) {
+                throw new Exception("already a fleet json with the " + CommonStrings.FLEET_DATA_ID + " \""  + fleetDataId + "\"");
+            }
+
             String factoryTypeClassPath = null;
             try {
                 factoryTypeClassPath = fleetDataJson.getString(CommonStrings.USING_FACTORY);

@@ -98,9 +98,6 @@ public class VariantsLibFleetFactory  {
         if(id.equals("")) {
             throw new Exception(CommonStrings.FLEET_DATA_ID + "field could not be read");
         }
-        if(FleetBuildData.FLEET_DATA.containsKey(id)) {
-            throw new Exception("already a fleet json with the " + CommonStrings.FLEET_DATA_ID + " \""  + id + "\"");
-        }
 
         minDP = JsonUtils.getInt(CommonStrings.MIN_DP, 0, fleetJson);
         if(minDP < 0) {

@@ -52,7 +52,7 @@
 
 	# variants and their amount to always add to fleets of this type
 	# DEFAULT: no additional ships
-	"alwaysInclude":{"ox_Standard":2, "atlas_Standard":5},
+	"alwaysInclude":{"ox_Standard":2, "atlas_Standard":1},
 
 	# a script that will be run after a fleet of this type is spawned the script must implement the 
 	# interface variants_lib.scripts.FleetEditingScript scripts are run in the order that they are listed

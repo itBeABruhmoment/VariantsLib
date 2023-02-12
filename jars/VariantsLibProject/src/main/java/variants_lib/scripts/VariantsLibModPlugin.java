@@ -34,6 +34,20 @@ public class VariantsLibModPlugin extends BaseModPlugin {
     }
 
     @Override
+    public void onDevModeF8Reload() {
+        try {
+            FleetBuildData.SCRIPTS.clear();
+            FleetBuildData.FLEET_DATA.clear();
+            FactionData.FACTION_DATA.clear();
+            VariantData.VARIANT_DATA.clear();
+            onApplicationLoad();
+        } catch (Exception e) {
+            log.info("error ############################################################################################");
+            log.info(e);
+        }
+    }
+
+    @Override
     public void onGameLoad(boolean newGame)
     {
         log.debug(CommonStrings.MOD_ID + ": adding listener");
