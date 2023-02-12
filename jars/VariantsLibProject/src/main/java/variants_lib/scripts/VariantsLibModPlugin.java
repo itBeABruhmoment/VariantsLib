@@ -42,7 +42,6 @@ public class VariantsLibModPlugin extends BaseModPlugin {
             VariantData.VARIANT_DATA.clear();
             onApplicationLoad();
         } catch (Exception e) {
-            log.info("error ############################################################################################");
             log.info(e);
         }
     }
