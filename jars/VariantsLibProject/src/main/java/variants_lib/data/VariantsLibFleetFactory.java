@@ -350,7 +350,12 @@ public class VariantsLibFleetFactory  {
         addPartitionShips(vars, params, rand);
         final ArrayList<FleetMemberAPI> shipsToOfficer = chooseShipsToOfficer(vars, params);
         createOfficers(params, shipsToOfficer, rand);
-        fleetAPI.setCommander(shipsToOfficer.get(0).getCaptain());
+        if(shipsToOfficer.size() > 0) {
+            fleetAPI.setCommander(shipsToOfficer.get(0).getCaptain());
+        } else {
+            fleetAPI.setCommander(Global.getFactory().createPerson());
+        }
+
 
         Collections.sort(vars.combatShips, new SortByDP());
         Collections.sort(vars.civilianShips, new SortByDP());
