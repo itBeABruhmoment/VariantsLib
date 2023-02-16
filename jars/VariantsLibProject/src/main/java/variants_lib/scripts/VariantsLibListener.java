@@ -51,12 +51,22 @@ public class VariantsLibListener extends BaseCampaignEventListener{
     
     @Override
     public void reportFleetSpawned(CampaignFleetAPI fleet) {
-        for(FleetEditingScript script : SettingsData.universalPreModificationScripts.values()) {
-            script.run(fleet);
-        }
-        FleetRandomizer.modify(fleet);
-        for(FleetEditingScript script : SettingsData.universalPostModificationScripts.values()) {
-            script.run(fleet);
+        try {
+            for(FleetEditingScript script : SettingsData.universalPreModificationScripts.values()) {
+                script.run(fleet);
+            }
+            FleetRandomizer.modify(fleet);
+            for(FleetEditingScript script : SettingsData.universalPostModificationScripts.values()) {
+                script.run(fleet);
+            }
+        } catch (Exception e) {
+            log.info(variants_lib.data.CommonStrings.MOD_ID + ": error when attempting to modify fleet, if" +
+                    " you're seeing this you should probably send your logs to the creator of variants lib, " +
+                    "attempting to despawn affected fleet");
+            log.info(e.toString());
+            fleet.getFleetData().clear();
+            fleet.setCommander(Global.getFactory().createPerson());
+            fleet.despawn();
         }
     }
 }
