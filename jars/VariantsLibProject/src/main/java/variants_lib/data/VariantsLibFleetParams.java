@@ -3,7 +3,6 @@ package variants_lib.data;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
-import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
@@ -12,7 +11,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
-import java.util.Random;
+/**
+ * params for building fleets with VariantsLibFleetFactory
+ */
 public class VariantsLibFleetParams {
     protected static final Logger log = Global.getLogger(VariantsLibFleetParams.class);
     static {
