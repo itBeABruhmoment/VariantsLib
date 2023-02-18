@@ -20,13 +20,18 @@ Console.showMessage(s);
 */
 import com.fs.starfarer.api.ModSpecAPI;
 
-// loads data found in faction_tags.csv
+/**
+ * loads and stores data found in faction_tags.csv
+ */
 public class FactionData {
     private static final Logger log = Global.getLogger(variants_lib.data.FactionData.class);
     static {
         log.setLevel(Level.ALL);
     }
-    
+
+    /**
+     * loaded data from faction_tags.csv
+     */
     public static final HashMap<String, FactionConfig> FACTION_DATA = new HashMap<String, FactionConfig>();
     private static final String CSV_FIRST_COLUMN_NAME = "factionID";
     private static final String CSV_SECOND_COLUMN_NAME = "fleets";
@@ -73,6 +78,12 @@ public class FactionData {
         return tagsDone;
     }
 
+    /**
+     * loads data from faction_tags.csv into the field FACTION_DATA, does some basic merging
+     * @throws IOException
+     * @throws JSONException
+     * @throws Exception
+     */
     public static void loadData() throws IOException, JSONException, Exception
     {
         for(ModSpecAPI mod : Global.getSettings().getModManager().getEnabledModsCopy()) {
@@ -162,6 +173,9 @@ public class FactionData {
         }  
     }
 
+    /**
+     * Represents data for a particular faction
+     */
     public static class FactionConfig
     {
         public HashMap<String, Double> specialFleetSpawnRateOverrides;
@@ -183,7 +197,7 @@ public class FactionData {
             specialFleetSpawnRateOverrides = SpecialFleetSpawnRateOverrides;
         }
 
-        // when data conficts the values in "other" get priortized
+        // when data conflicts the values in "other" get prioritized
         public void merge(FactionConfig other)
         {
             specialFleetSpawnRate = other.specialFleetSpawnRate;

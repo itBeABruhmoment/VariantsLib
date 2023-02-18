@@ -1,30 +1,28 @@
 package variants_lib.data;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.io.IOException;
-
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.ModSpecAPI;
-
 import variants_lib.scripts.FleetEditingScript;
 
-
-// loads data on fleet types
+/**
+ * loads and stores fleet jsons (VariantsLibFleetFactory) and FleetEditingScript
+ */
 public class FleetBuildData {
     private static final Logger log = Global.getLogger(variants_lib.data.FleetBuildData.class);
     static {
         log.setLevel(Level.ALL);
     }
 
+    /**
+     * Maps the id's of loaded fleet jsons to the fleet factory they specify
+     */
     public static final HashMap<String, VariantsLibFleetFactory> FLEET_DATA = new HashMap<>();
     public static final HashMap<String, FleetEditingScript> SCRIPTS = new HashMap<>();
 

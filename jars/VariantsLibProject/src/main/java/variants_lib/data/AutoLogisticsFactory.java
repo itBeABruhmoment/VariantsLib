@@ -40,7 +40,6 @@ public class AutoLogisticsFactory {
     /**
      * faction to base ship generation off of
      */
-    @NotNull
     public String faction = "independent";
     /**
      * target dp of entire fleet
@@ -56,7 +55,10 @@ public class AutoLogisticsFactory {
     protected static final String[] LINER_CLASSES_IN_ORDER = {"linerLarge", "linerMedium", "linerSmall"};
     protected static final String[] PERSONNEL_CLASSES_IN_ORDER = {"personnelLarge", "personnelMedium", "personnelSmall"};
 
-    @NotNull
+    /**
+     * Creates logistical ships based on fields
+     * @return a AutoLogisticsReturn containing the logistical ships generated
+     */
     public AutoLogisticsReturn createLogisticalShips() {
         final AutoLogisticsReturn returnParams = new AutoLogisticsReturn();
         final int freighterDp = Math.round(fleetDP * percentageFreighters);
@@ -81,8 +83,14 @@ public class AutoLogisticsFactory {
         return returnParams;
     }
 
-    protected ArrayList<FleetMemberAPI> addShipType(String[] shipClassList, FactionAPI faction, int availableDP)
-    {
+    /**
+     * Generates logistical ships of a specific role (ie tanker, freighter)
+     * @param shipClassList FREIGHTER_CLASSES_IN_ORDER, TANKER_CLASSES_IN_ORDER, LINER_CLASSES_IN_ORDER, or PERSONNEL_CLASSES_IN_ORDER
+     * @param faction faction to use ships from
+     * @param availableDP amount of dp worth of ships that should be generated
+     * @return ships generated
+     */
+    protected ArrayList<FleetMemberAPI> addShipType(String[] shipClassList, FactionAPI faction, int availableDP) {
         final ArrayList<FleetMemberAPI> addedShips = new ArrayList<>(10);
         final int dpAvailableOriginal = availableDP;
         int shipClass = 0;
@@ -114,7 +122,7 @@ public class AutoLogisticsFactory {
         return Math.round(Global.getSettings().getVariant(variantId).getHullSpec().getSuppliesToRecover());
     }
 
-    protected FleetMemberAPI createShip(@NotNull String variantId) {
+    protected FleetMemberAPI createShip(String variantId) {
         final FleetMemberAPI ship = Global.getFactory().createFleetMember(FleetMemberType.SHIP, variantId);
         ship.getVariant().setOriginalVariant(variantId);
         return ship;

@@ -13,6 +13,9 @@ import java.util.Vector;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+/**
+ * represents an element of the "fleetPartitions" field in fleet jsons
+ */
 public class FleetPartition {
     private static final Logger log = Global.getLogger(variants_lib.data.FleetPartition.class);
     static {
@@ -21,17 +24,16 @@ public class FleetPartition {
 
     public int maxDPForPartition = 10000;
     public int maxShipsForPartition = 1000;
-
-    @NotNull
     public ArrayList<FleetPartitionMember> members = new ArrayList<>();
-    public float partitionWeight = 10.0f; // should be percentage after processing
+    public float partitionWeight = 10.0f;
 
-    public void makePartitionWeightPercentage(float outOf)
-    {
-        partitionWeight = partitionWeight / outOf;
-    }
-
-    // loadedFileInfo and index is just data for throwing descriptive error messages
+    /**
+     * Create a fleet partition
+     * @param partitionData json representation of a partition
+     * @param index used for log output, set it to anything
+     * @param modId used for log output, set it to anything
+     * @throws Exception
+     */
     public FleetPartition(JSONObject partitionData, int index, String modId) throws Exception
     {
         // read "partitionWeight"

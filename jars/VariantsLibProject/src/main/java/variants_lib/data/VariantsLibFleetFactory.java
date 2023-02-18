@@ -22,8 +22,6 @@ import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.plugins.impl.CoreAutofitPlugin;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import variants_lib.scripts.HasHeavyIndustryTracker;
@@ -43,23 +41,38 @@ public class VariantsLibFleetFactory  {
             "fluxbreakers", "reinforcedhull", "targetingunit", "solar_shielding"};
 
     // derived from loaded jsons and csv
-    @NotNull public ArrayList<AlwaysBuildMember> alwaysInclude = new ArrayList<>(5);
-    @NotNull public ArrayList<FleetPartition> partitions = new ArrayList<>(5);
-    @NotNull public ArrayList<String> commanderSkills = new ArrayList<>(5);
-    @NotNull public String id = "";
-    @NotNull public HashMap<String, Float> fleetTypeSpawnWeights = new HashMap<>();
+    public ArrayList<AlwaysBuildMember> alwaysInclude = new ArrayList<>(5);
+    public ArrayList<FleetPartition> partitions = new ArrayList<>(5);
+    public ArrayList<String> commanderSkills = new ArrayList<>(5);
+    public String id = "";
+    public HashMap<String, Float> fleetTypeSpawnWeights = new HashMap<>();
     public int minDP = 0;
     public int maxDP = Integer.MAX_VALUE;
     public String defaultFleetWidePersonality = "steady";
     public boolean spawnIfNoIndustry = true;
     public boolean autofit = true;
-    public int setDPToAtLeast = 0; // set to zero if not defined
+    public int setDPToAtLeast = 0;
+
+    /**
+     * as a fraction of the fleet's dp
+     */
     public float freighterDp = 0.0f;
+    /**
+     * as a fraction of the fleet's dp
+     */
     public float linerDp = 0.0f;
+    /**
+     * as a fraction of the fleet's dp
+     */
     public float tankerDp = 0.0f;
+    /**
+     * as a fraction of the fleet's dp
+     */
     public float personnelDp = 0.0f;
 
-    // fields for fleet building process
+    /**
+     * used for fleet building purposes
+     */
     protected int maxOverBudget = 0;
 
     /**
@@ -76,9 +89,9 @@ public class VariantsLibFleetFactory  {
      * @throws Exception An exception containing some message on fields that are set to invalid values or failed to load
      */
     public VariantsLibFleetFactory(
-            @NotNull final JSONObject fleetJson,
-            @NotNull final JSONObject fleetJsonCsvRow,
-            @NotNull final String modOfOrigin
+            final JSONObject fleetJson,
+            final JSONObject fleetJsonCsvRow,
+            final String modOfOrigin
     ) throws Exception {
         initializeFromJson(fleetJson, fleetJsonCsvRow, modOfOrigin);
     }
@@ -91,9 +104,9 @@ public class VariantsLibFleetFactory  {
      * @throws Exception An exception containing some message on fields that are set to invalid values or failed to load
      */
     public void initializeFromJson(
-            @NotNull final JSONObject fleetJson,
-            @NotNull final JSONObject fleetJsonCsvRow,
-            @NotNull final String modOfOrigin) throws Exception {
+            final JSONObject fleetJson,
+            final JSONObject fleetJsonCsvRow,
+            final String modOfOrigin) throws Exception {
         id = JsonUtils.getString(CommonStrings.FLEET_DATA_ID, "", fleetJson);
         if(id.equals("")) {
             throw new Exception(CommonStrings.FLEET_DATA_ID + "field could not be read");
@@ -209,11 +222,10 @@ public class VariantsLibFleetFactory  {
 
     /**
      * Choose a random fleet to spawn based on spawn weights in factions.csv
-     * @param params Specifications to base selection on
+     * @param params Specifications to base selection on (ie. don't choose a fleet with a minDP of 100 when trying to make a 50 dp fleet)
      * @return a fleet factory that meets specifications, or null if no factories could be found
      */
-    @Nullable
-    public static VariantsLibFleetFactory pickFleetFactory(@NotNull final VariantsLibFleetParams params) {
+    public static VariantsLibFleetFactory pickFleetFactory(final VariantsLibFleetParams params) {
         if(!FactionData.FACTION_DATA.containsKey(params.faction)) {
             log.debug(params.faction + " not a recognised faction");
             return null;
@@ -230,10 +242,8 @@ public class VariantsLibFleetFactory  {
         for(final VariantsLibFleetFactory factory : validFleetComps) {
             totalWeightsSum += factory.fleetTypeSpawnWeights.get(params.fleetType);
         }
-        //log.debug("rand: " + random + " weightSum: " + totalWeightsSum);
         float runningWeightsSum = 0;
         for(final VariantsLibFleetFactory factory : validFleetComps) {
-            //log.debug("add: " + comp.spawnWeight / totalWeightsSum);
             runningWeightsSum += factory.fleetTypeSpawnWeights.get(params.fleetType) / totalWeightsSum;
             if(runningWeightsSum > random) {
                 return factory;
@@ -242,8 +252,7 @@ public class VariantsLibFleetFactory  {
         return null;
     }
 
-    @NotNull
-    private static ArrayList<VariantsLibFleetFactory> getValidFleetChoices(@NotNull final VariantsLibFleetParams params) {
+    private static ArrayList<VariantsLibFleetFactory> getValidFleetChoices(final VariantsLibFleetParams params) {
         final ArrayList<VariantsLibFleetFactory> fleetFactories = new ArrayList<>(10);
         for(final String factoryId : FactionData.FACTION_DATA.get(params.faction).customFleetIds) {
             final VariantsLibFleetFactory factory = FleetBuildData.FLEET_DATA.get(factoryId);
@@ -294,11 +303,10 @@ public class VariantsLibFleetFactory  {
 
     /**
      * Creates a fleet from parameters
-     * @param params Params to use
+     * @param params
      * @return Fleet created based off of params
      */
-    @NotNull
-    public CampaignFleetAPI makeFleet(@NotNull final VariantsLibFleetParams params) {
+    public CampaignFleetAPI makeFleet(final VariantsLibFleetParams params) {
         final CampaignFleetAPI fleet = Global.getFactory().createEmptyFleet(params.faction, params.fleetName, true);
         createFleet(fleet, params, new ArrayList<FleetMemberAPI>(), new Random(params.seed), false);
         return fleet;
@@ -308,13 +316,14 @@ public class VariantsLibFleetFactory  {
      * Edits a fleet based on the original fleet's composition. Preserves mothballed ships
      * @param original Fleet to edit
      */
-    public void editFleet(@NotNull final CampaignFleetAPI original) {
+    // TODO: make this preserve mothballed ships
+    public void editFleet(final CampaignFleetAPI original) {
         final VariantsLibFleetParams params = new VariantsLibFleetParams(original);
         clearMembers(original);
         createFleet(original, params, new ArrayList<FleetMemberAPI>(), new Random(params.seed), true);
     }
 
-    public void editFleet(@NotNull final CampaignFleetAPI fleet, @NotNull final VariantsLibFleetParams params) {
+    public void editFleet(final CampaignFleetAPI fleet, final VariantsLibFleetParams params) {
         clearMembers(fleet);
         createFleet(fleet, params, new ArrayList<FleetMemberAPI>(), new Random(params.seed), true);
     }
@@ -335,10 +344,10 @@ public class VariantsLibFleetFactory  {
      * @param rand Random number generator used to generate fleet
      */
     protected void createFleet(
-            @NotNull final CampaignFleetAPI fleetAPI,
-            @NotNull final VariantsLibFleetParams params,
-            @NotNull final ArrayList<FleetMemberAPI> membersToKeep,
-            @NotNull final Random rand,
+            final CampaignFleetAPI fleetAPI,
+            final VariantsLibFleetParams params,
+            final ArrayList<FleetMemberAPI> membersToKeep,
+            final Random rand,
             final boolean calledFromEditFleet
     ) {
         final CreateFleetVariables vars = new CreateFleetVariables();
@@ -402,7 +411,7 @@ public class VariantsLibFleetFactory  {
      * @param vars variables to update
      * @param params params used to make fleet
      */
-    protected void addAutoLogistics(@NotNull final CreateFleetVariables vars, @NotNull final VariantsLibFleetParams params) {
+    protected void addAutoLogistics(final CreateFleetVariables vars, final VariantsLibFleetParams params) {
         final AutoLogisticsFactory makeAutoLogistics = new AutoLogisticsFactory();
         makeAutoLogistics.faction = params.faction;
         makeAutoLogistics.percentagePersonnel = personnelDp;
@@ -423,7 +432,7 @@ public class VariantsLibFleetFactory  {
      * @param vars vars to update
      * @param params params for making the fleet
      */
-    protected void addAlwaysIncludeMembers(@NotNull final CreateFleetVariables vars, @NotNull final VariantsLibFleetParams params) {
+    protected void addAlwaysIncludeMembers(final CreateFleetVariables vars, final VariantsLibFleetParams params) {
         for(final AlwaysBuildMember member : alwaysInclude) {
             for(int i = 0; i < member.amount; i++) {
                 final FleetMemberAPI newMember = createShip(member.id);
@@ -445,9 +454,9 @@ public class VariantsLibFleetFactory  {
      * @param rand random number generator to use
      */
     protected void addPartitionShips(
-            @NotNull final CreateFleetVariables vars,
-            @NotNull final VariantsLibFleetParams params,
-            @NotNull final Random rand
+            final CreateFleetVariables vars,
+            final VariantsLibFleetParams params,
+            final Random rand
     ) {
         for(int i = 0; i < partitions.size(); i++) {
             final FleetPartition partition = partitions.get(i);
@@ -481,7 +490,7 @@ public class VariantsLibFleetFactory  {
         }
     }
 
-    private void addShipsToVars(@NotNull final CreateFleetVariables vars, @NotNull final List<FleetMemberAPI> ships) {
+    private void addShipsToVars(final CreateFleetVariables vars, final List<FleetMemberAPI> ships) {
         for(final FleetMemberAPI member : ships) {
             if(vars.totalDPRemaining > 0 && vars.numShipsThatCanBeAdded > 0) {
                 if(member.isCivilian()) {
@@ -503,8 +512,7 @@ public class VariantsLibFleetFactory  {
      * @param params params used to generate fleet
      * @return list of fleet members to give officers with first being the flagship
      */
-    @NotNull
-    protected ArrayList<FleetMemberAPI> chooseShipsToOfficer(@NotNull final CreateFleetVariables vars, @NotNull final VariantsLibFleetParams params) {
+    protected ArrayList<FleetMemberAPI> chooseShipsToOfficer(final CreateFleetVariables vars, final VariantsLibFleetParams params) {
         if(vars.civilianShips.size() + vars.combatShips.size() < 1 || params.numOfficers < 1) {
             return new ArrayList<>();
         }
@@ -561,9 +569,9 @@ public class VariantsLibFleetFactory  {
      * @param rand random number generator used
      */
     protected void createOfficers(
-            @NotNull final VariantsLibFleetParams params,
-            @NotNull final ArrayList<FleetMemberAPI> shipsToOfficer,
-            @NotNull final Random rand
+            final VariantsLibFleetParams params,
+            final ArrayList<FleetMemberAPI> shipsToOfficer,
+            final Random rand
     ) {
         if(shipsToOfficer.size() < 1) {
             return;
@@ -629,7 +637,7 @@ public class VariantsLibFleetFactory  {
         }
     }
 
-    protected FleetMemberAPI createShip(@NotNull final String variantId) {
+    protected FleetMemberAPI createShip(final String variantId) {
         final FleetMemberAPI ship = Global.getFactory().createFleetMember(FleetMemberType.SHIP, variantId);
         ship.getVariant().setOriginalVariant(variantId);
         return ship;
@@ -643,8 +651,7 @@ public class VariantsLibFleetFactory  {
         return sum;
     }
 
-    @Nullable
-    protected String pickVariant(@NotNull final FleetPartition partition, final int DPLimit, @NotNull final Random rand) {
+    protected String pickVariant(final FleetPartition partition, final int DPLimit, final Random rand) {
         final Vector<FleetPartitionMember> pickableVariants = getPickableVariants(partition, DPLimit);
         if(pickableVariants.size() == 0) { // no eligible variants because not enough dp to spawn them
             return null;
@@ -662,7 +669,7 @@ public class VariantsLibFleetFactory  {
         return pickableVariants.get(pickableVariants.size() - 1).id; // handle possible edge case
     }
 
-    protected double sumWeights(@NotNull final Vector<FleetPartitionMember> members) {
+    protected double sumWeights(final Vector<FleetPartitionMember> members) {
         double sum = 0;
         for(final FleetPartitionMember member : members) {
             sum += member.weight;
@@ -670,7 +677,7 @@ public class VariantsLibFleetFactory  {
         return sum;
     }
 
-    protected @NotNull Vector<FleetPartitionMember> getPickableVariants(@NotNull final FleetPartition partition, final int DPLimit) {
+    protected Vector<FleetPartitionMember> getPickableVariants(final FleetPartition partition, final int DPLimit) {
         final Vector<FleetPartitionMember> members = new Vector<FleetPartitionMember>(10);
         for(final FleetPartitionMember member : partition.members) {
             if(getDPInt(member.id) <= DPLimit) {
@@ -680,7 +687,7 @@ public class VariantsLibFleetFactory  {
         return members;
     }
 
-    protected void addSMods(@NotNull final CampaignFleetAPI fleet, @NotNull final VariantsLibFleetParams params, @NotNull final Random rand) {
+    protected void addSMods(final CampaignFleetAPI fleet, final VariantsLibFleetParams params, final Random rand) {
         if(params.averageSMods <= 0.0f) {
             return;
         }
@@ -704,9 +711,9 @@ public class VariantsLibFleetFactory  {
     }
 
     protected int addVariantDataSMods(
-            @NotNull final ShipVariantAPI variant,
-            @NotNull final VariantData.VariantDataMember variantData,
-            @NotNull final PersonAPI captain,
+            final ShipVariantAPI variant,
+            final VariantData.VariantDataMember variantData,
+            final PersonAPI captain,
             final int amount
     ) {
        int i = 0;
@@ -728,9 +735,9 @@ public class VariantsLibFleetFactory  {
      * @param numSMods
      */
     protected void addRandomSModsToVariant(
-            @NotNull final PersonAPI captain,
-            @NotNull final ShipVariantAPI variant,
-            @NotNull Random rand,
+            final PersonAPI captain,
+            final ShipVariantAPI variant,
+            Random rand,
             final int numSMods
     ) {
         final ShipHullSpecAPI specs = variant.getHullSpec();
@@ -809,9 +816,9 @@ public class VariantsLibFleetFactory  {
      * @return whether the hullmod was not present before and successfully added
      */
     protected boolean attemptToAddHullMod(
-            @NotNull final ShipVariantAPI variant,
-            @NotNull final String hullMod,
-            @NotNull final PersonAPI captain,
+            final ShipVariantAPI variant,
+            final String hullMod,
+            final PersonAPI captain,
             final boolean smod
     ) {
         final HullModSpecAPI hullModSpecs = Global.getSettings().getHullModSpec(hullMod);
@@ -861,7 +868,7 @@ public class VariantsLibFleetFactory  {
         }
     }
 
-    protected static int getDPInt(@NotNull String variantId) {
+    protected static int getDPInt(String variantId) {
         return Math.round(Global.getSettings().getVariant(variantId).getHullSpec().getSuppliesToRecover());
     }
 
@@ -882,9 +889,7 @@ public class VariantsLibFleetFactory  {
      * Variables that need to be passed around in the createFleet method
      */
     protected static class CreateFleetVariables {
-        @NotNull
         ArrayList<FleetMemberAPI> combatShips = new ArrayList<>(30);
-        @NotNull
         ArrayList<FleetMemberAPI> civilianShips = new ArrayList<>(30);
         int numShipsThatCanBeAdded = 0;
         int totalDPRemaining = 0;
