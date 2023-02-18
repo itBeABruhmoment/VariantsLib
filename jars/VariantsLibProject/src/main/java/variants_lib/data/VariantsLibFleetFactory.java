@@ -313,10 +313,9 @@ public class VariantsLibFleetFactory  {
     }
 
     /**
-     * Edits a fleet based on the original fleet's composition. Preserves mothballed ships
+     * Edits a fleet based on the original fleet's composition
      * @param original Fleet to edit
      */
-    // TODO: make this preserve mothballed ships
     public void editFleet(final CampaignFleetAPI original) {
         final VariantsLibFleetParams params = new VariantsLibFleetParams(original);
         clearMembers(original);

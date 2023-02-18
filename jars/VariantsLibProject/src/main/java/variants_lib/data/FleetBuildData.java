@@ -54,7 +54,7 @@ public class FleetBuildData {
             throw new Exception(loadedFileInfo + " could not be opened. Ensure everything is formated correctly (check your spelling, file structure, formatting, check for duplicate keys, etc)");
         }
         
-        String fleetDataId = fleetDataJson.optString("fleetDataId");
+        String fleetDataId = fleetDataJson.optString(CommonStrings.FLEET_DATA_ID);
         if(fleetDataId.equals("")) {
             throw new Exception(loadedFileInfo + " has no \"fleetDataId\" field, check spelling and formatting");
         }
@@ -63,7 +63,7 @@ public class FleetBuildData {
         }
 
         // check whether to load the fleet
-        String[] requiredMods = JsonUtils.getStringArray("requiredMods", loadedFileInfo, fleetDataJson);
+        String[] requiredMods = JsonUtils.getStringArray(CommonStrings.REQUIRED_MODS, loadedFileInfo, fleetDataJson);
         boolean shouldLoad = false;
         if(requiredMods == null) {
             shouldLoad = true;

@@ -8,7 +8,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 public class CommonStrings {
     // fleet json fields
     public static final String USING_FACTORY = "usingFactory";
-    public static final String REQUIRED_MODS = "requiredMods"; // TODO: implement required mods
+    public static final String REQUIRED_MODS = "requiredMods";
     public static final String FLEET_DATA_ID = "fleetDataId";
     public static final String MIN_DP = "minDP";
     public static final String MAX_DP = "maxDP";
