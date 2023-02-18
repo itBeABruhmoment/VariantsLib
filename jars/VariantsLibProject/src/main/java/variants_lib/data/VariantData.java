@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.io.IOException;
 import java.util.Vector;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -183,12 +182,10 @@ public class VariantData {
     }
 
     public static class VariantDataMember {
-        @NotNull
         public ArrayList<String> officerSpecifications;
-        @NotNull
         public ArrayList<String> smods;
 
-        public VariantDataMember(@NotNull ArrayList<String> officerSpecifications, @NotNull ArrayList<String> smods)
+        public VariantDataMember(ArrayList<String> officerSpecifications, ArrayList<String> smods)
         {
             this.officerSpecifications = officerSpecifications;
             this.smods = smods;

@@ -10,7 +10,6 @@ import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.Random;
@@ -20,11 +19,8 @@ public class VariantsLibFleetParams {
         log.setLevel(Level.ALL);
     }
 
-    @NotNull
     public String fleetName = "fleet";
-    @NotNull
     public String faction = "independent";
-    @NotNull
     public String fleetType = FleetTypes.PATROL_MEDIUM; // String to store under the memkey $fleetType
     public int fleetPoints = 100;
     public float quality = 1.0f; // 0.0f being max dmods, 1.0f being the least
@@ -35,7 +31,7 @@ public class VariantsLibFleetParams {
 
     public VariantsLibFleetParams() { }
 
-    public VariantsLibFleetParams(@NotNull CampaignFleetAPI fleet) {
+    public VariantsLibFleetParams(CampaignFleetAPI fleet) {
         final MemoryAPI fleetMemory = fleet.getMemoryWithoutUpdate();
 
         fleetName = fleet.getName();

@@ -3,7 +3,6 @@ package variants_lib.data;
 import com.fs.starfarer.api.Global;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 public class FleetPartitionMember {
@@ -12,7 +11,6 @@ public class FleetPartitionMember {
         log.setLevel(Level.ALL);
     }
 
-    @NotNull
     public String id;
     public float weight;
 
@@ -21,7 +19,7 @@ public class FleetPartitionMember {
         weight /= outOf;
     }
 
-    public FleetPartitionMember(@NotNull String variantId, float spawningWeight)
+    public FleetPartitionMember(String variantId, float spawningWeight)
     {
         id = variantId;
         weight = spawningWeight;

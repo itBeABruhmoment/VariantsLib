@@ -4,7 +4,6 @@ import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Skills;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,18 +25,14 @@ public class OfficerFactory {
             Skills.TARGET_ANALYSIS, Skills.BALLISTIC_MASTERY, Skills.SYSTEMS_EXPERTISE, Skills.MISSILE_SPECIALIZATION,
             Skills.GUNNERY_IMPLANTS, Skills.ENERGY_WEAPON_MASTERY, Skills.ORDNANCE_EXPERTISE, Skills.POLARIZED_ARMOR};
 
-    @NotNull
     public FactionAPI faction;
-    @NotNull
     public String personality = "steady";
-    @NotNull
     public ArrayList<String> skillsToAdd = new ArrayList<>();
     public int level = 5;
     public float percentEliteSkills = 0.25f;
-    @NotNull
     public Random rand = new Random();
 
-    public OfficerFactory(@NotNull FactionAPI faction) {
+    public OfficerFactory(FactionAPI faction) {
         this.faction = faction;
     }
 
@@ -46,7 +41,6 @@ public class OfficerFactory {
      * @return An officer
      */
 
-    @NotNull
     public PersonAPI makeOfficer() {
         final PersonAPI officer = faction.createRandomPerson(rand);
         final MutableCharacterStatsAPI stats = officer.getStats();

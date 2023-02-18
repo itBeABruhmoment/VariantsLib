@@ -1,8 +1,6 @@
 package variants_lib.data;
 
 import com.fs.starfarer.api.Global;
-
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

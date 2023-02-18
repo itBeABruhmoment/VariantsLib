@@ -1,12 +1,9 @@
 package variants_lib.data;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Random;
 
 public class Util {
-    @NotNull
-    public static int[] createRandomNumberSequence(int length, @NotNull Random rand) {
+    public static int[] createRandomNumberSequence(int length, Random rand) {
         final int[] sequence = new int[length];
         for(int i = 0; i < sequence.length; i++) {
             sequence[i] = i;
