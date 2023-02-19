@@ -1,4 +1,9 @@
 {
+	# the classpath of the fleet factory to load this fleet json with, the class in this field must
+	# extend variants_lib.data.VariantsLibFleetFactory
+	# DEFAULT: variants_lib.data.VariantsLibFleetFactory
+	"usingFactory":"variants_lib.data.VariantsLibFleetFactory",
+	
 	# mods that need to be enabled for this file to be loaded. Use this to make fleets with content 
 	# from other mods which may not be enabled. Put .variant files with content from other mods in 
 	# data/variants_lib/modded_variants and ensure its file name is the same as its variant id
