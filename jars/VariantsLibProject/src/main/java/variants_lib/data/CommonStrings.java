@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 
-// stores important strings
+/**
+ * Stores important strings used in this mod
+ */
 public class CommonStrings {
     // fleet json fields
     public static final String USING_FACTORY = "usingFactory";

@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"variants_lib.console"},{"l":"variants_lib.data"},{"l":"variants_lib.scripts"},{"l":"variants_lib.test"}];updateSearchResults();

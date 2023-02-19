@@ -29,6 +29,9 @@ import variants_lib.scripts.UnofficeredPersonalitySetPlugin;
 
 import java.util.*;
 
+/**
+ * Generates fleets specified by fleet jsons
+ */
 public class VariantsLibFleetFactory  {
     protected static final Logger log = Global.getLogger(VariantsLibFleetFactory.class);
     static {

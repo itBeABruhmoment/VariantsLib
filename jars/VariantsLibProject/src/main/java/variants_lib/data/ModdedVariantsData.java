@@ -14,7 +14,9 @@ import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.loading.WeaponGroupSpec;
 import com.fs.starfarer.api.loading.WeaponGroupType;
 
-// for storing variant that need other mods to load
+/**
+ * Stores variants that require non-vanilla assets
+ */
 public class ModdedVariantsData {
     private static final Logger log = Global.getLogger(variants_lib.data.ModdedVariantsData.class);
     static {
