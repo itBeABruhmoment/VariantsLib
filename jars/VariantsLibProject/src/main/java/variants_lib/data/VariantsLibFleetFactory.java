@@ -579,64 +579,54 @@ public class VariantsLibFleetFactory  {
             return;
         }
 
-        final OfficerFactory officerFactory = new OfficerFactory(Global.getSector().getFaction(params.faction));
-
-        officerFactory.rand = rand;
-        // make commander
-        {
-            officerFactory.level = Math.round(params.averageOfficerLevel + 2.0f);
-            if(officerFactory.level > 10) {
-                officerFactory.level = 10;
-            }
-
-            final String factionDefaultPersonality = UnofficeredPersonalitySetPlugin.getDefaultPersonality(params.faction);
-            if(factionDefaultPersonality != null) {
-                officerFactory.personality = factionDefaultPersonality;
-            }
-
-            officerFactory.skillsToAdd.addAll(commanderSkills);
-            final VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(shipsToOfficer.get(0).getVariant().getOriginalVariant());
-            if(variantData != null) {
-                for(final String tag : variantData.officerSpecifications) {
-                    final String skill = CommonStrings.SKILL_EDIT_TAGS.get(tag);
-                    final String personality = CommonStrings.PERSONALITY_EDIT_TAGS.get(tag);
-                    if(skill != null) {
-                        officerFactory.skillsToAdd.add(skill);
-                    } else if(personality != null) {
-                        officerFactory.personality = personality;
-                    }
-                }
-            }
-            shipsToOfficer.get(0).setCaptain(officerFactory.makeOfficer());
-        }
+        final OfficerFactory officerFactory = createOfficerFactory(params);
+        final PersonAPI commander = createCommander(officerFactory, params, rand, shipsToOfficer.get(0).getVariant().getOriginalVariant());
+        shipsToOfficer.get(0).setCaptain(commander);
 
         // make other officers
+        log.info("s" + shipsToOfficer.size());
         for(int i = 1; i < shipsToOfficer.size(); i++) {
             final FleetMemberAPI toOfficer = shipsToOfficer.get(i);
-            officerFactory.level = Math.round(params.averageOfficerLevel + 2 * rand.nextFloat() - 1.0f);
-            if (officerFactory.level < 1) {
-                officerFactory.level = 1;
-            }
-
-            final String factionDefaultPersonality = UnofficeredPersonalitySetPlugin.getDefaultPersonality(params.faction);
-            if (factionDefaultPersonality != null) {
-                officerFactory.personality = factionDefaultPersonality;
-            }
-
-            final VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(shipsToOfficer.get(0).getVariant().getOriginalVariant());
-            if (variantData != null) {
-                for (final String tag : variantData.officerSpecifications) {
-                    final String skill = CommonStrings.SKILL_EDIT_TAGS.get(tag);
-                    final String personality = CommonStrings.PERSONALITY_EDIT_TAGS.get(tag);
-                    if (skill != null) {
-                        officerFactory.skillsToAdd.add(skill);
-                    } else if (personality != null) {
-                        officerFactory.personality = personality;
-                    }
-                }
-            }
-            toOfficer.setCaptain(officerFactory.makeOfficer());
+            toOfficer.setCaptain(createOfficer(officerFactory, params, rand, toOfficer.getVariant().getOriginalVariant()););
         }
+    }
+
+    protected PersonAPI createOfficer(
+            OfficerFactory officerFactory,
+            VariantsLibFleetParams fleetParams,
+            Random rand,
+            String variantId
+    ) {
+        OfficerFactoryParams officerFactoryParams = new OfficerFactoryParams(
+                variantId,
+                fleetParams.faction,
+                rand,
+                fleetParams.averageOfficerLevel + 2.0f
+        );
+        if(officerFactoryParams.level > 10) {
+            officerFactoryParams.level = 10;
+        }
+        officerFactoryParams.skillsToAdd.addAll(commanderSkills);
+        return officerFactory.makeOfficer(officerFactoryParams);
+    }
+
+    protected PersonAPI createCommander(
+            OfficerFactory officerFactory,
+            VariantsLibFleetParams fleetParams,
+            Random rand,
+            String variantId
+    ) {
+        OfficerFactoryParams officerFactoryParams = new OfficerFactoryParams(
+                variantId,
+                fleetParams.faction,
+                rand,
+                fleetParams.averageOfficerLevel
+        );
+        return officerFactory.makeOfficer(officerFactoryParams);
+    }
+
+    protected OfficerFactory createOfficerFactory(final VariantsLibFleetParams params) {
+        return new OfficerFactory();
     }
 
     protected FleetMemberAPI createShip(final String variantId) {

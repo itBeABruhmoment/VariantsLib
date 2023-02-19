@@ -45,7 +45,8 @@ public class vlTestCommand implements BaseCommand {
     }
 
     public void testOfficerFactory() {
-        final OfficerFactory fact = new OfficerFactory(Global.getSector().getFaction("pirates"));
+        /*
+        final OfficerFactory fact = new OfficerFactory();
         fact.percentEliteSkills = 0.25f;
         fact.level = 5;
         fact.skillsToAdd.add(Skills.POLARIZED_ARMOR);
@@ -55,6 +56,8 @@ public class vlTestCommand implements BaseCommand {
             Console.showMessage(skill.getSkill().getId());
         }
         Console.showMessage(person.getPersonalityAPI().getId());
+
+         */
     }
 
     public void testSMods() {

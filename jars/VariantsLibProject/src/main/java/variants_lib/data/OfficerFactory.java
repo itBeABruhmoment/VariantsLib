@@ -1,9 +1,12 @@
 package variants_lib.data;
 
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Skills;
+import org.graalvm.compiler.nodes.gc.G1ArrayRangePostWriteBarrier;
+import variants_lib.scripts.UnofficeredPersonalitySetPlugin;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,34 +28,26 @@ public class OfficerFactory {
             Skills.TARGET_ANALYSIS, Skills.BALLISTIC_MASTERY, Skills.SYSTEMS_EXPERTISE, Skills.MISSILE_SPECIALIZATION,
             Skills.GUNNERY_IMPLANTS, Skills.ENERGY_WEAPON_MASTERY, Skills.ORDNANCE_EXPERTISE, Skills.POLARIZED_ARMOR};
 
-    public FactionAPI faction;
-    public String personality = "steady";
-    public ArrayList<String> skillsToAdd = new ArrayList<>();
-    public int level = 5;
-    public float percentEliteSkills = 0.25f;
-    public Random rand = new Random();
 
-    public OfficerFactory(FactionAPI faction) {
-        this.faction = faction;
-    }
+    public OfficerFactory() {}
 
     /**
-     * Make officer using variables in fields
+     * Make officer using params. params.rand used for random number generation
      * @return An officer
      */
-
-    public PersonAPI makeOfficer() {
-        final PersonAPI officer = faction.createRandomPerson(rand);
+    public PersonAPI makeOfficer(final OfficerFactoryParams params) {
+        final FactionAPI faction = Global.getSector().getFaction(params.faction);
+        final PersonAPI officer = faction.createRandomPerson(params.rand);
         final MutableCharacterStatsAPI stats = officer.getStats();
         int skillsAdded = 0;
 
-        stats.setLevel(level);
-        officer.setPersonality(personality);
+        stats.setLevel(params.level);
+        officer.setPersonality(params.personality);
 
         // add skills in skillsToAdd until done or level does not allow it
-        while (skillsAdded < level && skillsAdded < skillsToAdd.size()) {
-            final String skill = skillsToAdd.get(skillsAdded);
-            if (VALID_ELITE_SKILLS.contains(skill) && rand.nextFloat() < percentEliteSkills) {
+        while (skillsAdded < params.level && skillsAdded < params.skillsToAdd.size()) {
+            final String skill = params.skillsToAdd.get(skillsAdded);
+            if (VALID_ELITE_SKILLS.contains(skill) && params.rand.nextFloat() < params.percentEliteSkills) {
                 stats.setSkillLevel(skill, 2.0f);
             } else {
                 stats.setSkillLevel(skill, 1.0f);
@@ -61,14 +56,14 @@ public class OfficerFactory {
         }
 
         // fill remaining levels with empty skills
-        if (skillsAdded < level) {
-            final int[] randomIndices = Util.createRandomNumberSequence(FILLER_SKILLS.length, rand);
+        if (skillsAdded < params.level) {
+            final int[] randomIndices = Util.createRandomNumberSequence(FILLER_SKILLS.length, params.rand);
             int i = 0;
-            while (i < randomIndices.length && skillsAdded < level) {
+            while (i < randomIndices.length && skillsAdded < params.level) {
                 final String skill = FILLER_SKILLS[randomIndices[i]];
                 if (!stats.hasSkill(skill)) {
                     float skillLevel;
-                    if (rand.nextFloat() < percentEliteSkills) {
+                    if (params.rand.nextFloat() < params.percentEliteSkills) {
                         skillLevel = 2.0f;
                     } else {
                         skillLevel = 1.0f;
