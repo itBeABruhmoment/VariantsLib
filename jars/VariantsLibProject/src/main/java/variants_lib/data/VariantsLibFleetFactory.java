@@ -587,7 +587,7 @@ public class VariantsLibFleetFactory  {
         log.info("s" + shipsToOfficer.size());
         for(int i = 1; i < shipsToOfficer.size(); i++) {
             final FleetMemberAPI toOfficer = shipsToOfficer.get(i);
-            toOfficer.setCaptain(createOfficer(officerFactory, params, rand, toOfficer.getVariant().getOriginalVariant()););
+            toOfficer.setCaptain(createOfficer(officerFactory, params, rand, toOfficer.getVariant().getOriginalVariant()));
         }
     }
 
