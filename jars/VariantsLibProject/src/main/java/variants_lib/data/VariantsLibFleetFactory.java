@@ -584,14 +584,13 @@ public class VariantsLibFleetFactory  {
         shipsToOfficer.get(0).setCaptain(commander);
 
         // make other officers
-        log.info("s" + shipsToOfficer.size());
         for(int i = 1; i < shipsToOfficer.size(); i++) {
             final FleetMemberAPI toOfficer = shipsToOfficer.get(i);
             toOfficer.setCaptain(createOfficer(officerFactory, params, rand, toOfficer.getVariant().getOriginalVariant()));
         }
     }
 
-    protected PersonAPI createOfficer(
+    protected PersonAPI createCommander(
             OfficerFactory officerFactory,
             VariantsLibFleetParams fleetParams,
             Random rand,
@@ -610,7 +609,7 @@ public class VariantsLibFleetFactory  {
         return officerFactory.createOfficer(officerFactoryParams);
     }
 
-    protected PersonAPI createCommander(
+    protected PersonAPI createOfficer(
             OfficerFactory officerFactory,
             VariantsLibFleetParams fleetParams,
             Random rand,

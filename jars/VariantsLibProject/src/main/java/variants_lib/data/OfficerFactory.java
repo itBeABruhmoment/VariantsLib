@@ -51,7 +51,7 @@ public class OfficerFactory {
         addSkills(officer, params);
     }
 
-    protected void addSkills(PersonAPI officer, OfficerFactoryParams params) {
+    protected void addSkills(final PersonAPI officer, final OfficerFactoryParams params) {
         final MutableCharacterStatsAPI stats = officer.getStats();
         int skillsAdded = 0;
 
