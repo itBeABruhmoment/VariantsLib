@@ -22,7 +22,7 @@ public class SettingsData {
 
     private static int maxShipsInAIFleet = 30;
     private static int maxOfficersInAIFleet = 10;
-    private static boolean enableAutofit = false;
+    private static boolean enableNoAutofit = true;
     private static float specialFleetSpawnMult = 1.0f;
     private static boolean enableOfficerEditing = true;
     private static boolean enableFleetEditing = true;
@@ -61,7 +61,7 @@ public class SettingsData {
         }
 
         try {
-            enableAutofit = settings.getBoolean("enableNoAutofitFeatures");
+            enableNoAutofit = settings.getBoolean("enableNoAutofitFeatures");
         } catch(Exception e) {
             throw new Exception(CommonStrings.MOD_ID + "failed to read \"enableNoAutofitFeatures\" in " + CommonStrings.SETTINGS_FILE_NAME);
         }
@@ -105,7 +105,7 @@ public class SettingsData {
                 log.debug("enableNoAutofitFeatures field could not be read setting to default");
             }
             // merge so that one mod disabling it disables the feature
-            enableAutofit = enableAutofit && noAuto;
+            enableNoAutofit = enableNoAutofit && noAuto;
 
             boolean officerEdit = true;
             try {
@@ -189,7 +189,7 @@ public class SettingsData {
 
     public static boolean noAutofitFeaturesEnabled()
     {
-        return enableAutofit;
+        return enableNoAutofit;
     }
 
     public static float getSpecialFleetSpawnMult()
