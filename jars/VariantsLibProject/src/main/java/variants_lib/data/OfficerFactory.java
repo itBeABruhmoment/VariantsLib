@@ -34,6 +34,24 @@ public class OfficerFactory {
     public PersonAPI createOfficer(final OfficerFactoryParams params) {
         final FactionAPI faction = Global.getSector().getFaction(params.faction);
         final PersonAPI officer = faction.createRandomPerson(params.rand);
+        addSkills(officer, params);
+        return officer;
+    }
+
+    /**
+     * Does the same thing as createOfficer but allows the user to create the officer
+     * @param officer
+     * @param params
+     */
+    public void editOfficer(final PersonAPI officer, final OfficerFactoryParams params) {
+        final MutableCharacterStatsAPI stats = officer.getStats();
+        for(MutableCharacterStatsAPI.SkillLevelAPI skill : stats.getSkillsCopy()) {
+            skill.setLevel(0.0f);
+        }
+        addSkills(officer, params);
+    }
+
+    protected void addSkills(PersonAPI officer, OfficerFactoryParams params) {
         final MutableCharacterStatsAPI stats = officer.getStats();
         int skillsAdded = 0;
 
@@ -70,7 +88,5 @@ public class OfficerFactory {
                 i++;
             }
         }
-
-        return officer;
     }
 }

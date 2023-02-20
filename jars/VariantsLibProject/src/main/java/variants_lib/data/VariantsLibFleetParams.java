@@ -64,7 +64,7 @@ public class VariantsLibFleetParams {
 
         try {
             DefaultFleetInflaterParams inflaterParams = (DefaultFleetInflaterParams)fleet.getInflater().getParams();
-            averageSMods = averageSMods;
+            averageSMods = Math.round(inflaterParams.averageSMods);
         } catch(Exception e) {
             log.info("could not get average smods defaulting to none");
         }

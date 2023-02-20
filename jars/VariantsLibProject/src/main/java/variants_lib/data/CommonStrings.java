@@ -45,6 +45,7 @@ public class CommonStrings {
     public static final String MODIFIED_IN_BATTLE_KEY = "$vlModifiedInBattle";
     public static final String FLEET_VARIANT_KEY = "$vlType";
     public static final String FLEET_EDITED_MEMKEY = "$vlmodified";
+    public static final String NO_AUTOFIT_APPLIED = "$vlNoAutofitApplied";
 
     public static final HashSet<String> PERSONALITIES =  new HashSet<String>() {{
         add(Personalities.AGGRESSIVE);  add(Personalities.CAUTIOUS); add(Personalities.RECKLESS);
