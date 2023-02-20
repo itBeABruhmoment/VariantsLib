@@ -492,8 +492,9 @@ public class VariantsLibFleetFactory  {
         }
     }
 
-    private void addShipsToVars(final CreateFleetVariables vars, final List<FleetMemberAPI> ships) {
-        for(final FleetMemberAPI member : ships) {
+    private void addShipsToVars(final CreateFleetVariables vars, final List<String> ships) {
+        for(final String variantId : ships) {
+            final FleetMemberAPI member = createShip(variantId);
             if(vars.totalDPRemaining > 0 && vars.numShipsThatCanBeAdded > 0) {
                 if(member.isCivilian()) {
                     vars.civilianShips.add(member);

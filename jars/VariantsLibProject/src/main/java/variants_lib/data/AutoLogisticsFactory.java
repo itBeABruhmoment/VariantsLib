@@ -2,8 +2,6 @@ package variants_lib.data;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.FactionAPI;
-import com.fs.starfarer.api.fleet.FleetMemberAPI;
-import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.fleet.ShipRolePick;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -11,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Create FleetMemberAPIs for the auto logistics feature
+ * Choose variant ids for the auto logistics feature
  */
 public class AutoLogisticsFactory {
     protected static final Logger log = Global.getLogger(AutoLogisticsFactory.class);
@@ -88,8 +86,8 @@ public class AutoLogisticsFactory {
      * @param availableDP amount of dp worth of ships that should be generated
      * @return ships generated
      */
-    protected ArrayList<FleetMemberAPI> addShipType(String[] shipClassList, FactionAPI faction, int availableDP) {
-        final ArrayList<FleetMemberAPI> addedShips = new ArrayList<>(10);
+    protected ArrayList<String> addShipType(String[] shipClassList, FactionAPI faction, int availableDP) {
+        final ArrayList<String> addedShips = new ArrayList<>(10);
         final int dpAvailableOriginal = availableDP;
         int shipClass = 0;
         boolean continueLoop = true;
@@ -101,8 +99,7 @@ public class AutoLogisticsFactory {
                 String variantId = ship.get(0).variantId;
                 enoughDP = availableDP - getDPInt(variantId) + maxOverBudget > 0;
                 if(enoughDP) {
-                    FleetMemberAPI newMember = createShip(variantId);
-                    addedShips.add(newMember);
+                    addedShips.add(variantId);
                     availableDP -= getDPInt(variantId);
                 }
             }
@@ -120,16 +117,13 @@ public class AutoLogisticsFactory {
         return Math.round(Global.getSettings().getVariant(variantId).getHullSpec().getSuppliesToRecover());
     }
 
-    protected FleetMemberAPI createShip(String variantId) {
-        final FleetMemberAPI ship = Global.getFactory().createFleetMember(FleetMemberType.SHIP, variantId);
-        ship.getVariant().setOriginalVariant(variantId);
-        return ship;
-    }
-
+    /**
+     * Store variant id's of the ships selected
+     */
     public static class AutoLogisticsReturn {
-        public ArrayList<FleetMemberAPI> freighters = new ArrayList<>(10);
-        public ArrayList<FleetMemberAPI> tankers = new ArrayList<>(10);
-        public ArrayList<FleetMemberAPI> liners = new ArrayList<>(10);
-        public ArrayList<FleetMemberAPI> personnel = new ArrayList<>(10);
+        public ArrayList<String> freighters = new ArrayList<>(10);
+        public ArrayList<String> tankers = new ArrayList<>(10);
+        public ArrayList<String> liners = new ArrayList<>(10);
+        public ArrayList<String> personnel = new ArrayList<>(10);
     }
 }
