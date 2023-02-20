@@ -25,6 +25,10 @@ public class FleetRandomizer {
     }};
 
     private static boolean allowFleetModification(CampaignFleetAPI fleet) {
+        if(!SettingsData.fleetEditingEnabled()) {
+            return false;
+        }
+
         if(fleet.getMemoryWithoutUpdate().contains(CommonStrings.FLEET_EDITED_MEMKEY)) {
             log.debug(CommonStrings.MOD_ID + ": fleet not edited, has " + CommonStrings.FLEET_EDITED_MEMKEY + " memkey");
             return false;
@@ -80,7 +84,7 @@ public class FleetRandomizer {
             useToEdit.editFleet(fleet, params);
             fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, useToEdit.id);
             log.info("fleet edited");
-        } else {
+        } else if(SettingsData.noAutofitFeaturesEnabled()){
             if(FactionData.FACTION_DATA.get(params.faction).hasTag(CommonStrings.NO_AUTOFIT_TAG)) {
                 fleet.setInflated(true);
                 FleetBuildingUtils.addDMods(fleet, rand, params.quality);
