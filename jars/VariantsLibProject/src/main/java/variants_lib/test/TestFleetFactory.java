@@ -33,8 +33,8 @@ public class TestFleetFactory extends VariantsLibFleetFactory {
     }
 
     @Override
-    public CampaignFleetAPI makeFleet(@NotNull VariantsLibFleetParams params) {
+    public CampaignFleetAPI createFleet(@NotNull VariantsLibFleetParams params) {
         log.debug(CommonStrings.MOD_ID + ": test that custom fleet factories are working as intended");
-        return super.makeFleet(params);
+        return super.createFleet(params);
     }
 }

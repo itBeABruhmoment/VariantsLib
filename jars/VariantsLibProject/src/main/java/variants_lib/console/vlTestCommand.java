@@ -3,21 +3,16 @@ package variants_lib.console;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.FleetDataAPI;
-import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
-import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.fleet.FleetMemberType;
 import com.fs.starfarer.api.impl.campaign.FleetEncounterContext;
-import com.fs.starfarer.api.impl.campaign.ids.Skills;
 import org.jetbrains.annotations.NotNull;
 import org.lazywizard.console.BaseCommand;
 import org.lazywizard.console.Console;
 import variants_lib.data.FleetBuildData;
-import variants_lib.data.OfficerFactory;
 import variants_lib.data.VariantsLibFleetFactory;
 import variants_lib.data.VariantsLibFleetParams;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -65,7 +60,7 @@ public class vlTestCommand implements BaseCommand {
         VariantsLibFleetParams params = new VariantsLibFleetParams();
         params.averageSMods = 3.0f;
         params.fleetPoints = 200;
-        CampaignFleetAPI fleet = fact.makeFleet(params);
+        CampaignFleetAPI fleet = fact.createFleet(params);
         FleetDataAPI data = Global.getSector().getPlayerFleet().getFleetData();
         for(FleetMemberAPI member : fleet.getMembersWithFightersCopy()) {
             if(!member.isFighterWing()) {

@@ -25,7 +25,6 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import variants_lib.scripts.HasHeavyIndustryTracker;
-import variants_lib.scripts.UnofficeredPersonalitySetPlugin;
 
 import java.util.*;
 
@@ -309,7 +308,7 @@ public class VariantsLibFleetFactory  {
      * @param params
      * @return Fleet created based off of params
      */
-    public CampaignFleetAPI makeFleet(final VariantsLibFleetParams params) {
+    public CampaignFleetAPI createFleet(final VariantsLibFleetParams params) {
         final CampaignFleetAPI fleet = Global.getFactory().createEmptyFleet(params.faction, params.fleetName, true);
         createFleet(fleet, params, new ArrayList<FleetMemberAPI>(), new Random(params.seed), false);
         return fleet;
@@ -608,7 +607,7 @@ public class VariantsLibFleetFactory  {
             officerFactoryParams.level = 10;
         }
         officerFactoryParams.skillsToAdd.addAll(commanderSkills);
-        return officerFactory.makeOfficer(officerFactoryParams);
+        return officerFactory.createOfficer(officerFactoryParams);
     }
 
     protected PersonAPI createCommander(
@@ -623,7 +622,7 @@ public class VariantsLibFleetFactory  {
                 rand,
                 fleetParams.averageOfficerLevel
         );
-        return officerFactory.makeOfficer(officerFactoryParams);
+        return officerFactory.createOfficer(officerFactoryParams);
     }
 
     protected OfficerFactory createOfficerFactory(final VariantsLibFleetParams params) {

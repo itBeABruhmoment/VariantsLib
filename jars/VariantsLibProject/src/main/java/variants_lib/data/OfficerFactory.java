@@ -5,12 +5,8 @@ import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Skills;
-import org.graalvm.compiler.nodes.gc.G1ArrayRangePostWriteBarrier;
-import variants_lib.scripts.UnofficeredPersonalitySetPlugin;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
 
 /**
  * For making officers
@@ -35,7 +31,7 @@ public class OfficerFactory {
      * Make officer using params. params.rand used for random number generation
      * @return An officer
      */
-    public PersonAPI makeOfficer(final OfficerFactoryParams params) {
+    public PersonAPI createOfficer(final OfficerFactoryParams params) {
         final FactionAPI faction = Global.getSector().getFaction(params.faction);
         final PersonAPI officer = faction.createRandomPerson(params.rand);
         final MutableCharacterStatsAPI stats = officer.getStats();

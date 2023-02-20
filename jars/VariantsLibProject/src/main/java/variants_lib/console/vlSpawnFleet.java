@@ -55,7 +55,7 @@ public class vlSpawnFleet implements BaseCommand{
         params.averageOfficerLevel = 5;
         params.numOfficers = 5;
 
-        CampaignFleetAPI toSpawn = FleetBuildData.FLEET_DATA.get(splited[1]).makeFleet(params);
+        CampaignFleetAPI toSpawn = FleetBuildData.FLEET_DATA.get(splited[1]).createFleet(params);
 
         // Spawn fleet around player
         final Vector2f offset = new Vector2f(0, 0);
