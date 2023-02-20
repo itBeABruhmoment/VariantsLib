@@ -104,6 +104,7 @@ public class FleetRandomizer {
         final Random rand = new Random(params.seed);
         if(useToEdit != null && rand.nextDouble() < specialFleetSpawnRate) {
             useToEdit.editFleet(fleet, params);
+            fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, useToEdit.id);
             log.info("fleet edited");
         } else {
             if(FactionData.FACTION_DATA.get(params.faction).hasTag(CommonStrings.NO_AUTOFIT_TAG)) {
