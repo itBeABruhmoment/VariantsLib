@@ -59,11 +59,6 @@
 	# DEFAULT: no additional ships
 	"alwaysInclude":{"ox_Standard":2, "atlas_Standard":1},
 
-	# a script that will be run after a fleet of this type is spawned the script must implement the 
-	# interface variants_lib.scripts.FleetEditingScript scripts are run in the order that they are listed
-	# DEFAULT: no scripts
-	"postModificationScripts":["variants_lib.scripts.FleetEditingScriptTest"],
-
 	# Specify what portion of the fleet's dp should be dedicated to different groups of ships
 	# Based on how the fleet generation system works, it's best to have ships with similar dp 
 	# in each partition and have the higher average dp partitions before lower dp ones
