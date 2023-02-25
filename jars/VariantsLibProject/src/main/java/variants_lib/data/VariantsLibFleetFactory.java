@@ -29,7 +29,7 @@ import variants_lib.scripts.HasHeavyIndustryTracker;
 import java.util.*;
 
 /**
- * Generates fleets specified by fleet jsons
+ * Generates fleets specified by fleet jsons. Contains both the fields from the fleet json and the logic for creating fleets
  */
 public class VariantsLibFleetFactory  {
     protected static final Logger log = Global.getLogger(VariantsLibFleetFactory.class);
