@@ -24,7 +24,6 @@ public class SettingsData {
     private static int maxOfficersInAIFleet = 10;
     private static boolean enableNoAutofit = true;
     private static float specialFleetSpawnMult = 1.0f;
-    private static boolean enableOfficerEditing = true;
     private static boolean enableFleetEditing = true;
     private static boolean enablePersonalitySet = true;
     public static HashMap<String, FleetEditingScript> universalPreModificationScripts = new HashMap<>();
@@ -75,12 +74,6 @@ public class SettingsData {
             throw new Exception(CommonStrings.MOD_ID + "\"specialFleetSpawnMult\" from " + CommonStrings.SETTINGS_FILE_NAME + "has a negative value");
         }
 
-        try {
-            enableOfficerEditing = settings.getBoolean("enableOfficerEditing");
-        } catch(Exception e) {
-            throw new Exception(CommonStrings.MOD_ID + "failed to read \"enableOfficerEditing\" in " + CommonStrings.SETTINGS_FILE_NAME);
-        }
-
         // get all universalPreModificationScripts and universalPostModificationScripts
         for(ModSpecAPI mod : Global.getSettings().getModManager().getEnabledModsCopy()) {
             String modId = mod.getId();
@@ -106,15 +99,6 @@ public class SettingsData {
             }
             // merge so that one mod disabling it disables the feature
             enableNoAutofit = enableNoAutofit && noAuto;
-
-            boolean officerEdit = true;
-            try {
-                officerEdit = settingsJson.getBoolean("enableOfficerEditing");
-            } catch(Exception e) {
-                officerEdit = true;
-                log.debug("enableOfficerEditing field could not be read setting to default");
-            }
-            enableOfficerEditing = enableOfficerEditing && officerEdit;
 
             boolean fleetEdit = true;
             try {
@@ -180,11 +164,6 @@ public class SettingsData {
                 }
             }
         }  
-    }
-
-    public static boolean OfficerEditingEnabled()
-    {
-        return enableOfficerEditing;
     }
 
     public static boolean noAutofitFeaturesEnabled()
