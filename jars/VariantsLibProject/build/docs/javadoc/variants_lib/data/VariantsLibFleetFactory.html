@@ -84,7 +84,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">VariantsLibFleetFactory</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Generates fleets specified by fleet jsons</div>
+<div class="block">Generates fleets specified by fleet jsons. Contains both the fields from the fleet json and the logic for creating fleets</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -279,15 +279,35 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#clearMembers(com.fs.starfarer.api.campaign.CampaignFleetAPI)">clearMembers</a></span>&#8203;(com.fs.starfarer.api.campaign.CampaignFleetAPI&nbsp;fleetAPI)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#createFleet(com.fs.starfarer.api.campaign.CampaignFleetAPI,variants_lib.data.VariantsLibFleetParams,java.util.ArrayList,java.util.Random,boolean)">createFleet</a></span>&#8203;(com.fs.starfarer.api.campaign.CampaignFleetAPI&nbsp;fleetAPI,
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected com.fs.starfarer.api.characters.PersonAPI</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#createCommander(variants_lib.data.OfficerFactory,variants_lib.data.VariantsLibFleetParams,java.util.Random,java.lang.String)">createCommander</a></span>&#8203;(<a href="OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a>&nbsp;officerFactory,
+ <a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;fleetParams,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a>&nbsp;rand,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;variantId)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#createFleet(com.fs.starfarer.api.campaign.CampaignFleetAPI,variants_lib.data.VariantsLibFleetParams,java.util.ArrayList,java.util.Random,boolean)">createFleet</a></span>&#8203;(com.fs.starfarer.api.campaign.CampaignFleetAPI&nbsp;fleetAPI,
  <a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;params,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.fs.starfarer.api.fleet.FleetMemberAPI&gt;&nbsp;membersToKeep,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a>&nbsp;rand,
  boolean&nbsp;calledFromEditFleet)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Create a fleet</div>
 </div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>com.fs.starfarer.api.campaign.CampaignFleetAPI</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#createFleet(variants_lib.data.VariantsLibFleetParams)">createFleet</a></span>&#8203;(<a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;params)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Creates a fleet from parameters</div>
+</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected com.fs.starfarer.api.characters.PersonAPI</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#createOfficer(variants_lib.data.OfficerFactory,variants_lib.data.VariantsLibFleetParams,java.util.Random,java.lang.String)">createOfficer</a></span>&#8203;(<a href="OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a>&nbsp;officerFactory,
+ <a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;fleetParams,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a>&nbsp;rand,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;variantId)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected <a href="OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#createOfficerFactory(variants_lib.data.VariantsLibFleetParams)">createOfficerFactory</a></span>&#8203;(<a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;params)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected void</code></div>
 <div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#createOfficers(variants_lib.data.VariantsLibFleetParams,java.util.ArrayList,java.util.Random)">createOfficers</a></span>&#8203;(<a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;params,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;com.fs.starfarer.api.fleet.FleetMemberAPI&gt;&nbsp;shipsToOfficer,
@@ -321,30 +341,25 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
 <div class="block">Initialize the fields of this factory based of the JSON parameters.</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>com.fs.starfarer.api.campaign.CampaignFleetAPI</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#makeFleet(variants_lib.data.VariantsLibFleetParams)">makeFleet</a></span>&#8203;(<a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;params)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Creates a fleet from parameters</div>
-</div>
-<div class="col-first odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#pickFleetFactory(variants_lib.data.VariantsLibFleetParams)">pickFleetFactory</a></span>&#8203;(<a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;params)</code></div>
-<div class="col-last odd-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
+<div class="col-first even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code>static <a href="VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#pickFleetFactory(variants_lib.data.VariantsLibFleetParams)">pickFleetFactory</a></span>&#8203;(<a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;params)</code></div>
+<div class="col-last even-row-color method-summary-table-tab1 method-summary-table-tab4 method-summary-table">
 <div class="block">Choose a random fleet to spawn based on spawn weights in factions.csv</div>
 </div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#pickVariant(variants_lib.data.FleetPartition,int,java.util.Random)">pickVariant</a></span>&#8203;(<a href="FleetPartition.html" title="class in variants_lib.data">FleetPartition</a>&nbsp;partition,
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#pickVariant(variants_lib.data.FleetPartition,int,java.util.Random)">pickVariant</a></span>&#8203;(<a href="FleetPartition.html" title="class in variants_lib.data">FleetPartition</a>&nbsp;partition,
  int&nbsp;DPLimit,
  <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a>&nbsp;rand)</code></div>
-<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected double</code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#sumPartitionWeights(int)">sumPartitionWeights</a></span>&#8203;(int&nbsp;start)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected double</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#sumWeights(java.util.Vector)">sumWeights</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Vector.html" title="class or interface in java.util" class="external-link">Vector</a>&lt;<a href="FleetPartitionMember.html" title="class in variants_lib.data">FleetPartitionMember</a>&gt;&nbsp;members)</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#sumPartitionWeights(int)">sumPartitionWeights</a></span>&#8203;(int&nbsp;start)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected double</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#sumWeights(java.util.Vector)">sumWeights</a></span>&#8203;(<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Vector.html" title="class or interface in java.util" class="external-link">Vector</a>&lt;<a href="FleetPartitionMember.html" title="class in variants_lib.data">FleetPartitionMember</a>&gt;&nbsp;members)</code></div>
 <div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#toString()">toString</a></span>()</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -565,9 +580,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="makeFleet(variants_lib.data.VariantsLibFleetParams)">
-<h3>makeFleet</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.fs.starfarer.api.campaign.CampaignFleetAPI</span>&nbsp;<span class="element-name">makeFleet</span>&#8203;<span class="parameters">(<a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;params)</span></div>
+<section class="detail" id="createFleet(variants_lib.data.VariantsLibFleetParams)">
+<h3>createFleet</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.fs.starfarer.api.campaign.CampaignFleetAPI</span>&nbsp;<span class="element-name">createFleet</span>&#8203;<span class="parameters">(<a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;params)</span></div>
 <div class="block">Creates a fleet from parameters</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -688,6 +703,30 @@ loadScripts(document, 'script');</script>
 <dd><code>shipsToOfficer</code> - ships to generate officers for</dd>
 <dd><code>rand</code> - random number generator used</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createCommander(variants_lib.data.OfficerFactory,variants_lib.data.VariantsLibFleetParams,java.util.Random,java.lang.String)">
+<h3>createCommander</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.fs.starfarer.api.characters.PersonAPI</span>&nbsp;<span class="element-name">createCommander</span>&#8203;<span class="parameters">(<a href="OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a>&nbsp;officerFactory,
+ <a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;fleetParams,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a>&nbsp;rand,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;variantId)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="createOfficer(variants_lib.data.OfficerFactory,variants_lib.data.VariantsLibFleetParams,java.util.Random,java.lang.String)">
+<h3>createOfficer</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">com.fs.starfarer.api.characters.PersonAPI</span>&nbsp;<span class="element-name">createOfficer</span>&#8203;<span class="parameters">(<a href="OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a>&nbsp;officerFactory,
+ <a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;fleetParams,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a>&nbsp;rand,
+ <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;variantId)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="createOfficerFactory(variants_lib.data.VariantsLibFleetParams)">
+<h3>createOfficerFactory</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></span>&nbsp;<span class="element-name">createOfficerFactory</span>&#8203;<span class="parameters">(<a href="VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a>&nbsp;params)</span></div>
 </section>
 </li>
 <li>

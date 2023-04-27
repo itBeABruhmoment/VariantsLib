@@ -83,6 +83,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Generates logistical ships of a specific role (ie tanker, freighter)</div>
 </dd>
+<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactory.html#addSkills(com.fs.starfarer.api.characters.PersonAPI,variants_lib.data.OfficerFactoryParams)">addSkills(PersonAPI, OfficerFactoryParams)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/scripts/FleetBuildingUtils.html#addSMods(com.fs.starfarer.api.campaign.CampaignFleetAPI,java.util.Random,float)">addSMods(CampaignFleetAPI, Random, float)</a></span> - Static method in class variants_lib.scripts.<a href="variants_lib/scripts/FleetBuildingUtils.html" title="class in variants_lib.scripts">FleetBuildingUtils</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.html#addSMods(com.fs.starfarer.api.campaign.CampaignFleetAPI,variants_lib.data.VariantsLibFleetParams,java.util.Random)">addSMods(CampaignFleetAPI, VariantsLibFleetParams, Random)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></dt>
@@ -121,12 +123,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="variants_lib/data/AutoLogisticsFactory.html" title="class in variants_lib.data"><span class="type-name-link">AutoLogisticsFactory</span></a> - Class in <a href="variants_lib/data/package-summary.html">variants_lib.data</a></dt>
 <dd>
-<div class="block">Create FleetMemberAPIs for the auto logistics feature</div>
+<div class="block">Choose variant ids for the auto logistics feature</div>
 </dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/AutoLogisticsFactory.html#%3Cinit%3E()">AutoLogisticsFactory()</a></span> - Constructor for class variants_lib.data.<a href="variants_lib/data/AutoLogisticsFactory.html" title="class in variants_lib.data">AutoLogisticsFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="variants_lib/data/AutoLogisticsFactory.AutoLogisticsReturn.html" title="class in variants_lib.data"><span class="type-name-link">AutoLogisticsFactory.AutoLogisticsReturn</span></a> - Class in <a href="variants_lib/data/package-summary.html">variants_lib.data</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Store variant id's of the ships selected</div>
+</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/AutoLogisticsFactory.AutoLogisticsReturn.html#%3Cinit%3E()">AutoLogisticsReturn()</a></span> - Constructor for class variants_lib.data.<a href="variants_lib/data/AutoLogisticsFactory.AutoLogisticsReturn.html" title="class in variants_lib.data">AutoLogisticsFactory.AutoLogisticsReturn</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetParams.html#averageOfficerLevel">averageOfficerLevel</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a></dt>
@@ -150,9 +154,17 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.SortByDP.html#compare(com.fs.starfarer.api.fleet.FleetMemberAPI,com.fs.starfarer.api.fleet.FleetMemberAPI)">compare(FleetMemberAPI, FleetMemberAPI)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.SortByDP.html" title="class in variants_lib.data">VariantsLibFleetFactory.SortByDP</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.html#createCommander(variants_lib.data.OfficerFactory,variants_lib.data.VariantsLibFleetParams,java.util.Random,java.lang.String)">createCommander(OfficerFactory, VariantsLibFleetParams, Random, String)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="variants_lib/test/TestFleetFactory.html#createFleet(variants_lib.data.VariantsLibFleetParams)">createFleet(VariantsLibFleetParams)</a></span> - Method in class variants_lib.test.<a href="variants_lib/test/TestFleetFactory.html" title="class in variants_lib.test">TestFleetFactory</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.html#createFleet(com.fs.starfarer.api.campaign.CampaignFleetAPI,variants_lib.data.VariantsLibFleetParams,java.util.ArrayList,java.util.Random,boolean)">createFleet(CampaignFleetAPI, VariantsLibFleetParams, ArrayList&lt;FleetMemberAPI&gt;, Random, boolean)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></dt>
 <dd>
 <div class="block">Create a fleet</div>
+</dd>
+<dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.html#createFleet(variants_lib.data.VariantsLibFleetParams)">createFleet(VariantsLibFleetParams)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></dt>
+<dd>
+<div class="block">Creates a fleet from parameters</div>
 </dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.CreateFleetVariables.html#%3Cinit%3E()">CreateFleetVariables()</a></span> - Constructor for class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.CreateFleetVariables.html" title="class in variants_lib.data">VariantsLibFleetFactory.CreateFleetVariables</a></dt>
 <dd>&nbsp;</dd>
@@ -160,13 +172,19 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates logistical ships based on fields</div>
 </dd>
+<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactory.html#createOfficer(variants_lib.data.OfficerFactoryParams)">createOfficer(OfficerFactoryParams)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></dt>
+<dd>
+<div class="block">Make officer using params.</div>
+</dd>
+<dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.html#createOfficer(variants_lib.data.OfficerFactory,variants_lib.data.VariantsLibFleetParams,java.util.Random,java.lang.String)">createOfficer(OfficerFactory, VariantsLibFleetParams, Random, String)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.html#createOfficerFactory(variants_lib.data.VariantsLibFleetParams)">createOfficerFactory(VariantsLibFleetParams)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.html#createOfficers(variants_lib.data.VariantsLibFleetParams,java.util.ArrayList,java.util.Random)">createOfficers(VariantsLibFleetParams, ArrayList&lt;FleetMemberAPI&gt;, Random)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></dt>
 <dd>
 <div class="block">Create officers for the list of FleetMemberAPIs passed in, with the first in the list containing the fleet's commander</div>
 </dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/Util.html#createRandomNumberSequence(int,java.util.Random)">createRandomNumberSequence(int, Random)</a></span> - Static method in class variants_lib.data.<a href="variants_lib/data/Util.html" title="class in variants_lib.data">Util</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="variants_lib/data/AutoLogisticsFactory.html#createShip(java.lang.String)">createShip(String)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/AutoLogisticsFactory.html" title="class in variants_lib.data">AutoLogisticsFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.html#createShip(java.lang.String)">createShip(String)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></dt>
 <dd>&nbsp;</dd>
@@ -192,6 +210,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.html#editFleet(com.fs.starfarer.api.campaign.CampaignFleetAPI,variants_lib.data.VariantsLibFleetParams)">editFleet(CampaignFleetAPI, VariantsLibFleetParams)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactory.html#editOfficer(com.fs.starfarer.api.characters.PersonAPI,variants_lib.data.OfficerFactoryParams)">editOfficer(PersonAPI, OfficerFactoryParams)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></dt>
+<dd>
+<div class="block">Does the same thing as createOfficer but allows the user to create the officer</div>
+</dd>
 </dl>
 <h2 class="title" id="I:F">F</h2>
 <dl class="index">
@@ -199,7 +221,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">faction to base ship generation off of</div>
 </dd>
-<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactory.html#faction">faction</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></dt>
+<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactoryParams.html#faction">faction</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetParams.html#faction">faction</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a></dt>
 <dd>&nbsp;</dd>
@@ -362,7 +384,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:L">L</h2>
 <dl class="index">
-<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactory.html#level">level</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></dt>
+<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactoryParams.html#level">level</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/AutoLogisticsFactory.html#LINER_CLASSES_IN_ORDER">LINER_CLASSES_IN_ORDER</a></span> - Static variable in class variants_lib.data.<a href="variants_lib/data/AutoLogisticsFactory.html" title="class in variants_lib.data">AutoLogisticsFactory</a></dt>
 <dd>&nbsp;</dd>
@@ -399,16 +421,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
-<dt><span class="member-name-link"><a href="variants_lib/test/TestFleetFactory.html#makeFleet(variants_lib.data.VariantsLibFleetParams)">makeFleet(VariantsLibFleetParams)</a></span> - Method in class variants_lib.test.<a href="variants_lib/test/TestFleetFactory.html" title="class in variants_lib.test">TestFleetFactory</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.html#makeFleet(variants_lib.data.VariantsLibFleetParams)">makeFleet(VariantsLibFleetParams)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></dt>
-<dd>
-<div class="block">Creates a fleet from parameters</div>
-</dd>
-<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactory.html#makeOfficer()">makeOfficer()</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></dt>
-<dd>
-<div class="block">Make officer using variables in fields</div>
-</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/FleetPartitionMember.html#makeWeightPercentage(double)">makeWeightPercentage(double)</a></span> - Method in class variants_lib.data.<a href="variants_lib/data/FleetPartitionMember.html" title="class in variants_lib.data">FleetPartitionMember</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/CommonStrings.html#MAX_DP">MAX_DP</a></span> - Static variable in class variants_lib.data.<a href="variants_lib/data/CommonStrings.html" title="class in variants_lib.data">CommonStrings</a></dt>
@@ -474,6 +486,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/CommonStrings.html#NEX_VULTURE_FLEET">NEX_VULTURE_FLEET</a></span> - Static variable in class variants_lib.data.<a href="variants_lib/data/CommonStrings.html" title="class in variants_lib.data">CommonStrings</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="variants_lib/data/CommonStrings.html#NO_AUTOFIT_APPLIED">NO_AUTOFIT_APPLIED</a></span> - Static variable in class variants_lib.data.<a href="variants_lib/data/CommonStrings.html" title="class in variants_lib.data">CommonStrings</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/CommonStrings.html#NO_AUTOFIT_TAG">NO_AUTOFIT_TAG</a></span> - Static variable in class variants_lib.data.<a href="variants_lib/data/CommonStrings.html" title="class in variants_lib.data">CommonStrings</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/SettingsData.html#noAutofitFeaturesEnabled()">noAutofitFeaturesEnabled()</a></span> - Static method in class variants_lib.data.<a href="variants_lib/data/SettingsData.html" title="class in variants_lib.data">SettingsData</a></dt>
@@ -483,14 +497,20 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:O">O</h2>
 <dl class="index">
-<dt><span class="member-name-link"><a href="variants_lib/data/SettingsData.html#OfficerEditingEnabled()">OfficerEditingEnabled()</a></span> - Static method in class variants_lib.data.<a href="variants_lib/data/SettingsData.html" title="class in variants_lib.data">SettingsData</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data"><span class="type-name-link">OfficerFactory</span></a> - Class in <a href="variants_lib/data/package-summary.html">variants_lib.data</a></dt>
 <dd>
 <div class="block">For making officers</div>
 </dd>
-<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactory.html#%3Cinit%3E(com.fs.starfarer.api.campaign.FactionAPI)">OfficerFactory(FactionAPI)</a></span> - Constructor for class variants_lib.data.<a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></dt>
+<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactory.html#%3Cinit%3E()">OfficerFactory()</a></span> - Constructor for class variants_lib.data.<a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="variants_lib/data/OfficerFactoryParams.html" title="class in variants_lib.data"><span class="type-name-link">OfficerFactoryParams</span></a> - Class in <a href="variants_lib/data/package-summary.html">variants_lib.data</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactoryParams.html#%3Cinit%3E()">OfficerFactoryParams()</a></span> - Constructor for class variants_lib.data.<a href="variants_lib/data/OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactoryParams.html#%3Cinit%3E(java.lang.String,java.lang.String,java.util.Random,float)">OfficerFactoryParams(String, String, Random, float)</a></span> - Constructor for class variants_lib.data.<a href="variants_lib/data/OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a></dt>
+<dd>
+<div class="block">Create params to make a random officer</div>
+</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantData.VariantDataMember.html#officerSpecifications">officerSpecifications</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/VariantData.VariantDataMember.html" title="class in variants_lib.data">VariantData.VariantDataMember</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/scripts/VariantsLibModPlugin.html#onApplicationLoad()">onApplicationLoad()</a></span> - Method in class variants_lib.scripts.<a href="variants_lib/scripts/VariantsLibModPlugin.html" title="class in variants_lib.scripts">VariantsLibModPlugin</a></dt>
@@ -524,11 +544,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">portion of dp dedicated to tankers</div>
 </dd>
-<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactory.html#percentEliteSkills">percentEliteSkills</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></dt>
+<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactoryParams.html#percentEliteSkills">percentEliteSkills</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/CommonStrings.html#PERSONALITIES">PERSONALITIES</a></span> - Static variable in class variants_lib.data.<a href="variants_lib/data/CommonStrings.html" title="class in variants_lib.data">CommonStrings</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactory.html#personality">personality</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></dt>
+<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactoryParams.html#personality">personality</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/CommonStrings.html#PERSONALITY_EDIT_TAGS">PERSONALITY_EDIT_TAGS</a></span> - Static variable in class variants_lib.data.<a href="variants_lib/data/CommonStrings.html" title="class in variants_lib.data">CommonStrings</a></dt>
 <dd>&nbsp;</dd>
@@ -560,7 +580,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:R">R</h2>
 <dl class="index">
-<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactory.html#rand">rand</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></dt>
+<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactoryParams.html#rand">rand</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/scripts/HasHeavyIndustryTracker.html#refreshHasHeavyIndustry()">refreshHasHeavyIndustry()</a></span> - Static method in class variants_lib.scripts.<a href="variants_lib/scripts/HasHeavyIndustryTracker.html" title="class in variants_lib.scripts">HasHeavyIndustryTracker</a></dt>
 <dd>&nbsp;</dd>
@@ -589,8 +609,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
-<dt><span class="member-name-link"><a href="variants_lib/scripts/FleetRandomizer.html#scriptEnded">scriptEnded</a></span> - Variable in class variants_lib.scripts.<a href="variants_lib/scripts/FleetRandomizer.html" title="class in variants_lib.scripts">FleetRandomizer</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/FleetBuildData.html#SCRIPTS">SCRIPTS</a></span> - Static variable in class variants_lib.data.<a href="variants_lib/data/FleetBuildData.html" title="class in variants_lib.data">FleetBuildData</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetParams.html#seed">seed</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetParams.html" title="class in variants_lib.data">VariantsLibFleetParams</a></dt>
@@ -605,7 +623,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/CommonStrings.html#SKILL_EDIT_TAGS">SKILL_EDIT_TAGS</a></span> - Static variable in class variants_lib.data.<a href="variants_lib/data/CommonStrings.html" title="class in variants_lib.data">CommonStrings</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactory.html#skillsToAdd">skillsToAdd</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/OfficerFactory.html" title="class in variants_lib.data">OfficerFactory</a></dt>
+<dt><span class="member-name-link"><a href="variants_lib/data/OfficerFactoryParams.html#skillsToAdd">skillsToAdd</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantData.VariantDataMember.html#smods">smods</a></span> - Variable in class variants_lib.data.<a href="variants_lib/data/VariantData.VariantDataMember.html" title="class in variants_lib.data">VariantData.VariantDataMember</a></dt>
 <dd>&nbsp;</dd>
@@ -702,7 +720,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="variants_lib/data/VariantsLibFleetFactory.html" title="class in variants_lib.data"><span class="type-name-link">VariantsLibFleetFactory</span></a> - Class in <a href="variants_lib/data/package-summary.html">variants_lib.data</a></dt>
 <dd>
-<div class="block">Generates fleets specified by fleet jsons</div>
+<div class="block">Generates fleets specified by fleet jsons.</div>
 </dd>
 <dt><span class="member-name-link"><a href="variants_lib/data/VariantsLibFleetFactory.html#%3Cinit%3E()">VariantsLibFleetFactory()</a></span> - Constructor for class variants_lib.data.<a href="variants_lib/data/VariantsLibFleetFactory.html" title="class in variants_lib.data">VariantsLibFleetFactory</a></dt>
 <dd>

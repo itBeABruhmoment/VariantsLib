@@ -45,13 +45,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field.summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li><a href="#field.detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method.detail">Method</a></li>
 </ul>
@@ -84,36 +84,6 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- =========== FIELD SUMMARY =========== -->
-<li>
-<section class="field-summary" id="field.summary">
-<h2>Field Summary</h2>
-<div class="caption"><span>Fields</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Field</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>com.fs.starfarer.api.campaign.FactionAPI</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#faction">faction</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>int</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#level">level</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>float</code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#percentEliteSkills">percentEliteSkills</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#personality">personality</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a></code></div>
-<div class="col-second even-row-color"><code><span class="member-name-link"><a href="#rand">rand</a></span></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><span class="member-name-link"><a href="#skillsToAdd">skillsToAdd</a></span></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor.summary">
@@ -122,7 +92,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E(com.fs.starfarer.api.campaign.FactionAPI)">OfficerFactory</a></span>&#8203;(com.fs.starfarer.api.campaign.FactionAPI&nbsp;faction)</code></div>
+<div class="col-constructor-name even-row-color"><code><span class="member-name-link"><a href="#%3Cinit%3E()">OfficerFactory</a></span>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -138,10 +108,20 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>com.fs.starfarer.api.characters.PersonAPI</code></div>
-<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#makeOfficer()">makeOfficer</a></span>()</code></div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#addSkills(com.fs.starfarer.api.characters.PersonAPI,variants_lib.data.OfficerFactoryParams)">addSkills</a></span>&#8203;(com.fs.starfarer.api.characters.PersonAPI&nbsp;officer,
+ <a href="OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a>&nbsp;params)</code></div>
+<div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>com.fs.starfarer.api.characters.PersonAPI</code></div>
+<div class="col-second odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#createOfficer(variants_lib.data.OfficerFactoryParams)">createOfficer</a></span>&#8203;(<a href="OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a>&nbsp;params)</code></div>
+<div class="col-last odd-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
+<div class="block">Make officer using params.</div>
+</div>
+<div class="col-first even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table"><code><span class="member-name-link"><a href="#editOfficer(com.fs.starfarer.api.characters.PersonAPI,variants_lib.data.OfficerFactoryParams)">editOfficer</a></span>&#8203;(com.fs.starfarer.api.characters.PersonAPI&nbsp;officer,
+ <a href="OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a>&nbsp;params)</code></div>
 <div class="col-last even-row-color method-summary-table-tab2 method-summary-table-tab4 method-summary-table">
-<div class="block">Make officer using variables in fields</div>
+<div class="block">Does the same thing as createOfficer but allows the user to create the officer</div>
 </div>
 </div>
 </div>
@@ -155,59 +135,15 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
-<!-- ============ FIELD DETAIL =========== -->
-<li>
-<section class="field-details" id="field.detail">
-<h2>Field Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="faction">
-<h3>faction</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.fs.starfarer.api.campaign.FactionAPI</span>&nbsp;<span class="element-name">faction</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="personality">
-<h3>personality</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">personality</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="skillsToAdd">
-<h3>skillsToAdd</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">skillsToAdd</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="level">
-<h3>level</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">level</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="percentEliteSkills">
-<h3>percentEliteSkills</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">percentEliteSkills</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="rand">
-<h3>rand</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/Random.html" title="class or interface in java.util" class="external-link">Random</a></span>&nbsp;<span class="element-name">rand</span></div>
-</section>
-</li>
-</ul>
-</section>
-</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor.detail">
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.fs.starfarer.api.campaign.FactionAPI)">
+<section class="detail" id="&lt;init&gt;()">
 <h3>OfficerFactory</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">OfficerFactory</span>&#8203;<span class="parameters">(com.fs.starfarer.api.campaign.FactionAPI&nbsp;faction)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">OfficerFactory</span>()</div>
 </section>
 </li>
 </ul>
@@ -219,14 +155,34 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="makeOfficer()">
-<h3>makeOfficer</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.fs.starfarer.api.characters.PersonAPI</span>&nbsp;<span class="element-name">makeOfficer</span>()</div>
-<div class="block">Make officer using variables in fields</div>
+<section class="detail" id="createOfficer(variants_lib.data.OfficerFactoryParams)">
+<h3>createOfficer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.fs.starfarer.api.characters.PersonAPI</span>&nbsp;<span class="element-name">createOfficer</span>&#8203;<span class="parameters">(<a href="OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a>&nbsp;params)</span></div>
+<div class="block">Make officer using params. params.rand used for random number generation</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>An officer</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="editOfficer(com.fs.starfarer.api.characters.PersonAPI,variants_lib.data.OfficerFactoryParams)">
+<h3>editOfficer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">editOfficer</span>&#8203;<span class="parameters">(com.fs.starfarer.api.characters.PersonAPI&nbsp;officer,
+ <a href="OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a>&nbsp;params)</span></div>
+<div class="block">Does the same thing as createOfficer but allows the user to create the officer</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>officer</code> - </dd>
+<dd><code>params</code> - </dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="addSkills(com.fs.starfarer.api.characters.PersonAPI,variants_lib.data.OfficerFactoryParams)">
+<h3>addSkills</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addSkills</span>&#8203;<span class="parameters">(com.fs.starfarer.api.characters.PersonAPI&nbsp;officer,
+ <a href="OfficerFactoryParams.html" title="class in variants_lib.data">OfficerFactoryParams</a>&nbsp;params)</span></div>
 </section>
 </li>
 </ul>
