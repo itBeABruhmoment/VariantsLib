@@ -86,9 +86,13 @@ public class FleetRandomizer {
             log.info("fleet edited");
         } else if(SettingsData.noAutofitFeaturesEnabled()){
             if(FactionData.FACTION_DATA.get(params.faction).hasTag(CommonStrings.NO_AUTOFIT_TAG)) {
-                fleet.setInflated(true);
-                FleetBuildingUtils.addDMods(fleet, rand, params.quality);
-                FleetBuildingUtils.addSMods(fleet, rand, params.averageSMods);
+                //fleet.setInflated(true);
+                //FleetBuildingUtils.addDMods(fleet, rand, params.quality);
+                //FleetBuildingUtils.addSMods(fleet, rand, params.averageSMods);
+                final NoAutofitInflater inflate = new NoAutofitInflater();
+                inflate.averageSmods = params.averageSMods;
+                inflate.quality = params.quality;
+                fleet.setInflater(inflate);
             }
             fleetMemory.set(CommonStrings.NO_AUTOFIT_APPLIED, true);
             log.info("fleet not edited");
