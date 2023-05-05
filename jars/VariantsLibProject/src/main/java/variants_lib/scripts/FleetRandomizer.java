@@ -90,8 +90,8 @@ public class FleetRandomizer {
                 fleet.setInflated(true);
                 FleetBuildingUtils.addDMods(fleet, rand, params.quality);
                 FleetBuildingUtils.addSMods(fleet, rand, params.averageSMods);
+                fleetMemory.set(CommonStrings.NO_AUTOFIT_APPLIED, true);
             }
-            fleetMemory.set(CommonStrings.NO_AUTOFIT_APPLIED, true);
             log.info("fleet not edited");
         }
     }
