@@ -5,6 +5,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -89,7 +90,7 @@ public class FleetRandomizer {
                 //fleet.setInflated(true);
                 //FleetBuildingUtils.addDMods(fleet, rand, params.quality);
                 //FleetBuildingUtils.addSMods(fleet, rand, params.averageSMods);
-                final NoAutofitInflater inflate = new NoAutofitInflater();
+                final NoAutofitInflater inflate = new NoAutofitInflater(new DefaultFleetInflaterParams());
                 inflate.averageSmods = params.averageSMods;
                 inflate.quality = params.quality;
                 fleet.setInflater(inflate);

@@ -19,7 +19,7 @@ public class NoAutofitInflater extends DefaultFleetInflater
         log.setLevel(Level.ALL);
     }
 
-    private Random rand;
+    private Random rand = new Random();
 
     NoAutofitInflater(DefaultFleetInflaterParams params) {
         super(params);
