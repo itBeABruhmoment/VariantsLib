@@ -3,9 +3,9 @@
     "name": "Variants Lib",
     "author": "itBeABruhmoment",
     "utility": "false",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "a fleet related utility library",
-    "gameVersion": "0.95.1a-RC6",
+    "gameVersion": "0.96a-RC6",
     "jars":["jars/VariantsLib.jar"],
     "modPlugin":"variants_lib.scripts.VariantsLibModPlugin"
 }
