@@ -3,7 +3,7 @@
     "name": "Variants Lib",
     "author": "itBeABruhmoment",
     "utility": "false",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "description": "a fleet related utility library",
     "gameVersion": "0.96a-RC6",
     "jars":["jars/VariantsLib.jar"],
