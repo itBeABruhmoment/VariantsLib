@@ -84,7 +84,7 @@ public class FleetRandomizer {
         if(useToEdit != null && rand.nextDouble() < specialFleetSpawnRate) {
             useToEdit.editFleet(fleet, params);
             fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, useToEdit.id);
-            log.info("fleet edited");
+            log.info("fleet edited to " + useToEdit.id);
         } else if(SettingsData.noAutofitFeaturesEnabled()){
             if(FactionData.FACTION_DATA.get(params.faction).hasTag(CommonStrings.NO_AUTOFIT_TAG)) {
                 fleet.setInflated(true);
