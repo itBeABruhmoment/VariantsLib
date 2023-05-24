@@ -8,6 +8,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.impl.campaign.ids.FleetTypes;
 
+import variants_lib.data.CommonStrings;
 import variants_lib.data.FleetBuildData;
 import variants_lib.data.VariantsLibFleetParams;
 
@@ -50,12 +51,13 @@ public class vlSpawnFleet implements BaseCommand{
         params.faction = splited[0];
         params.fleetType = FleetTypes.PATROL_LARGE;
         params.fleetPoints = fp;
-        params.quality = 0.75f;
-        params.averageSMods = 2.0f;
+        params.quality = 1.0f;
+        params.averageSMods = 0.0f;
         params.averageOfficerLevel = 5;
-        params.numOfficers = 5;
+        params.numOfficers = 8;
 
         CampaignFleetAPI toSpawn = FleetBuildData.FLEET_DATA.get(splited[1]).createFleet(params);
+        toSpawn.getMemoryWithoutUpdate().set(CommonStrings.FLEET_EDITED_MEMKEY, true);
 
         // Spawn fleet around player
         final Vector2f offset = new Vector2f(0, 0);
