@@ -140,75 +140,35 @@ public class TestFleetInteraction extends FleetInteractionDialogPluginImpl {
         this.options.clearOptions();
         FleetEncounterContextPlugin.DataForEncounterSide playerData = this.context.getDataFor(this.playerFleet);
         this.context.getDataFor(this.otherFleet).setDisengaged(true);
-//        if (!this.firedVictoryTriggers) {
-//            SectorEntityToken prev = this.dialog.getInteractionTarget();
-//            RuleBasedInteractionDialogPluginImpl plugin = new RuleBasedInteractionDialogPluginImpl();
-//            plugin.setEmbeddedMode(true);
-//            this.dialog.setPlugin(plugin);
-//            BattleAPI battleAPI = this.context.getBattle();
-//            boolean firedAnyTriggers = false;
-//            for (CampaignFleetAPI other : battleAPI.getNonPlayerSide()) {
-//                this.dialog.setInteractionTarget((SectorEntityToken)other);
-//                plugin.init(this.dialog);
-//                MemoryAPI mem = other.getMemoryWithoutUpdate();
-//                List<FleetMemberAPI> losses = Misc.getSnapshotMembersLost(other);
-//                List<FleetMemberAPI> remaining = other.getFleetData().getMembersListCopy();
-//                int fpTotal = 0;
-//                int fpLost = 0;
-//                int fpRemaining = 0;
-//                for (FleetMemberAPI curr : losses) {
-//                    fpLost += curr.getFleetPointCost();
-//                    fpTotal += curr.getFleetPointCost();
-//                }
-//                for (FleetMemberAPI curr : remaining) {
-//                    fpRemaining += curr.getFleetPointCost();
-//                    fpTotal += curr.getFleetPointCost();
-//                }
-//                mem.set("$someShipsDestroyed", Boolean.valueOf(!losses.isEmpty()), 0.0F);
-//                mem.set("$fpLost", Integer.valueOf(fpLost), 0.0F);
-//                mem.set("$fpRemaining", Integer.valueOf(fpRemaining), 0.0F);
-//                mem.set("$fpLostFraction", Float.valueOf(fpLost / Math.max(1, fpTotal)), 0.0F);
-//                mem.set("$battle", battleAPI, 0.0F);
-//                List<String> triggers = Misc.getDefeatTriggers(other, false);
-//                if (triggers != null)
-//                    for (String trigger : new ArrayList<String>(triggers)) {
-//                        boolean fired = FireBest.fire(null, this.dialog, plugin.getMemoryMap(), trigger);
-//                        if (fired) {
-//                            triggers.remove(trigger);
-//                            firedAnyTriggers = true;
-//                        }
-//                    }
-//                Misc.clearDefeatTriggersIfNeeded(other);
-//            }
-//            this.dialog.setInteractionTarget(prev);
-//            this.dialog.setPlugin(this);
-//            this.firedVictoryTriggers = true;
-//            if (firedAnyTriggers) {
-//                this.options.addOption("Continue", OptionId.CONTINUE_FROM_VICTORY_TRIGGERS, null);
-//                return;
-//            }
-//        }
+
         CampaignFleetAPI actualPlayer = Global.getSector().getPlayerFleet();
 
         boolean validFleet = this.playerFleet.isValidPlayerFleet();
         BattleAPI battle = this.context.getBattle();
 
-        if (!this.context.getLoot().isEmpty() && validFleet) {
-            this.options.addOption("Pick through the wreckage", OptionId.CONTINUE_LOOT, null);
-        } else {
-            if (!validFleet)
-                addText(getString("finalOutcomeNoShipsLeft"));
-            String leave = "Leave";
-            boolean withEscape = true;
-            if (this.config.noSalvageLeaveOptionText != null && validFleet && this.context.getLoot().isEmpty()) {
-                leave = this.config.noSalvageLeaveOptionText;
-                withEscape = false;
-            }
-            this.options.addOption(leave, OptionId.LEAVE, null);
-            if (withEscape)
-                this.options.setShortcut(OptionId.LEAVE, 1, false, false, false, true);
-        }
+//        if (!this.context.getLoot().isEmpty() && validFleet) {
+//            this.options.addOption("Pick through the wreckage", OptionId.CONTINUE_LOOT, null);
+//        } else {
+//            if (!validFleet)
+//                addText(getString("finalOutcomeNoShipsLeft"));
+//            String leave = "Leave";
+//            boolean withEscape = true;
+//            if (this.config.noSalvageLeaveOptionText != null && validFleet && this.context.getLoot().isEmpty()) {
+//                leave = this.config.noSalvageLeaveOptionText;
+//                withEscape = false;
+//            }
+//            this.options.addOption(leave, OptionId.LEAVE, null);
+//            if (withEscape)
+//                this.options.setShortcut(OptionId.LEAVE, 1, false, false, false, true);
+//        }
 
+        this.options.addOption("Leave", OptionId.LEAVE, null);
+        cleanUp();
+    }
+
+    @Override
+    protected void losingPath() {
+        this.options.addOption("Leave", OptionId.LEAVE, null);
         cleanUp();
     }
 

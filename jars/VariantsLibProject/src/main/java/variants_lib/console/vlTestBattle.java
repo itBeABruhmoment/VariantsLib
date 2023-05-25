@@ -86,10 +86,11 @@ public class vlTestBattle implements BaseCommand {
         }
 
         final FleetMemberAPI flag = Global.getFactory().createFleetMember(FleetMemberType.SHIP, "dram_Light");
-        fleet1.getFleetData().addFleetMember(flag);
+
         flag.setCaptain(playerPerson);
+        fleet1.getFleetData().addFleetMember(flag);
         player.getFleetData().setFlagship(flag);
-        flag.setFlagship(true);
+
         for(FleetMemberAPI memberAPI : fleet1.getFleetData().getMembersListCopy()) {
             if(!memberAPI.isFighterWing()) {
                 memberAPI.setFlagship(false);
