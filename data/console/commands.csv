@@ -2,7 +2,7 @@ command,class,tags,syntax,help
 vlSpawnFleet,variants_lib.console.vlSpawnFleet,,vlSpawnFleet <faction> <fleetId> <fleet points>,"spawns a variants lib fleet by faction, fleet id, and fleet points"
 vlTestCommand,variants_lib.console.vlTestCommand,,vlTestCommand <testNum>,testing command you should not touch
 vlTestBattle,variants_lib.console.vlTestBattle,,vlTestBattle <fleet 1 id> <fleet 1 fp> <fleet 2 id> <fleet 2 fp>,test command to have variant lib specified fleets fight
-,,,,
+vlEnableAI,variants_lib.console.vlStartAdmiralAI,,,
 ,,,,
 ,,,,
 ,,,,

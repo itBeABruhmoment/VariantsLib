@@ -139,7 +139,6 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin {
             log.debug(CommonStrings.MOD_ID + ": combat script not run, personality \"" + fleetWidePersonality + "\" not registered");
             return;
         }
-        
     }
 
     @Override

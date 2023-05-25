@@ -3,17 +3,27 @@ package variants_lib.console;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BattleAPI;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.campaign.CampaignUIAPI;
+import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.combat.BattleCreationContext;
 import com.fs.starfarer.api.fleet.FleetGoal;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.fleet.FleetMemberType;
+import com.fs.starfarer.api.impl.campaign.FleetEncounterContext;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import org.jetbrains.annotations.NotNull;
 import org.lazywizard.console.BaseCommand;
 import org.lazywizard.console.Console;
+import variants_lib.data.CommonStrings;
 import variants_lib.data.FleetBuildData;
 import variants_lib.data.VariantsLibFleetFactory;
 import variants_lib.data.VariantsLibFleetParams;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class vlTestBattle implements BaseCommand {
+    // vltestbattle bv_hegemony_eliteso 200 bv_hegemony_eliteso 200
     @Override
     public CommandResult runCommand(@NotNull String s, @NotNull CommandContext commandContext) {
         final String[] split = s.split("\\s+");
@@ -61,31 +71,56 @@ public class vlTestBattle implements BaseCommand {
         params.faction = Factions.PIRATES;
         final CampaignFleetAPI fleet2 = side2Factory.createFleet(params);
 
-        final BattleAPI battleAPI = Global.getFactory().createBattle(Global.getSector().getPlayerFleet(), fleet2);
-        battleAPI.getSideOne().add(fleet1);
-        battleAPI.genCombined();
+        //fleet1.getMemoryWithoutUpdate().set(CommonStrings.FLEET_EDITED_MEMKEY, true);
+        fleet2.getMemoryWithoutUpdate().set(CommonStrings.FLEET_EDITED_MEMKEY, true);
 
-        final BattleCreationContext battleCreationContext = new BattleCreationContext(
-                battleAPI.getPlayerCombined(),
-                FleetGoal.ATTACK,
-                battleAPI.getNonPlayerCombined(),
-                FleetGoal.ATTACK
-        );
-        battleCreationContext.objectivesAllowed = true;
+        //Global.getSector().getCurrentLocation().spawnFleet(Global.getSector().getPlayerFleet(), 0, 0, fleet1);
+        final CampaignFleetAPI player = Global.getSector().getPlayerFleet();
 
-        Global.getSector().addTransientScript(new StartAfterConsoleCloseScript(new StartBattleScript(battleCreationContext)));
+        final PersonAPI playerPerson = player.getActivePerson();
+
+        final ArrayList<FleetMemberAPI> restore = new ArrayList<>(30);
+        restore.addAll(player.getFleetData().getMembersListCopy());
+        for(FleetMemberAPI memberAPI : player.getFleetData().getMembersListCopy()) {
+            player.getFleetData().removeFleetMember(memberAPI);
+        }
+
+        final FleetMemberAPI flag = Global.getFactory().createFleetMember(FleetMemberType.SHIP, "dram_Light");
+        fleet1.getFleetData().addFleetMember(flag);
+        flag.setCaptain(playerPerson);
+        player.getFleetData().setFlagship(flag);
+        flag.setFlagship(true);
+        for(FleetMemberAPI memberAPI : fleet1.getFleetData().getMembersListCopy()) {
+            if(!memberAPI.isFighterWing()) {
+                memberAPI.setFlagship(false);
+                player.getFleetData().addFleetMember(memberAPI);
+            }
+        }
+
+        Global.getSector().getCurrentLocation().spawnFleet(Global.getSector().getPlayerFleet(), 0, 0, fleet2);
+
+        Global.getSector().addTransientScript(new StartAfterConsoleCloseScript(new StartBattleScript(fleet1, fleet2, restore)));
+
+        player.setAIMode(true);
+
         return CommandResult.SUCCESS;
     }
 
     public static class StartBattleScript implements Runnable {
-        BattleCreationContext context = null;
-        StartBattleScript(final BattleCreationContext context) {
-            this.context = context;
+        CampaignFleetAPI ally;
+        CampaignFleetAPI enemy;
+        ArrayList<FleetMemberAPI> restore;
+
+        StartBattleScript(CampaignFleetAPI ally, CampaignFleetAPI enemy, ArrayList<FleetMemberAPI> restore) {
+            this.ally = ally;
+            this.enemy = enemy;
+            this.restore = restore;
         }
 
         @Override
         public void run() {
-            Global.getSector().getCampaignUI().startBattle(context);
+            final CampaignUIAPI ui = Global.getSector().getCampaignUI();
+            ui.showInteractionDialog(new TestFleetInteraction(ally, enemy, restore), enemy);
         }
     }
 }

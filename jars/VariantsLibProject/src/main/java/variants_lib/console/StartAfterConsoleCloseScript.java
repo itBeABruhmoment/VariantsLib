@@ -35,7 +35,8 @@ public class StartAfterConsoleCloseScript implements EveryFrameScript {
 
     @Override
     public void advance(float amount) {
-        if(!isDone) {
+        final CampaignUIAPI ui = Global.getSector().getCampaignUI();
+        if(!isDone && !ui.isShowingDialog() && !ui.isShowingMenu()) {
             isDone = true;
             run.run();
         }
