@@ -183,5 +183,6 @@ public class TestFleetInteraction extends FleetInteractionDialogPluginImpl {
             }
         }
         playerFleet.setAIMode(false);
+        otherFleet.despawn();
     }
 }
