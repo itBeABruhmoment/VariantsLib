@@ -5,12 +5,19 @@ import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Factions;
 import com.fs.starfarer.api.impl.campaign.ids.Personalities;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import variants_lib.scripts.UnofficeredPersonalitySetPlugin;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class OfficerFactoryParams {
+    private static final Logger log = Global.getLogger(OfficerFactoryParams.class);
+    static {
+        log.setLevel(Level.ALL);
+    }
+
     public String faction = Factions.INDEPENDENT;
     public String personality = Personalities.STEADY;
     public ArrayList<String> skillsToAdd = new ArrayList<>();

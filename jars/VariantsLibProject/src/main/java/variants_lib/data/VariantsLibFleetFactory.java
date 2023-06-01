@@ -17,6 +17,7 @@ import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflater;
 import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
 import com.fs.starfarer.api.impl.campaign.ids.HullMods;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
+import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 import com.fs.starfarer.api.impl.campaign.ids.Tags;
 import com.fs.starfarer.api.loading.HullModSpecAPI;
 import com.fs.starfarer.api.plugins.impl.CoreAutofitPlugin;
@@ -37,10 +38,14 @@ public class VariantsLibFleetFactory  {
         log.setLevel(Level.ALL);
     }
     protected static final HashSet<String> VALID_PERSONALITIES = new HashSet<String>() {{
-        add("timid"); add("cautious"); add("steady"); add("reckless"); add("aggressive");
+        add(Personalities.TIMID); add(Personalities.CAUTIOUS); add(Personalities.STEADY); add(Personalities.RECKLESS); add(Personalities.AGGRESSIVE);
     }};
     protected static final String[] FALLBACK_HULLMODS = {"hardenedshieldemitter", "fluxdistributor",
             "fluxbreakers", "reinforcedhull", "targetingunit", "solar_shielding"};
+
+    // aggression is from 1 to 5
+    private static final String[] AGGRESSION_TO_PERSONALITY = {null, Personalities.CAUTIOUS, Personalities.TIMID,
+            Personalities.STEADY, Personalities.AGGRESSIVE, Personalities.RECKLESS};
 
     // derived from loaded jsons and csv
     public ArrayList<AlwaysBuildMember> alwaysInclude = new ArrayList<>(5);
@@ -50,6 +55,7 @@ public class VariantsLibFleetFactory  {
     public HashMap<String, Float> fleetTypeSpawnWeights = new HashMap<>();
     public int minDP = 0;
     public int maxDP = Integer.MAX_VALUE;
+    public boolean defaultFleetWidePersonalitySet = false;
     public String defaultFleetWidePersonality = "steady";
     public boolean spawnIfNoIndustry = true;
     public boolean autofit = true;
@@ -126,8 +132,11 @@ public class VariantsLibFleetFactory  {
             throw new Exception(CommonStrings.MIN_DP + "is greater than " + CommonStrings.MAX_DP);
         }
 
-        defaultFleetWidePersonality = JsonUtils.getString(CommonStrings.DEFAULT_FLEET_WIDE_PERSONALITY, "steady", fleetJson);
-        if(!VALID_PERSONALITIES.contains(defaultFleetWidePersonality)) {
+        defaultFleetWidePersonality = JsonUtils.getString(CommonStrings.DEFAULT_FLEET_WIDE_PERSONALITY, "none", fleetJson);
+        if(defaultFleetWidePersonality.equals("none")) {
+            defaultFleetWidePersonality = Personalities.STEADY;
+            defaultFleetWidePersonalitySet = true;
+        } else if(!VALID_PERSONALITIES.contains(defaultFleetWidePersonality)) {
             throw new Exception(CommonStrings.DEFAULT_FLEET_WIDE_PERSONALITY + " is not set to a valid personality");
         }
 
@@ -579,22 +588,42 @@ public class VariantsLibFleetFactory  {
             return;
         }
 
+        String personalityToUse = defaultFleetWidePersonality;
+        if(!defaultFleetWidePersonalitySet) {
+            final int aggressionVal = Global.getSector().getFaction(params.faction).getDoctrine().getAggression();
+            personalityToUse = AGGRESSION_TO_PERSONALITY[aggressionVal];
+        }
+
+
         final OfficerFactory officerFactory = createOfficerFactory(params);
-        final PersonAPI commander = createCommander(officerFactory, params, rand, shipsToOfficer.get(0).getVariant().getOriginalVariant());
+        final PersonAPI commander = createCommander(
+                officerFactory,
+                params,
+                rand,
+                shipsToOfficer.get(0).getVariant().getOriginalVariant(),
+                personalityToUse
+        );
         shipsToOfficer.get(0).setCaptain(commander);
 
         // make other officers
         for(int i = 1; i < shipsToOfficer.size(); i++) {
             final FleetMemberAPI toOfficer = shipsToOfficer.get(i);
-            toOfficer.setCaptain(createOfficer(officerFactory, params, rand, toOfficer.getVariant().getOriginalVariant()));
+            toOfficer.setCaptain(createOfficer(
+                    officerFactory,
+                    params,
+                    rand,
+                    toOfficer.getVariant().getOriginalVariant(),
+                    personalityToUse
+            ));
         }
     }
 
     protected PersonAPI createCommander(
-            OfficerFactory officerFactory,
-            VariantsLibFleetParams fleetParams,
-            Random rand,
-            String variantId
+            final OfficerFactory officerFactory,
+            final VariantsLibFleetParams fleetParams,
+            final Random rand,
+            final String variantId,
+            final String personality
     ) {
         OfficerFactoryParams officerFactoryParams = new OfficerFactoryParams(
                 variantId,
@@ -606,14 +635,16 @@ public class VariantsLibFleetFactory  {
             officerFactoryParams.level = 10;
         }
         officerFactoryParams.skillsToAdd.addAll(commanderSkills);
+        officerFactoryParams.personality = personality;
         return officerFactory.createOfficer(officerFactoryParams);
     }
 
     protected PersonAPI createOfficer(
-            OfficerFactory officerFactory,
-            VariantsLibFleetParams fleetParams,
-            Random rand,
-            String variantId
+            final OfficerFactory officerFactory,
+            final VariantsLibFleetParams fleetParams,
+            final Random rand,
+            final String variantId,
+            final String personality
     ) {
         OfficerFactoryParams officerFactoryParams = new OfficerFactoryParams(
                 variantId,
@@ -621,6 +652,7 @@ public class VariantsLibFleetFactory  {
                 rand,
                 fleetParams.averageOfficerLevel
         );
+        officerFactoryParams.personality = personality;
         return officerFactory.createOfficer(officerFactoryParams);
     }
 

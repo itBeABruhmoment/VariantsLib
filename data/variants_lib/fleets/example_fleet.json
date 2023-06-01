@@ -31,8 +31,8 @@
 	# DEFAULT: true
 	"spawnIfNoIndustry":false,
 
-	# Personality unofficered ships in this fleet will have in combat
-	# DEFAULT: the factions officer aggressiveness specified in doctrine
+	# Personality unofficered ships in this fleet will have in combat, or "none" to use the faction's doctrine
+	# DEFAULT: none
 	"defaultFleetWidePersonality":"aggressive", 
 
 	# commander skills that will be added to the fleet's captain
