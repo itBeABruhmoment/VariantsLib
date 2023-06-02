@@ -51,8 +51,6 @@ public class VariantsLibModPlugin extends BaseModPlugin {
     {
         log.debug(CommonStrings.MOD_ID + ": adding listener");
         Global.getSector().addTransientListener(new VariantsLibListener(false));
-        log.debug(CommonStrings.MOD_ID + ": initializing faction aggression values");
-        UnofficeredPersonalitySetPlugin.innitDefaultAggressionValues();
         log.debug(CommonStrings.MOD_ID + ": initializing HasHeavyIndustryTracker");
         HasHeavyIndustryTracker.refreshHasHeavyIndustry();
         HasHeavyIndustryTracker.printEntries();

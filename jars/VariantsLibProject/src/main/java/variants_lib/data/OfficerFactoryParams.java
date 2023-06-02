@@ -18,6 +18,9 @@ public class OfficerFactoryParams {
         log.setLevel(Level.ALL);
     }
 
+    private static final String[] AGGRESSION_TO_PERSONALITY = {Personalities.CAUTIOUS, Personalities.TIMID,
+            Personalities.STEADY, Personalities.AGGRESSIVE, Personalities.RECKLESS};
+
     public String faction = Factions.INDEPENDENT;
     public String personality = Personalities.STEADY;
     public ArrayList<String> skillsToAdd = new ArrayList<>();
@@ -45,10 +48,8 @@ public class OfficerFactoryParams {
             this.level = 1;
         }
 
-        final String factionDefaultPersonality = UnofficeredPersonalitySetPlugin.getDefaultPersonality(faction);
-        if (factionDefaultPersonality != null) {
-            this.personality = factionDefaultPersonality;
-        }
+        final int aggressionVal = Global.getSector().getFaction(faction).getDoctrine().getAggression();
+        personality = AGGRESSION_TO_PERSONALITY[aggressionVal - 1];
 
         final VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(variantId);
         if (variantData != null) {

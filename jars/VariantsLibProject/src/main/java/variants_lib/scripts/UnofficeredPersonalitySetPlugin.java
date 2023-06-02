@@ -2,9 +2,10 @@ package variants_lib.scripts;
 
 import java.util.List;
 
-import com.fs.starfarer.api.combat.CombatEngineAPI;
-import com.fs.starfarer.api.combat.EveryFrameCombatPlugin;
-import com.fs.starfarer.api.combat.ViewportAPI;
+import com.fs.starfarer.api.characters.PersonAPI;
+import com.fs.starfarer.api.combat.*;
+import com.fs.starfarer.api.combat.listeners.FleetMemberDeploymentListener;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.input.InputEventAPI;
 import java.util.HashMap;
 
@@ -12,8 +13,10 @@ import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Personalities;
+import com.fs.starfarer.api.mission.FleetSide;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lazywizard.console.Console;
 import variants_lib.data.CommonStrings;
 import variants_lib.data.FleetBuildData;
 import variants_lib.data.SettingsData;
@@ -22,6 +25,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.fs.starfarer.api.campaign.FactionAPI;
+import variants_lib.data.VariantsLibFleetFactory;
 
 /*
 for(ShipAPI ship: Global.getCombatEngine().getShips()) {
@@ -42,18 +46,13 @@ for(FleetMemberAPI ship: Global.getCombatEngine().getContext().getOtherFleet().g
 }
 */
 
-public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin {
+public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin, FleetMemberDeploymentListener {
     private static final Logger log = Global.getLogger(variants_lib.scripts.UnofficeredPersonalitySetPlugin.class);
     static {
         log.setLevel(Level.ALL);
     }
 
-    public static HashMap<String, Integer> FACTION_DEFAULT_AGGRESSION;
-
-    private static final HashMap<String, Integer> AGGRESSION = new HashMap<String, Integer>() {{
-        put(Personalities.CAUTIOUS, 1);     put(Personalities.TIMID, 2);    put(Personalities.STEADY, 3);
-        put(Personalities.AGGRESSIVE, 4);   put(Personalities.RECKLESS, 5);
-    }};
+    public String aggression = Personalities.STEADY;
 
     private static final String[] AGGRESSION_TO_PERSONALITY = {null, Personalities.CAUTIOUS, Personalities.TIMID,
             Personalities.STEADY, Personalities.AGGRESSIVE, Personalities.RECKLESS};
@@ -70,21 +69,47 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin {
     }
     */
 
-    @Nullable
-    public static String getDefaultPersonality(@NotNull String faction) {
-        final Integer aggression = FACTION_DEFAULT_AGGRESSION.get(faction);
-        if(aggression != null && aggression > 0 && aggression <= 5) {
-            return AGGRESSION_TO_PERSONALITY[aggression];
+    /**
+     * The correct default fleet-wide aggression, or null if it is not set
+     * @return the correct default fleet-wide aggression, or null if it is not set
+     */
+    private String getAppropriateAggression(CampaignFleetAPI fleet) {
+        final String fleetType = fleet.getMemoryWithoutUpdate().getString(CommonStrings.FLEET_VARIANT_KEY);
+        if(fleetType == null) {
+            log.debug(CommonStrings.MOD_ID + ": not a variants lib created fleet");
+            return null;
         }
-        return null;
+
+        final VariantsLibFleetFactory fleetFactory = FleetBuildData.FLEET_DATA.get(fleetType);
+        if(fleetFactory == null) {
+            log.debug(CommonStrings.MOD_ID + ": fleet factory could not be found");
+            return null;
+        }
+
+        if(!fleetFactory.defaultFleetWidePersonalitySet) {
+            log.debug(CommonStrings.MOD_ID + ": defaultFleetWidePersonalitySet false, using default aggression values");
+            return null;
+        }
+        return fleetFactory.defaultFleetWidePersonality;
     }
 
-    public static void innitDefaultAggressionValues()
-    {
-        FACTION_DEFAULT_AGGRESSION = new HashMap<String, Integer>();
-        for(FactionAPI faction : Global.getSector().getAllFactions()) {
-            FACTION_DEFAULT_AGGRESSION.put(faction.getId(), faction.getDoctrine().getAggression());
-        }
+    private boolean shouldEditMember(final DeployedFleetMemberAPI memberAPI) {
+        final PersonAPI officer = memberAPI.getMember().getCaptain();
+        final boolean hasOfficer = officer != null && officer.getStats().getLevel() != 0;
+        return !(memberAPI.isAlly()
+                || hasOfficer
+                || memberAPI.isStation()
+                || memberAPI.isStationModule()
+                || memberAPI.isFighterWing());
+    }
+
+    private void setAI(final DeployedFleetMemberAPI memberAPI, String aggression) {
+        final ShipAPI ship = memberAPI.getShip();
+        final ShipAIConfig aiConf = new ShipAIConfig();
+        aiConf.personalityOverride = aggression;
+        final ShipAIPlugin aiPlugin = Global.getSettings().createDefaultShipAI(ship, aiConf);
+        ship.setShipAI(aiPlugin);
+        ship.getShipAI().forceCircumstanceEvaluation();
     }
 
     @Override
@@ -92,9 +117,6 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin {
         if(!SettingsData.personalitySetEnabled()) {
             return;
         }
-
-        CampaignFleetAPI enemyFleet = null;
-        String fleetWidePersonality = null;
 
         if(combatEngine == null) {
             log.debug(CommonStrings.MOD_ID + ": combat engine null");
@@ -104,41 +126,34 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin {
             log.debug(CommonStrings.MOD_ID + ": title");
             return;
         }
-        enemyFleet = combatEngine.getContext().getOtherFleet();
+        if(combatEngine.getListenerManager().hasListenerOfClass(UnofficeredPersonalitySetPlugin.class)) {
+            log.debug(CommonStrings.MOD_ID + ": already a listener");
+            return;
+        }
+        final CampaignFleetAPI enemyFleet = combatEngine.getContext().getOtherFleet();
         if(enemyFleet == null) {
             log.debug(CommonStrings.MOD_ID + ": enemy fleet null(huh?)");
             return;
         }
 
-        if(enemyFleet.getMemoryWithoutUpdate().contains(CommonStrings.FLEET_VARIANT_KEY)) {
-            String fleetType = enemyFleet.getMemoryWithoutUpdate().getString(CommonStrings.FLEET_VARIANT_KEY);
-            fleetWidePersonality = FleetBuildData.FLEET_DATA.get(fleetType).defaultFleetWidePersonality;
-            log.debug(CommonStrings.MOD_ID + ": fleet is of type " + fleetType + " with personality " + fleetWidePersonality);
-        } else {
-            String factionId = enemyFleet.getFaction().getId();
-            if(factionId != null && FACTION_DEFAULT_AGGRESSION.containsKey(factionId)) {
-                enemyFleet.getFaction().getDoctrine().setAggression(FACTION_DEFAULT_AGGRESSION.get(factionId));
-            }
-            log.debug(CommonStrings.MOD_ID + ": fleet has no default personality, set to default");
-            return;
-        }
-        if(fleetWidePersonality == null) {
-            String factionId = enemyFleet.getFaction().getId();
-            if(factionId != null && FACTION_DEFAULT_AGGRESSION.containsKey(factionId)) {
-                enemyFleet.getFaction().getDoctrine().setAggression(FACTION_DEFAULT_AGGRESSION.get(factionId));
-            }
-            log.debug(CommonStrings.MOD_ID + ": fleet has no default personality, set to default");
+        aggression = getAppropriateAggression(enemyFleet);
+        if(aggression == null) {
             return;
         }
 
-        if(AGGRESSION.containsKey(fleetWidePersonality)) {
-            log.debug(CommonStrings.MOD_ID + ": setting aggression to \"" + fleetWidePersonality + "\"");
-            int agressionValue = AGGRESSION.get(fleetWidePersonality);
-            enemyFleet.getFaction().getDoctrine().setAggression(agressionValue);
-        } else {
-            log.debug(CommonStrings.MOD_ID + ": combat script not run, personality \"" + fleetWidePersonality + "\" not registered");
-            return;
+        final List<DeployedFleetMemberAPI> deployedMembers = combatEngine.getFleetManager(FleetSide.ENEMY).getAllEverDeployedCopy();
+        for(final DeployedFleetMemberAPI deployed : deployedMembers) {
+            try {
+                if(shouldEditMember(deployed)) {
+                    setAI(deployed, aggression);
+                }
+            } catch (Exception e) {
+                log.debug("failed to set a personality");
+                log.debug(e);
+            }
         }
+
+        combatEngine.getListenerManager().addListener(this);
     }
 
     @Override
@@ -160,5 +175,26 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin {
     public void renderInWorldCoords(ViewportAPI arg0) {
         // do nothing
     }
-    
+
+    @Override
+    public void reportFleetMemberDeployed(DeployedFleetMemberAPI deployedFleetMemberAPI) {
+        log.debug("fleet member deployed");
+        if(shouldEditMember(deployedFleetMemberAPI)) {
+            setAI(deployedFleetMemberAPI, aggression);
+        }
+    }
 }
+/*
+for(FleetMemberAPI memberAPI : Global.getCombatEngine().getFleetManager(FleetSide.ENEMY).getDeployedCopy()) {
+            Console.showMessage(memberAPI.getFleetData().getFleet());
+        }
+        for(FleetMemberAPI memberAPI : Global.getCombatEngine().getFleetManager(FleetSide.ENEMY).getReservesCopy()) {
+            Console.showMessage(memberAPI.getFleetData().getFleet());
+        }
+        for(FleetMemberAPI memberAPI : Global.getCombatEngine().getFleetManager(FleetSide.PLAYER).getDeployedCopy()) {
+            Console.showMessage(memberAPI.getFleetData().getFleet());
+        }
+        for(FleetMemberAPI memberAPI : Global.getCombatEngine().getFleetManager(FleetSide.PLAYER).getReservesCopy()) {
+            Console.showMessage(memberAPI.getFleetData().getFleet());
+        }
+ */

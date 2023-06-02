@@ -55,7 +55,7 @@ public class VariantsLibFleetFactory  {
     public HashMap<String, Float> fleetTypeSpawnWeights = new HashMap<>();
     public int minDP = 0;
     public int maxDP = Integer.MAX_VALUE;
-    public boolean defaultFleetWidePersonalitySet = false;
+    public boolean defaultFleetWidePersonalitySet = true;
     public String defaultFleetWidePersonality = "steady";
     public boolean spawnIfNoIndustry = true;
     public boolean autofit = true;
@@ -135,7 +135,7 @@ public class VariantsLibFleetFactory  {
         defaultFleetWidePersonality = JsonUtils.getString(CommonStrings.DEFAULT_FLEET_WIDE_PERSONALITY, "none", fleetJson);
         if(defaultFleetWidePersonality.equals("none")) {
             defaultFleetWidePersonality = Personalities.STEADY;
-            defaultFleetWidePersonalitySet = true;
+            defaultFleetWidePersonalitySet = false;
         } else if(!VALID_PERSONALITIES.contains(defaultFleetWidePersonality)) {
             throw new Exception(CommonStrings.DEFAULT_FLEET_WIDE_PERSONALITY + " is not set to a valid personality");
         }

@@ -6,11 +6,12 @@ import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
 
+import com.fs.starfarer.api.impl.campaign.FleetInteractionDialogPluginImpl;
+import variants_lib.data.CommonStrings;
 import variants_lib.data.SettingsData;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.lazywizard.console.CommonStrings;
 
 public class VariantsLibListener extends BaseCampaignEventListener{
     private static final Logger log = Global.getLogger(variants_lib.scripts.VariantsLibListener.class);
@@ -31,23 +32,44 @@ public class VariantsLibListener extends BaseCampaignEventListener{
     }
 
     @Override
-    public void reportPlayerEngagement(EngagementResultAPI result)
-    {
-        if(!SettingsData.personalitySetEnabled()) {
+    public void reportShownInteractionDialog(InteractionDialogAPI dialog) {
+        if(dialog.getPlugin() == null) {
+            log.info("interaction dialog plugin null");
             return;
         }
 
-        log.debug("resetting faction aggressions");
-        BattleAPI battle = result.getBattle();
-        for(CampaignFleetAPI fleet : battle.getNonPlayerSide()) {
-            FactionAPI faction = fleet.getFaction();
-            String factionId = faction.getId();
-            if(UnofficeredPersonalitySetPlugin.FACTION_DEFAULT_AGGRESSION.containsKey(factionId)) {
-                log.debug("resetting aggresion of " + factionId);
-                faction.getDoctrine().setAggression(UnofficeredPersonalitySetPlugin.FACTION_DEFAULT_AGGRESSION.get(factionId));
-            }
+        if(dialog.getInteractionTarget() == null) {
+            log.info("interaction target null");
+            return;
         }
+
+        if(!(dialog.getInteractionTarget() instanceof CampaignFleetAPI)) {
+            log.info("interaction dialog plugin null");
+            return;
+        }
+
+        final CampaignFleetAPI fleet = (CampaignFleetAPI) dialog.getInteractionTarget();
+        final String fleetType =  fleet.getMemoryWithoutUpdate().getString(CommonStrings.FLEET_VARIANT_KEY);
     }
+
+//    @Override
+//    public void reportPlayerEngagement(EngagementResultAPI result)
+//    {
+//        if(!SettingsData.personalitySetEnabled()) {
+//            return;
+//        }
+//
+//        log.debug("resetting faction aggressions");
+//        BattleAPI battle = result.getBattle();
+//        for(CampaignFleetAPI fleet : battle.getNonPlayerSide()) {
+//            FactionAPI faction = fleet.getFaction();
+//            String factionId = faction.getId();
+//            if(UnofficeredPersonalitySetPlugin.FACTION_DEFAULT_AGGRESSION.containsKey(factionId)) {
+//                log.debug("resetting aggresion of " + factionId);
+//                faction.getDoctrine().setAggression(UnofficeredPersonalitySetPlugin.FACTION_DEFAULT_AGGRESSION.get(factionId));
+//            }
+//        }
+//    }
     
     @Override
     public void reportFleetSpawned(CampaignFleetAPI fleet) {
