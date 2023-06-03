@@ -141,8 +141,6 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin, 
         if(shouldEditMember(deployedFleetMemberAPI)) {
             log.debug("set ai");
             setAI(deployedFleetMemberAPI, aggression);
-        } else {
-            log.debug("case 2");
         }
     }
 }
