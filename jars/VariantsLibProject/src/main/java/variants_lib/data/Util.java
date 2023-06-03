@@ -1,5 +1,7 @@
 package variants_lib.data;
 
+import com.fs.starfarer.api.characters.PersonAPI;
+
 import java.util.Random;
 
 public class Util {
@@ -18,5 +20,17 @@ public class Util {
             sequence[i] = temp;
         }
         return sequence;
+    }
+
+    /**
+     * A scuffed way of checking if a person is considered an officer (ie. you can see in a fleet preview screen) that
+     * might be sufficient for the base game
+     * @param person person to check
+     * @return true if the person is an officer, false otherwise
+     */
+    public static boolean isOfficer(final PersonAPI person) {
+        return person != null
+                && person.getPortraitSprite() != null
+                && !person.getPortraitSprite().equals("graphics/portraits/portrait_generic_grayscale.png");
     }
 }

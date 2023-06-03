@@ -2,7 +2,9 @@ package variants_lib.scripts;
 
 import java.util.List;
 
+import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
+import com.fs.starfarer.api.characters.SkillSpecAPI;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.listeners.FleetMemberDeploymentListener;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
@@ -17,15 +19,12 @@ import com.fs.starfarer.api.mission.FleetSide;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lazywizard.console.Console;
-import variants_lib.data.CommonStrings;
-import variants_lib.data.FleetBuildData;
-import variants_lib.data.SettingsData;
+import variants_lib.data.*;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.fs.starfarer.api.campaign.FactionAPI;
-import variants_lib.data.VariantsLibFleetFactory;
 
 /*
 for(ShipAPI ship: Global.getCombatEngine().getShips()) {
@@ -93,9 +92,10 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin, 
         return fleetFactory.defaultFleetWidePersonality;
     }
 
+    // vlspawnfleet pirates bv_hegemony_eliteso 200
     private boolean shouldEditMember(final DeployedFleetMemberAPI memberAPI) {
-        final PersonAPI officer = memberAPI.getMember().getCaptain();
-        final boolean hasOfficer = officer != null && officer.getStats().getLevel() != 0;
+        final PersonAPI person = memberAPI.getMember().getCaptain();
+        final boolean hasOfficer = Util.isOfficer(person);
         return !(memberAPI.isAlly()
                 || hasOfficer
                 || memberAPI.isStation()
@@ -141,6 +141,7 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin, 
             return;
         }
 
+        log.debug("setting personalities");
         final List<DeployedFleetMemberAPI> deployedMembers = combatEngine.getFleetManager(FleetSide.ENEMY).getAllEverDeployedCopy();
         for(final DeployedFleetMemberAPI deployed : deployedMembers) {
             try {
@@ -178,9 +179,11 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin, 
 
     @Override
     public void reportFleetMemberDeployed(DeployedFleetMemberAPI deployedFleetMemberAPI) {
-        log.debug("fleet member deployed");
         if(shouldEditMember(deployedFleetMemberAPI)) {
+            log.debug("set ai");
             setAI(deployedFleetMemberAPI, aggression);
+        } else {
+            log.debug("case 2");
         }
     }
 }
