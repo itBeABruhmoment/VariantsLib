@@ -52,7 +52,6 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin, 
         return fleetFactory.defaultFleetWidePersonality;
     }
 
-    // vlspawnfleet pirates bv_hegemony_eliteso 200
     private boolean shouldEditMember(final DeployedFleetMemberAPI memberAPI) {
         final PersonAPI person = memberAPI.getMember().getCaptain();
         final boolean hasOfficer = Util.isOfficer(person);
