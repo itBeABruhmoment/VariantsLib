@@ -2,48 +2,20 @@ package variants_lib.scripts;
 
 import java.util.List;
 
-import com.fs.starfarer.api.characters.MutableCharacterStatsAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
-import com.fs.starfarer.api.characters.SkillSpecAPI;
 import com.fs.starfarer.api.combat.*;
 import com.fs.starfarer.api.combat.listeners.FleetMemberDeploymentListener;
-import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.input.InputEventAPI;
-import java.util.HashMap;
 
 import com.fs.starfarer.api.GameState;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.impl.campaign.ids.Personalities;
 import com.fs.starfarer.api.mission.FleetSide;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.lazywizard.console.Console;
 import variants_lib.data.*;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-
-import com.fs.starfarer.api.campaign.FactionAPI;
-
-/*
-for(ShipAPI ship: Global.getCombatEngine().getShips()) {
-    try{
-        Console.showMessage(ship.getCaptain().getPersonalityAPI().getId() + ship.getHullSpec().getHullId());
-    } catch(Exception e) {
-
-    }
-}
-
-
-for(FleetMemberAPI ship: Global.getCombatEngine().getContext().getOtherFleet().getMembersWithFightersCopy()) {
-    try{
-        Console.showMessage(ship.getFleetData().getFleet().getFullName() + " " + ship.getHullId());
-    } catch(Exception e) {
-
-    }
-}
-*/
 
 public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin, FleetMemberDeploymentListener {
     private static final Logger log = Global.getLogger(variants_lib.scripts.UnofficeredPersonalitySetPlugin.class);
@@ -55,18 +27,6 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin, 
 
     private static final String[] AGGRESSION_TO_PERSONALITY = {null, Personalities.CAUTIOUS, Personalities.TIMID,
             Personalities.STEADY, Personalities.AGGRESSIVE, Personalities.RECKLESS};
-    /*
-    static void test()
-    {
-        for(FleetMemberAPI memberAPI : Global.getCombatEngine().getContext().getOtherFleet().getMembersWithFightersCopy()) {
-            try {
-                Console.showMessage(memberAPI.getHullId() + " " + memberAPI.getCaptain().getPersonalityAPI().getId());
-            } catch(Exception e) {
-
-            }
-        }
-    }
-    */
 
     /**
      * The correct default fleet-wide aggression, or null if it is not set
