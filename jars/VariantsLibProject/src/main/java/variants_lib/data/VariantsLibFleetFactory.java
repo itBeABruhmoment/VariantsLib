@@ -744,7 +744,7 @@ public class VariantsLibFleetFactory  {
        int i = 0;
        int hullModsAdded = 0;
        while(i < variantData.smods.size() && i < amount) {
-           if(attemptToAddHullMod(variant, variantData.smods.get(i), captain, true)) {
+           if(attemptToAddHullMod(variant, variantData.getSmods().get(i), captain, true)) {
                hullModsAdded++;
            }
            i++;

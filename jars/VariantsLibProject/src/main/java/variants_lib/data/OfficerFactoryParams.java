@@ -53,14 +53,9 @@ public class OfficerFactoryParams {
 
         final VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(variantId);
         if (variantData != null) {
-            for (final String tag : variantData.officerSpecifications) {
-                final String skill = CommonStrings.SKILL_EDIT_TAGS.get(tag);
-                final String personality = CommonStrings.PERSONALITY_EDIT_TAGS.get(tag);
-                if (skill != null) {
-                    this.skillsToAdd.add(skill);
-                } else if (personality != null) {
-                    this.personality = personality;
-                }
+            this.skillsToAdd.addAll(variantData.skills);
+            if(!variantData.getPersonality().equals(VariantData.VariantDataMember.NO_PERSONALITY_SET)) {
+                this.personality = variantData.getPersonality();
             }
         }
     }

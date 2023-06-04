@@ -144,7 +144,11 @@ public class VariantData {
                         log.debug(CommonStrings.MOD_ID + ": WARNING, the variant \"" + variantId + 
                         "\" listed in the file " + CommonStrings.VARIANT_TAGS_CSV_PATH + " is not loaded");
                     }
-    
+
+                    // read fields for variant data
+                    final VariantDataMember variantData = new VariantDataMember(variantId);
+
+                    // process officer spec tags
                     String officerSpecRaw = row.optString(CSV_SECOND_COLUMN_NAME);
                     ArrayList<String> officerSpec = processTags(officerSpecRaw);
                     officerSpec.trimToSize();
@@ -158,6 +162,15 @@ public class VariantData {
                     if(invalidTag != null) {
                         throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
                         " has the unrecognised tag \"" + invalidTag + "\" in "+ CommonStrings.VARIANT_TAGS_CSV_PATH);
+                    }
+
+                    // put loaded data into VariantDataMember
+                    for(final String tag : officerSpec) {
+                        if(CommonStrings.PERSONALITY_EDIT_TAGS.containsKey(tag)) {
+                            variantData.personality = CommonStrings.PERSONALITY_EDIT_TAGS.get(tag);
+                        } else {
+                            variantData.skills.add(CommonStrings.SKILL_EDIT_TAGS.get(tag));
+                        }
                     }
     
                     String smodsRaw = row.optString(CSV_THIRD_COLUMN_NAME);
@@ -174,23 +187,42 @@ public class VariantData {
                         throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
                         " has the unrecognised tag \"" + invalidTag + "\" in "+ CommonStrings.VARIANT_TAGS_CSV_PATH);
                     }
+
+                    variantData.smods = smods;
     
-                    VARIANT_DATA.put(variantId, new VariantDataMember(officerSpec, smods));
+                    VARIANT_DATA.put(variantId, variantData);
                 }
             }
         }
     }
 
     public static class VariantDataMember {
-        public ArrayList<String> officerSpecifications;
-        public ArrayList<String> smods;
+        public static final String NO_PERSONALITY_SET = "none";
+        protected String variantId = "";
+        protected String personality = NO_PERSONALITY_SET;
+        protected ArrayList<String> skills =  new ArrayList<>();
+        protected ArrayList<String> smods = new ArrayList<>();
 
-        public VariantDataMember(ArrayList<String> officerSpecifications, ArrayList<String> smods)
-        {
-            this.officerSpecifications = officerSpecifications;
-            this.smods = smods;
+        public VariantDataMember(final String variantId) {
+            this.variantId = variantId;
+        }
+
+        public String getVariantId() {
+            return variantId;
+        }
+
+        public String getPersonality() {
+            return personality;
+        }
+
+        public ArrayList<String> getSkills() {
+            return skills;
+        }
+
+        public ArrayList<String> getSmods() {
+            return smods;
         }
     }
 
-    private VariantData() {}
+    private VariantData(String variantId) {}
 }

@@ -59,7 +59,7 @@ public class FleetBuildingUtils {
                     variantData = VariantData.VARIANT_DATA.get(variantId);
                 }
 
-                if(variantData == null || variantData.smods.size() == 0) {
+                if(variantData == null || variantData.getSmods().size() == 0) {
                     ShipVariantAPI variant  = ship.getVariant();
                     Collection<String> hullMods = variant.getNonBuiltInHullmods();
                     int start = rand.nextInt() & Integer.MAX_VALUE; // get positive int
@@ -76,9 +76,9 @@ public class FleetBuildingUtils {
                     ShipVariantAPI variant  = ship.getVariant();
                     Collection<String> hullMods = variant.getNonBuiltInHullmods();
                     int numSmodsAdded = 0;
-                    while(numSmodsAdded < numSmodsToAdd && numSmodsAdded < variantData.smods.size()) {
-                        if(!hullMods.contains(variantData.smods.get(numSmodsAdded))) {
-                            variant.addPermaMod(variantData.smods.get(numSmodsAdded), true);
+                    while(numSmodsAdded < numSmodsToAdd && numSmodsAdded < variantData.getSmods().size()) {
+                        if(!hullMods.contains(variantData.getSmods().get(numSmodsAdded))) {
+                            variant.addPermaMod(variantData.getSmods().get(numSmodsAdded), true);
                             numSmodsAdded++;
                         }
                     }
