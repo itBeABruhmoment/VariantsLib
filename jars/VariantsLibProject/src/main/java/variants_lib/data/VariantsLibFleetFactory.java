@@ -623,7 +623,7 @@ public class VariantsLibFleetFactory  {
             final VariantsLibFleetParams fleetParams,
             final Random rand,
             final String variantId,
-            final String personality
+            final String defaultPersonality
     ) {
         OfficerFactoryParams officerFactoryParams = new OfficerFactoryParams(
                 variantId,
@@ -635,7 +635,7 @@ public class VariantsLibFleetFactory  {
             officerFactoryParams.level = 10;
         }
         officerFactoryParams.skillsToAdd.addAll(commanderSkills);
-        officerFactoryParams.personality = personality;
+        officerFactoryParams.personality = defaultPersonality;
         return officerFactory.createOfficer(officerFactoryParams);
     }
 
@@ -644,15 +644,17 @@ public class VariantsLibFleetFactory  {
             final VariantsLibFleetParams fleetParams,
             final Random rand,
             final String variantId,
-            final String personality
+            final String defaultPersonality
     ) {
+
+
         OfficerFactoryParams officerFactoryParams = new OfficerFactoryParams(
                 variantId,
                 fleetParams.faction,
                 rand,
                 fleetParams.averageOfficerLevel
         );
-        officerFactoryParams.personality = personality;
+        officerFactoryParams.personality = defaultPersonality;
         return officerFactory.createOfficer(officerFactoryParams);
     }
 
