@@ -25,6 +25,14 @@ public class ModdedVariantsData {
 
     public static final HashMap<String, ShipVariantAPI> VARIANTS = new HashMap<>();
 
+    public static ShipVariantAPI getVariant(String id) {
+        final ShipVariantAPI checkModdedVariants = VARIANTS.get(id);
+        if(checkModdedVariants != null) {
+            return checkModdedVariants;
+        }
+        return Global.getSettings().getVariant(id);
+    }
+
     // return false if succeeded and true if failed
     public static boolean addVariantToStore(String variantId, String modId) throws Exception {
         if(VARIANTS.containsKey(variantId)) {
