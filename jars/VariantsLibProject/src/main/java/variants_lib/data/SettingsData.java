@@ -183,7 +183,7 @@ public class SettingsData {
 
     public static int getMaxOfficersInAIFleet()
     {
-        return maxShipsInAIFleet;
+        return maxOfficersInAIFleet;
     }
 
     public static boolean fleetEditingEnabled()
