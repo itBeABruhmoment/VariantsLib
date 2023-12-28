@@ -4,6 +4,7 @@ import com.fs.starfarer.api.campaign.*;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.BaseCampaignEventListener;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.combat.EngagementResultAPI;
 
 import com.fs.starfarer.api.impl.campaign.FleetInteractionDialogPluginImpl;
@@ -41,6 +42,15 @@ public class VariantsLibListener extends BaseCampaignEventListener{
             for(FleetEditingScript script : SettingsData.universalPostModificationScripts.values()) {
                 script.run(fleet);
             }
+
+            final MemoryAPI fleetMem = fleet.getMemoryWithoutUpdate();
+            if(fleetMem.contains(CommonStrings.VARIANTS_LIB_LISTENER_APPLIED)) {
+                final long count = fleetMem.getLong(CommonStrings.VARIANTS_LIB_LISTENER_APPLIED);
+                fleetMem.set(CommonStrings.VARIANTS_LIB_LISTENER_APPLIED, count + 1);
+            } else {
+                fleetMem.set(CommonStrings.VARIANTS_LIB_LISTENER_APPLIED, 1);
+            }
+            fleet.getMemoryWithoutUpdate().set(CommonStrings.VARIANTS_LIB_LISTENER_APPLIED, true);
         } catch (Exception e) {
             log.info(variants_lib.data.CommonStrings.MOD_ID + ": error when attempting to modify fleet, if" +
                     " you're seeing this you should probably send your logs to the creator of variants lib, " +
