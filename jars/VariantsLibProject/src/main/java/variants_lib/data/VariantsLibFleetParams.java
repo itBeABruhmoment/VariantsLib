@@ -78,20 +78,16 @@ public class VariantsLibFleetParams {
 
     @Override
     public String toString() {
-        final JSONObject json = new JSONObject();
-        try {
-            json.put("fleetName", fleetName);
-            json.put("faction", faction);
-            json.put("fleetType", fleetType);
-            json.put("fleetPoints", fleetPoints);
-            json.put("quality", quality);
-            json.put("averageSmods", averageSMods);
-            json.put("numOfficers", numOfficers);
-            json.put("averageOfficerLevel", averageOfficerLevel);
-            json.put("seed", seed);
-        } catch (Exception e) {
-
-        }
-        return json.toString();
+        return "VariantsLibFleetParams{" +
+                "fleetName='" + fleetName + '\'' +
+                ", faction='" + faction + '\'' +
+                ", fleetType='" + fleetType + '\'' +
+                ", fleetPoints=" + fleetPoints +
+                ", quality=" + quality +
+                ", averageSMods=" + averageSMods +
+                ", numOfficers=" + numOfficers +
+                ", averageOfficerLevel=" + averageOfficerLevel +
+                ", seed=" + seed +
+                '}';
     }
 }
