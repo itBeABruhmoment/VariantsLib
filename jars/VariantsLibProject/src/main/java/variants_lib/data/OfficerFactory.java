@@ -12,14 +12,14 @@ import java.util.HashSet;
  * For making officers
  */
 public class OfficerFactory {
-    private static final HashSet<String> VALID_ELITE_SKILLS = new HashSet<String>() {{
+    protected static final HashSet<String> VALID_ELITE_SKILLS = new HashSet<String>() {{
         add(Skills.HELMSMANSHIP); add(Skills.COMBAT_ENDURANCE); add(Skills.IMPACT_MITIGATION); add(Skills.DAMAGE_CONTROL);
         add(Skills.FIELD_MODULATION); add(Skills.POINT_DEFENSE); add(Skills.TARGET_ANALYSIS); add(Skills.BALLISTIC_MASTERY);
         add(Skills.SYSTEMS_EXPERTISE); add(Skills.MISSILE_SPECIALIZATION); add(Skills.GUNNERY_IMPLANTS);
         add(Skills.ENERGY_WEAPON_MASTERY); add(Skills.ORDNANCE_EXPERTISE); add(Skills.POLARIZED_ARMOR);
     }};
 
-    private static final String[] FILLER_SKILLS = {Skills.HELMSMANSHIP, Skills.COMBAT_ENDURANCE,
+    protected static final String[] FILLER_SKILLS = {Skills.HELMSMANSHIP, Skills.COMBAT_ENDURANCE,
             Skills.IMPACT_MITIGATION, Skills.DAMAGE_CONTROL, Skills.FIELD_MODULATION, Skills.POINT_DEFENSE,
             Skills.TARGET_ANALYSIS, Skills.BALLISTIC_MASTERY, Skills.SYSTEMS_EXPERTISE, Skills.MISSILE_SPECIALIZATION,
             Skills.GUNNERY_IMPLANTS, Skills.ENERGY_WEAPON_MASTERY, Skills.ORDNANCE_EXPERTISE, Skills.POLARIZED_ARMOR};
