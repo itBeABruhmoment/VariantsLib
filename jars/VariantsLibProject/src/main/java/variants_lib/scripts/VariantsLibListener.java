@@ -39,10 +39,6 @@ public class VariantsLibListener extends BaseCampaignEventListener{
                 script.run(fleet);
             }
             FleetRandomizer.modify(fleet);
-            for(FleetEditingScript script : SettingsData.universalPostModificationScripts.values()) {
-                script.run(fleet);
-            }
-
             final MemoryAPI fleetMem = fleet.getMemoryWithoutUpdate();
             if(fleetMem.contains(CommonStrings.VARIANTS_LIB_LISTENER_APPLIED)) {
                 final long count = fleetMem.getLong(CommonStrings.VARIANTS_LIB_LISTENER_APPLIED);
@@ -50,7 +46,9 @@ public class VariantsLibListener extends BaseCampaignEventListener{
             } else {
                 fleetMem.set(CommonStrings.VARIANTS_LIB_LISTENER_APPLIED, 1);
             }
-            fleet.getMemoryWithoutUpdate().set(CommonStrings.VARIANTS_LIB_LISTENER_APPLIED, true);
+            for(FleetEditingScript script : SettingsData.universalPostModificationScripts.values()) {
+                script.run(fleet);
+            }
         } catch (Exception e) {
             log.info(variants_lib.data.CommonStrings.MOD_ID + ": error when attempting to modify fleet, if" +
                     " you're seeing this you should probably send your logs to the creator of variants lib, " +
