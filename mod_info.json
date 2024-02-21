@@ -5,7 +5,7 @@
     "utility": "false",
     "version": "0.4.0",
     "description": "a fleet related utility library",
-    "gameVersion": "0.96a-RC6",
+    "gameVersion": "0.97a-RC8",
     "jars":["jars/VariantsLib.jar"],
     "modPlugin":"variants_lib.scripts.VariantsLibModPlugin"
 }
