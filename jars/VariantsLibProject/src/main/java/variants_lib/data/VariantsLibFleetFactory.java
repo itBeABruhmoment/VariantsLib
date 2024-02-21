@@ -29,6 +29,8 @@ import variants_lib.scripts.HasHeavyIndustryTracker;
 
 import java.util.*;
 
+// TODO: fix officer skills
+
 /**
  * Generates fleets specified by fleet jsons. Contains both the fields from the fleet json and the logic for creating fleets
  */
