@@ -657,10 +657,6 @@ public class VariantsLibFleetFactory  {
                 fleetParams.averageOfficerLevel
         );
         officerFactoryParams.personality = defaultPersonality;
-        log.debug(variantId);
-        for(String s : officerFactoryParams.skillsToAdd) {
-            log.debug(s);
-        }
         return officerFactory.createOfficer(officerFactoryParams);
     }
 
