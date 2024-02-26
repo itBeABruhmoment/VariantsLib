@@ -89,9 +89,17 @@ public class AutoLogisticsFactory {
     protected ArrayList<String> addShipType(String[] shipClassList, FactionAPI faction, int availableDP) {
         final ArrayList<String> addedShips = new ArrayList<>(10);
         final int dpAvailableOriginal = availableDP;
+        int infLoopStop = 0;
         int shipClass = 0;
         boolean continueLoop = true;
         while(continueLoop) {
+            // I hate this but it will probably do for now
+            infLoopStop++;
+            if(infLoopStop > 100) {
+                log.error("tell itBeABruhmoment he sucks at coding");
+                break;
+            }
+
             List<ShipRolePick> ship = faction.pickShip(shipClassList[shipClass], FactionAPI.ShipPickParams.priority());
             boolean shipPicked = ship != null && ship.size() > 0;
             boolean enoughDP = false;
