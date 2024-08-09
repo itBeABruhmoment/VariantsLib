@@ -2,9 +2,13 @@ package variants_lib.scripts;
 
 import com.fs.starfarer.api.Global;
 
+import com.fs.starfarer.api.campaign.FleetInflater;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.campaign.CampaignFleetAPI;
+import com.fs.starfarer.api.characters.PersonAPI;
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 import com.fs.starfarer.api.fleet.FleetMemberAPI;
+import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflater;
 import com.fs.starfarer.api.impl.campaign.fleets.DefaultFleetInflaterParams;
 import com.fs.starfarer.api.impl.campaign.ids.MemFlags;
 import org.apache.log4j.Level;
@@ -96,12 +100,85 @@ public class FleetRandomizer {
             if(FactionData.FACTION_DATA.get(params.faction).hasTag(CommonStrings.NO_AUTOFIT_TAG)) {
                 log.debug("applying no autofit features");
                 fleet.setInflated(true);
-                FleetBuildingUtils.addDMods(fleet, rand, params.quality);
-                FleetBuildingUtils.addSMods(fleet, rand, params.averageSMods);
+
+                // edit officers
+                final String faction = fleet.getFaction().getId();
+                final OfficerFactory officerFactory = new OfficerFactory();
+                for(final FleetMemberAPI memberAPI : fleet.getMembersWithFightersCopy()) {
+                    final ShipVariantAPI originalVariant = ModdedVariantsData.getVariant(memberAPI.getVariant().getHullVariantId());
+                    if(originalVariant != null) {
+                        memberAPI.setVariant(originalVariant, false, true);
+                    }
+
+                    final PersonAPI officer = memberAPI.getCaptain();
+                    if(Util.isOfficer(officer)) {
+                        final String variant = memberAPI.getVariant().getOriginalVariant();
+                        final OfficerFactoryParams officerFactoryParams = new OfficerFactoryParams(
+                                variant,
+                                faction,
+                                rand,
+                                5
+                        );
+
+                        if(originalVariant != null) {
+                            VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(originalVariant.getHullVariantId());
+                            if(variantData != null) {
+                                officerFactoryParams.skillsToAdd.addAll(variantData.getSkills());
+                            }
+                        }
+                        officerFactoryParams.level = officer.getStats().getLevel();
+                        officerFactory.editOfficer(officer, officerFactoryParams);
+                    }
+                }
+
+                final VariantsLibFleetInflater inflater = createInflater(fleet, rand.nextLong());
+                if(inflater != null) {
+                    fleet.setInflater(inflater);
+                    fleet.inflateIfNeeded();
+                } else {
+                    log.info("inflater not created");
+                }
+
+//                FleetBuildingUtils.addDMods(fleet, rand, params.quality);
+//                FleetBuildingUtils.addSMods(fleet, rand, params.averageSMods);
                 fleetMemory.set(CommonStrings.NO_AUTOFIT_APPLIED, true);
                 log.debug("finished applying");
             }
         }
+    }
+
+    private static VariantsLibFleetInflater createInflater(CampaignFleetAPI fleet, long seed) {
+        final FleetInflater unknownFleetInflater = fleet.getInflater();
+        if(unknownFleetInflater instanceof DefaultFleetInflater) {
+            DefaultFleetInflater inflater = (DefaultFleetInflater) unknownFleetInflater;
+            int averageSMods = 0;
+            try {
+                DefaultFleetInflaterParams inflaterParams = (DefaultFleetInflaterParams)inflater.getParams();
+                averageSMods = inflaterParams.averageSMods;
+            } catch(Exception e) {
+                log.info("could not get average smods defaulting to none");
+            }
+
+            float quality = inflater.getQuality();
+            fleet.setInflated(true);
+
+            DefaultFleetInflaterParams inflaterParams = null;
+            final Object tempInflaterParams = inflater.getParams();
+            if(tempInflaterParams instanceof DefaultFleetInflaterParams) {
+                inflaterParams = (DefaultFleetInflaterParams) tempInflaterParams;
+            } else {
+                inflaterParams = new DefaultFleetInflaterParams();
+                inflaterParams.factionId = fleet.getFaction().getId();
+                inflaterParams.seed = seed;
+            }
+            return new VariantsLibFleetInflater(inflaterParams, quality, averageSMods);
+        } else if(unknownFleetInflater == null) {
+            final DefaultFleetInflaterParams inflaterParams = new DefaultFleetInflaterParams();
+            inflaterParams.factionId = fleet.getFaction().getId();
+            inflaterParams.seed = seed;
+            fleet.setInflater(new VariantsLibFleetInflater(inflaterParams, 1.0f, 0.0f));
+        }
+        return null;
     }
 
     private FleetRandomizer() {}
