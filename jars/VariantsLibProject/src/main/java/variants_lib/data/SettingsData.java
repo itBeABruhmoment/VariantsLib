@@ -1,6 +1,8 @@
 package variants_lib.data;
 
 import lunalib.lunaSettings.LunaSettings;
+import lunalib.lunaSettings.LunaSettingsListener;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,7 +17,7 @@ import com.fs.starfarer.api.ModSpecAPI;
 import variants_lib.scripts.FleetEditingScript;
 
 // loads settings for this mod
-public class SettingsData {
+public class SettingsData implements LunaSettingsListener {
     private static final Logger log = Global.getLogger(variants_lib.data.SettingsData.class);
     static {
         log.setLevel(Level.ALL);
@@ -205,6 +207,11 @@ public class SettingsData {
         }
     }
 
+    @Override
+    public void settingsChanged(String setting) {
+        log.debug(CommonStrings.MOD_ID + ": \"" + setting + "\" changed");
+        loadVariantsLibSettingsFromLunaLib();
+    }
 
     public void loadSettings() throws Exception {
         loadStarSectorSettings();
@@ -212,6 +219,7 @@ public class SettingsData {
         // overwrite settings with LunaLib ones if it is enabled
         if (Global.getSettings().getModManager().isModEnabled("lunalib")) {
             loadVariantsLibSettingsFromLunaLib();
+            LunaSettings.addSettingsListener(this);
         }
     }
 
