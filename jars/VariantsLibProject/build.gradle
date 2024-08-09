@@ -16,6 +16,7 @@ ext {
     gameDir = localProps.getProperty('starSectorInstallDir')
     consoleCommandsDir = localProps.getProperty('consoleCommandDir')
     lazyLibDir = localProps.getProperty('lazyLibDir')
+    lunaLibDir = localProps.getProperty('lunaLibDir')
 }
 
 dependencies {
@@ -32,6 +33,7 @@ dependencies {
     compileOnly files(consoleCommandsDir + '/jars/lw_Console.jar')
     compileOnly files(lazyLibDir + '/jars/LazyLib.jar')
     compileOnly files(lazyLibDir + '/jars/LazyLib-Kotlin.jar')
+    compileOnly files(lunaLibDir + '/jars/LunaLib.jar')
 }
 
 jar {
