@@ -30,6 +30,12 @@ public class FleetRandomizer {
             return false;
         }
 
+        String s = "";
+        for(String key : fleet.getMemoryWithoutUpdate().getKeys()) {
+            s = s + key + " ";
+        }
+        log.debug(s);
+
         if(fleet.getMemoryWithoutUpdate().contains(CommonStrings.FLEET_EDITED_MEMKEY)) {
             log.debug(CommonStrings.MOD_ID + ": fleet not edited, has " + CommonStrings.FLEET_EDITED_MEMKEY + " memkey");
             return false;
