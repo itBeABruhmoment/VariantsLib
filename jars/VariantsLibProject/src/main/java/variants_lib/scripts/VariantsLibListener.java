@@ -35,7 +35,7 @@ public class VariantsLibListener extends BaseCampaignEventListener{
     @Override
     public void reportFleetSpawned(CampaignFleetAPI fleet) {
         try {
-            for(FleetEditingScript script : SettingsData.universalPreModificationScripts.values()) {
+            for(FleetEditingScript script : SettingsData.getInstance().getUniversalPreModificationScripts().values()) {
                 script.run(fleet);
             }
             FleetRandomizer.modify(fleet);
@@ -46,7 +46,7 @@ public class VariantsLibListener extends BaseCampaignEventListener{
             } else {
                 fleetMem.set(CommonStrings.VARIANTS_LIB_LISTENER_APPLIED, 1);
             }
-            for(FleetEditingScript script : SettingsData.universalPostModificationScripts.values()) {
+            for(FleetEditingScript script : SettingsData.getInstance().getUniversalPostModificationScripts().values()) {
                 script.run(fleet);
             }
         } catch (Exception e) {

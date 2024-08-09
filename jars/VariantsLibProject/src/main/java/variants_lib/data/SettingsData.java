@@ -21,16 +21,22 @@ public class SettingsData {
         log.setLevel(Level.ALL);
     }
 
-    private static int maxShipsInAIFleet = 30;
-    private static int maxOfficersInAIFleet = 10;
-    private static boolean enableNoAutofit = true;
-    private static float specialFleetSpawnMult = 1.0f;
-    private static boolean enableFleetEditing = true;
-    private static boolean enablePersonalitySet = true;
-    public static HashMap<String, FleetEditingScript> universalPreModificationScripts = new HashMap<>();
-    public static HashMap<String, FleetEditingScript> universalPostModificationScripts = new HashMap<>();
+    private static final SettingsData instance = new SettingsData();
 
-    private static void loadStarSectorSettings() {
+    public static SettingsData getInstance() {
+        return instance;
+    }
+
+    private int maxShipsInAIFleet = 30;
+    private int maxOfficersInAIFleet = 10;
+    private boolean enableNoAutofit = true;
+    private float specialFleetSpawnMult = 1.0f;
+    private boolean enableFleetEditing = true;
+    private boolean enablePersonalitySet = true;
+    private HashMap<String, FleetEditingScript> universalPreModificationScripts = new HashMap<>();
+    private HashMap<String, FleetEditingScript> universalPostModificationScripts = new HashMap<>();
+
+    private void loadStarSectorSettings() {
         log.debug("getting important settings from base game settings");
         JSONObject vanillaGameSettings = null;
         try {
@@ -53,7 +59,7 @@ public class SettingsData {
         }
     }
 
-    private static void loadVariantsLibSettingsFromFile() throws Exception{
+    private void loadVariantsLibSettingsFromFile() throws Exception{
         // load settings json
         final JSONObject settings;
         try {
@@ -169,7 +175,7 @@ public class SettingsData {
         }
     }
 
-    private static void loadVariantsLibSettingsFromLunaLib() {
+    private void loadVariantsLibSettingsFromLunaLib() {
         Boolean temp1 = LunaSettings.getBoolean(CommonStrings.MOD_ID, CommonStrings.LUNA_NO_AUTOFIT);
         if(temp1 != null) {
             enableNoAutofit = temp1;
@@ -200,8 +206,7 @@ public class SettingsData {
     }
 
 
-    public static void loadSettings() throws Exception
-    {
+    public void loadSettings() throws Exception {
         loadStarSectorSettings();
         loadVariantsLibSettingsFromFile();
         // overwrite settings with LunaLib ones if it is enabled
@@ -210,34 +215,36 @@ public class SettingsData {
         }
     }
 
-    public static boolean noAutofitFeaturesEnabled()
-    {
+    public boolean noAutofitFeaturesEnabled() {
         return enableNoAutofit;
     }
 
-    public static float getSpecialFleetSpawnMult()
-    {
+    public float getSpecialFleetSpawnMult() {
         return specialFleetSpawnMult;
     }
 
-    public static int getMaxShipsInAIFleet()
-    {
+    public int getMaxShipsInAIFleet() {
         return maxShipsInAIFleet;
     }
 
-    public static int getMaxOfficersInAIFleet()
-    {
+    public int getMaxOfficersInAIFleet() {
         return maxOfficersInAIFleet;
     }
 
-    public static boolean fleetEditingEnabled()
-    {
+    public boolean fleetEditingEnabled() {
         return enableFleetEditing;
     }
 
-    public static boolean personalitySetEnabled()
-    {
+    public boolean personalitySetEnabled() {
         return enablePersonalitySet;
+    }
+
+    public HashMap<String, FleetEditingScript> getUniversalPostModificationScripts() {
+        return universalPostModificationScripts;
+    }
+
+    public HashMap<String, FleetEditingScript> getUniversalPreModificationScripts() {
+        return universalPreModificationScripts;
     }
 
     SettingsData() {} // do nothing

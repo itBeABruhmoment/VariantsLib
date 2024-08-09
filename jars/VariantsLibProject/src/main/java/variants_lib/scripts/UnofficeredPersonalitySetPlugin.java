@@ -73,7 +73,7 @@ public class UnofficeredPersonalitySetPlugin implements EveryFrameCombatPlugin, 
 
     @Override
     public void init(CombatEngineAPI combatEngine) {
-        if(!SettingsData.personalitySetEnabled()) {
+        if(!SettingsData.getInstance().personalitySetEnabled()) {
             return;
         }
 

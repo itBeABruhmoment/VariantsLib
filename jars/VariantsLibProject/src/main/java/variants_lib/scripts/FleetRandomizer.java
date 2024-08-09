@@ -26,7 +26,7 @@ public class FleetRandomizer {
     }};
 
     private static boolean allowFleetModification(CampaignFleetAPI fleet) {
-        if(!SettingsData.fleetEditingEnabled()) {
+        if(!SettingsData.getInstance().fleetEditingEnabled()) {
             return false;
         }
 
@@ -92,7 +92,7 @@ public class FleetRandomizer {
             useToEdit.editFleet(fleet, params);
             fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, useToEdit.id);
             log.debug("fleet edited to " + useToEdit.id);
-        } else if(SettingsData.noAutofitFeaturesEnabled()){
+        } else if(SettingsData.getInstance().noAutofitFeaturesEnabled()){
             if(FactionData.FACTION_DATA.get(params.faction).hasTag(CommonStrings.NO_AUTOFIT_TAG)) {
                 log.debug("applying no autofit features");
                 fleet.setInflated(true);

@@ -23,7 +23,7 @@ public class VariantsLibModPlugin extends BaseModPlugin {
     public void onApplicationLoad() throws Exception
     {
         log.debug(CommonStrings.MOD_ID + ": loading settings");
-        SettingsData.loadSettings();
+        SettingsData.getInstance().loadSettings();
         log.debug(CommonStrings.MOD_ID + ": loading faction data");
         FactionData.loadData();
         // somewhat important for FleetBuildData to be loaded before VariantData

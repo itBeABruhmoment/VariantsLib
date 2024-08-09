@@ -363,7 +363,7 @@ public class VariantsLibFleetFactory  {
             final boolean calledFromEditFleet
     ) {
         final CreateFleetVariables vars = new CreateFleetVariables();
-        vars.numShipsThatCanBeAdded = SettingsData.getMaxShipsInAIFleet() - membersToKeep.size();
+        vars.numShipsThatCanBeAdded = SettingsData.getInstance().getMaxShipsInAIFleet() - membersToKeep.size();
         vars.totalDPRemaining = params.fleetPoints;
 
         addAlwaysIncludeMembers(vars, params);
