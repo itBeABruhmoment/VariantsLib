@@ -90,5 +90,10 @@ public class CommonStrings {
 
     public static final String DO_NOT_EDIT_OFFICER = "no";
 
+    // Luna Settings
+    public static final String LUNA_NO_AUTOFIT =  "variants_lib_enableNoAutofitFeatures";
+    public static final String LUNA_FLEET_EDITING =  "variants_lib_enableFleetEditing";
+    public static final String LUNA_PERSONALITY_SET =  "variants_lib_enablePersonalitySet";
+    public static final String LUNA_SPECIAL_FLEET_MULT =  "variants_lib_specialFleetSpawnMult";
     private CommonStrings() {}
 }

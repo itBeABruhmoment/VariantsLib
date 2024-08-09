@@ -1,5 +1,6 @@
 package variants_lib.data;
 
+import lunalib.lunaSettings.LunaSettings;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -29,8 +30,7 @@ public class SettingsData {
     public static HashMap<String, FleetEditingScript> universalPreModificationScripts = new HashMap<>();
     public static HashMap<String, FleetEditingScript> universalPostModificationScripts = new HashMap<>();
 
-    public static void loadSettings() throws Exception
-    {
+    private static void loadStarSectorSettings() {
         log.debug("getting important settings from base game settings");
         JSONObject vanillaGameSettings = null;
         try {
@@ -51,7 +51,10 @@ public class SettingsData {
                 log.debug("could not read maxOfficersInAIFleet field, set to 10");
             }
         }
+    }
 
+    private static void loadVariantsLibSettingsFromFile() throws Exception{
+        // load settings json
         final JSONObject settings;
         try {
             settings = Global.getSettings().loadJSON(CommonStrings.SETTINGS_FILE_NAME, CommonStrings.MOD_ID);
@@ -74,7 +77,7 @@ public class SettingsData {
             throw new Exception(CommonStrings.MOD_ID + "\"specialFleetSpawnMult\" from " + CommonStrings.SETTINGS_FILE_NAME + "has a negative value");
         }
 
-        // get all universalPreModificationScripts and universalPostModificationScripts
+        // merge settings with other mods, generally turning a feature off turns it off for everyone and script fields are appended
         for(ModSpecAPI mod : Global.getSettings().getModManager().getEnabledModsCopy()) {
             String modId = mod.getId();
             log.debug(CommonStrings.MOD_ID + ": trying to load " + CommonStrings.SETTINGS_FILE_NAME + " from the mod " + modId);
@@ -163,7 +166,48 @@ public class SettingsData {
                     }
                 }
             }
-        }  
+        }
+    }
+
+    private static void loadVariantsLibSettingsFromLunaLib() {
+        Boolean temp1 = LunaSettings.getBoolean(CommonStrings.MOD_ID, CommonStrings.LUNA_NO_AUTOFIT);
+        if(temp1 != null) {
+            enableNoAutofit = temp1;
+        } else {
+            log.debug(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_NO_AUTOFIT + "\" LunaLib setting null");
+        }
+
+        Boolean temp2 = LunaSettings.getBoolean(CommonStrings.MOD_ID, CommonStrings.LUNA_FLEET_EDITING);
+        if(temp2 != null) {
+            enableFleetEditing = temp2;
+        } else {
+            log.debug(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_FLEET_EDITING + "\" LunaLib setting null");
+        }
+
+        Boolean temp3 = LunaSettings.getBoolean(CommonStrings.MOD_ID, CommonStrings.LUNA_PERSONALITY_SET);
+        if(temp3 != null) {
+            enablePersonalitySet = temp3;
+        } else {
+            log.debug(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_PERSONALITY_SET + "\" LunaLib setting null");
+        }
+
+        Double temp4 = LunaSettings.getDouble(CommonStrings.MOD_ID, CommonStrings.LUNA_SPECIAL_FLEET_MULT);
+        if(temp4 != null) {
+            specialFleetSpawnMult = temp4.floatValue();
+        } else {
+            log.debug(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_SPECIAL_FLEET_MULT + "\" LunaLib setting null");
+        }
+    }
+
+
+    public static void loadSettings() throws Exception
+    {
+        loadStarSectorSettings();
+        loadVariantsLibSettingsFromFile();
+        // overwrite settings with LunaLib ones if it is enabled
+        if (Global.getSettings().getModManager().isModEnabled("lunalib")) {
+            loadVariantsLibSettingsFromLunaLib();
+        }
     }
 
     public static boolean noAutofitFeaturesEnabled()
