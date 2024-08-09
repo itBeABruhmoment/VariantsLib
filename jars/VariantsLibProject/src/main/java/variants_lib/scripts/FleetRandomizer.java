@@ -85,9 +85,9 @@ public class FleetRandomizer {
         double specialFleetSpawnRate = 0.0;
         final FactionData.FactionConfig config = FactionData.FACTION_DATA.get(params.faction);
         if(config.specialFleetSpawnRateOverrides.containsKey(params.fleetType)) {
-            specialFleetSpawnRate = config.specialFleetSpawnRateOverrides.get(params.fleetType);
+            specialFleetSpawnRate = config.specialFleetSpawnRateOverrides.get(params.fleetType) * SettingsData.getInstance().getSpecialFleetSpawnMult();
         } else {
-            specialFleetSpawnRate = config.specialFleetSpawnRate;
+            specialFleetSpawnRate = config.specialFleetSpawnRate * SettingsData.getInstance().getSpecialFleetSpawnMult();
         }
 
         final Random rand = new Random(params.seed);
@@ -131,6 +131,7 @@ public class FleetRandomizer {
                     }
                 }
 
+                // add an inflater that just adds smods and dmods
                 final VariantsLibFleetInflater inflater = createInflater(fleet, rand.nextLong());
                 if(inflater != null) {
                     fleet.setInflater(inflater);

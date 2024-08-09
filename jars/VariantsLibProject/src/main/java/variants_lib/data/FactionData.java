@@ -122,8 +122,6 @@ public class FactionData {
                     if(specialFleetSpawnRate < 0 || specialFleetSpawnRate > 1) {
                         throw new Exception(CommonStrings.MOD_ID + ": the faction " + factionId + " has invalid number in \"specialFleetSpawnRateRaw\" field");
                     }
-                    // apply a setting
-                    specialFleetSpawnRate *= SettingsData.getInstance().getSpecialFleetSpawnMult();
 
                     // read specialFleetSpawnRateOverrides
                     HashMap<String, Double> weightOverrides = new HashMap<String, Double>();
@@ -143,8 +141,6 @@ public class FactionData {
                                 } catch(Exception e) {
                                     throw new Exception(CommonStrings.MOD_ID + ": the faction " + factionId + " has impropery formatted double in " + CSV_FIFTH_COLUMN_NAME);
                                 }
-                                // apply setting
-                                weight *= SettingsData.getInstance().getSpecialFleetSpawnMult();
                                 weightOverrides.put(key, weight);
                             }
                         }
