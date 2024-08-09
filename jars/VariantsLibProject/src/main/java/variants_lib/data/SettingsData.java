@@ -30,7 +30,6 @@ public class SettingsData implements LunaSettingsListener {
     }
 
     private int maxShipsInAIFleet = 30;
-    private int maxOfficersInAIFleet = 10;
     private boolean enableNoAutofit = true;
     private float specialFleetSpawnMult = 1.0f;
     private boolean enableFleetEditing = true;
@@ -48,15 +47,10 @@ public class SettingsData implements LunaSettingsListener {
         }
         if(vanillaGameSettings != null) {
             try {
-                maxOfficersInAIFleet = vanillaGameSettings.getInt("maxShipsInAIFleet");
+                maxShipsInAIFleet = vanillaGameSettings.getInt("maxShipsInAIFleet");
             } catch(Exception e) {
                 maxShipsInAIFleet = 30;
                 log.debug("could not read maxShipsInAIFleet field, set to 30");
-            }
-            try {
-                maxOfficersInAIFleet = vanillaGameSettings.getInt("maxOfficersInAIFleet");
-            } catch(Exception e) {
-                log.debug("could not read maxOfficersInAIFleet field, set to 10");
             }
         }
     }
@@ -233,10 +227,6 @@ public class SettingsData implements LunaSettingsListener {
 
     public int getMaxShipsInAIFleet() {
         return maxShipsInAIFleet;
-    }
-
-    public int getMaxOfficersInAIFleet() {
-        return maxOfficersInAIFleet;
     }
 
     public boolean fleetEditingEnabled() {
