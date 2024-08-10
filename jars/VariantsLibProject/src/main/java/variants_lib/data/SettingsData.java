@@ -4,6 +4,7 @@ import lunalib.lunaSettings.LunaSettings;
 import lunalib.lunaSettings.LunaSettingsListener;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.ModSpecAPI;
 
 import variants_lib.scripts.FleetEditingScript;
+import variants_lib.scripts.VariantsLibPostApplicationLoadScript;
 
 // loads settings for this mod
 public class SettingsData implements LunaSettingsListener {
@@ -36,6 +38,7 @@ public class SettingsData implements LunaSettingsListener {
     private boolean enablePersonalitySet = true;
     private HashMap<String, FleetEditingScript> universalPreModificationScripts = new HashMap<>();
     private HashMap<String, FleetEditingScript> universalPostModificationScripts = new HashMap<>();
+    private HashMap<String, VariantsLibPostApplicationLoadScript> postVariantsLibApplicationLoadScript = new HashMap<>();
 
     private void loadStarSectorSettings() {
         log.debug("getting important settings from base game settings");
@@ -123,51 +126,9 @@ public class SettingsData implements LunaSettingsListener {
             }
             enablePersonalitySet = enablePersonalitySet && personalitySet;
 
-            JSONArray universalPreModificationScriptsArr = null;
-            try {
-                universalPreModificationScriptsArr = settingsJson.getJSONArray("universalPreModificationScripts");
-            } catch(Exception e) {
-                universalPreModificationScriptsArr = null;
-                log.debug(CommonStrings.MOD_ID + ": mod " + modId + " could not have the field \"universalPreModificationScripts\" in " + CommonStrings.SETTINGS_FILE_NAME + " opened, skipped");
-            }
-            if(universalPreModificationScriptsArr != null) {
-                for(int i = 0; i < universalPreModificationScriptsArr.length(); i++) {
-                    String classPath = universalPreModificationScriptsArr.getString(i);
-                    try {
-                        FleetEditingScript script = (FleetEditingScript) Class.forName(classPath).newInstance();
-                        universalPreModificationScripts.put(classPath, script);
-                    } catch(ClassNotFoundException e) {
-                        throw new Exception(CommonStrings.MOD_ID + ": failed to find the class \"" + classPath + "\"");
-                    } catch(ClassCastException e) {
-                        throw new Exception(CommonStrings.MOD_ID + ": \"" + classPath + "\" is not a class that implements \"FleetEditingScript\"");
-                    } catch(Exception e) {
-                        throw new Exception(CommonStrings.MOD_ID + ": failed to create the class \"" + classPath + "\"");
-                    }
-                }
-            }
-
-            JSONArray universalPostModificationScriptsArr = null;
-            try {
-                universalPostModificationScriptsArr = settingsJson.getJSONArray("universalPostModificationScripts");
-            } catch(Exception e) {
-                universalPostModificationScriptsArr = null;
-                log.debug(CommonStrings.MOD_ID + ": mod " + modId + " could not have the field \"universalPostModificationScripts\" in " + CommonStrings.SETTINGS_FILE_NAME + " opened, skipped");
-            }
-            if(universalPostModificationScriptsArr != null) {
-                for(int i = 0; i < universalPostModificationScriptsArr.length(); i++) {
-                    String classPath = universalPostModificationScriptsArr.getString(i);
-                    try {
-                        FleetEditingScript script = (FleetEditingScript) Class.forName(classPath).newInstance();
-                        universalPostModificationScripts.put(classPath, script);
-                    } catch(ClassNotFoundException e) {
-                        throw new Exception(CommonStrings.MOD_ID + ": failed to find the class \"" + classPath + "\"");
-                    } catch(ClassCastException e) {
-                        throw new Exception(CommonStrings.MOD_ID + ": \"" + classPath + "\" is not a class that implements \"FleetEditingScript\"");
-                    } catch(Exception e) {
-                        throw new Exception(CommonStrings.MOD_ID + ": failed to create the class \"" + classPath + "\"");
-                    }
-                }
-            }
+            loadScripts("universalPreModificationScripts", universalPreModificationScripts, settingsJson, modId);
+            loadScripts("universalPostModificationScripts", universalPostModificationScripts, settingsJson, modId);
+            loadScripts("postVariantsLibApplicationLoadScript", postVariantsLibApplicationLoadScript, settingsJson, modId);
         }
     }
 
@@ -201,10 +162,43 @@ public class SettingsData implements LunaSettingsListener {
         }
     }
 
+    // loads an array of classpaths into a hashmap, with classpath as the key
+    private <T> void loadScripts(
+            String fieldName,
+            HashMap<String, T> scriptStore,
+            JSONObject settingsJson,
+            String settingsModId
+    ) throws Exception {
+        JSONArray scripts = null;
+        try {
+            scripts = settingsJson.getJSONArray(fieldName);
+        } catch(Exception e) {
+            scripts = null;
+            log.debug(CommonStrings.MOD_ID + ": mod " + settingsModId + " could not have the field \"" + fieldName + "\" in " + CommonStrings.SETTINGS_FILE_NAME + " opened, skipped");
+        }
+        if(scripts != null) {
+            for(int i = 0; i < scripts.length(); i++) {
+                String classPath = scripts.getString(i);
+                try {
+                    T script = (T) Class.forName(classPath).newInstance();
+                    scriptStore.put(classPath, script);
+                } catch(ClassNotFoundException e) {
+                    throw new Exception(CommonStrings.MOD_ID + ": failed to find the class \"" + classPath + "\"");
+                } catch(ClassCastException e) {
+                    throw new Exception(CommonStrings.MOD_ID + ": \"" + classPath + "\" is not a class that implements specified interface\"");
+                } catch(Exception e) {
+                    throw new Exception(CommonStrings.MOD_ID + ": failed to create the class \"" + classPath + "\"");
+                }
+            }
+        }
+    }
+
     @Override
-    public void settingsChanged(String setting) {
-        log.debug(CommonStrings.MOD_ID + ": \"" + setting + "\" changed");
-        loadVariantsLibSettingsFromLunaLib();
+    public void settingsChanged(String modId) {
+        if(modId.equals(CommonStrings.MOD_ID)) {
+            log.debug(CommonStrings.MOD_ID + ": settings changed");
+            loadVariantsLibSettingsFromLunaLib();
+        }
     }
 
     public void loadSettings() throws Exception {
@@ -243,6 +237,10 @@ public class SettingsData implements LunaSettingsListener {
 
     public HashMap<String, FleetEditingScript> getUniversalPreModificationScripts() {
         return universalPreModificationScripts;
+    }
+
+    public HashMap<String, VariantsLibPostApplicationLoadScript> getPostVariantsLibApplicationLoadScript() {
+        return postVariantsLibApplicationLoadScript;
     }
 
     SettingsData() {} // do nothing

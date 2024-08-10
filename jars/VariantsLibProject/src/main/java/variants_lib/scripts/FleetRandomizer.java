@@ -140,8 +140,6 @@ public class FleetRandomizer {
                     log.info("inflater not created");
                 }
 
-//                FleetBuildingUtils.addDMods(fleet, rand, params.quality);
-//                FleetBuildingUtils.addSMods(fleet, rand, params.averageSMods);
                 fleetMemory.set(CommonStrings.NO_AUTOFIT_APPLIED, true);
                 log.debug("finished applying");
             }

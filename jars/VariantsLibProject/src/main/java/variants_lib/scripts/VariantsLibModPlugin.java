@@ -1,6 +1,7 @@
 package variants_lib.scripts;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import com.fs.starfarer.api.BaseModPlugin;
 import com.fs.starfarer.api.Global;
@@ -31,6 +32,11 @@ public class VariantsLibModPlugin extends BaseModPlugin {
         FleetBuildData.loadData();
         log.debug(CommonStrings.MOD_ID + ": loading variant data");
         VariantData.loadData();
+
+        HashMap<String, VariantsLibPostApplicationLoadScript> scripts = SettingsData.getInstance().getPostVariantsLibApplicationLoadScript();
+        for(String key : scripts.keySet()) {
+            scripts.get(key).runPostApplicationLoadScript();
+        }
     }
 
     @Override
@@ -55,4 +61,6 @@ public class VariantsLibModPlugin extends BaseModPlugin {
         HasHeavyIndustryTracker.refreshHasHeavyIndustry();
         HasHeavyIndustryTracker.printEntries();
     }
+
+
 }
