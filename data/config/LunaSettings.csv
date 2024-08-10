@@ -1,5 +1,5 @@
 fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
-variants_lib_enableNoAutofitFeatures,No Autofit,Boolean,true,,Toggles autofit disabling features,,,
-variants_lib_enableFleetEditing,Fleet Editing,Boolean,true,,Toggles fleet editing features,,,
-variants_lib_enablePersonalitySet,Default Personality Setting,Boolean,true,,Toggles functionality that temporarily changes the default fleet personalities of factions,,,
-variants_lib_specialFleetSpawnMult,Special Fleet Spawn Multiplier,Double,1.0,,Multiplies the rate that special fleets spawn at,0.0,,
+variants_lib_enableNoAutofitFeatures,No Autofit,Boolean,true,,Toggles autofit for AI fleets,,,
+variants_lib_enableFleetEditing,Fleet Editing,Boolean,true,,Toggles fleet editing features for AI fleets,,,
+variants_lib_enablePersonalitySet,Default Personality Setting,Boolean,true,,Toggles this mod’s combat plugin that changes personalities of ships during battle,,,
+variants_lib_specialFleetSpawnMult,Special Fleet Spawn Multiplier,Double,1,,Multiplies the rate that special fleets spawn at,0,,
