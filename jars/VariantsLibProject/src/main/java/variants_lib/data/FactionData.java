@@ -184,13 +184,13 @@ public class FactionData {
             return tags.contains(tag);
         }
 
-        public FactionConfig(HashSet<String> Tags, Vector<String> CustomFleetIds, double SpecialFleetSpawnRate, 
-        HashMap<String, Double> SpecialFleetSpawnRateOverrides)
+        public FactionConfig(HashSet<String> tags, Vector<String> customFleetIds, double specialFleetSpawnRate,
+        HashMap<String, Double> specialFleetSpawnRateOverrides)
         {
-            tags = Tags;
-            customFleetIds = CustomFleetIds;
-            specialFleetSpawnRate = SpecialFleetSpawnRate;
-            specialFleetSpawnRateOverrides = SpecialFleetSpawnRateOverrides;
+            this.tags = tags;
+            this.customFleetIds = customFleetIds;
+            this.specialFleetSpawnRate = specialFleetSpawnRate;
+            this.specialFleetSpawnRateOverrides = specialFleetSpawnRateOverrides;
         }
 
         // when data conflicts the values in "other" get prioritized
@@ -208,6 +208,23 @@ public class FactionData {
                     customFleetIds.add(fleetId);
                 }
             }
+        }
+
+        public FactionConfig deepCopy() {
+            HashMap<String, Double> specialFleetSpawnRateOverrides = new HashMap<>();
+            for(String key : this.specialFleetSpawnRateOverrides.keySet()) {
+                specialFleetSpawnRateOverrides.put(key, this.specialFleetSpawnRateOverrides.get(key).doubleValue());
+            }
+            HashSet<String> tags = new HashSet<>();
+            for(String key : this.specialFleetSpawnRateOverrides.keySet()) {
+                tags.add(key);
+            }
+            Vector<String> customFleetIds = new Vector<>();
+            for(String id : this.customFleetIds) {
+                customFleetIds.add(id);
+            }
+            double specialFleetSpawnRate = this.specialFleetSpawnRate;
+            return new FactionConfig(tags, customFleetIds, specialFleetSpawnRate, specialFleetSpawnRateOverrides);
         }
 
         @Override

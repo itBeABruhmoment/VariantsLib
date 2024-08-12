@@ -19,7 +19,7 @@ import variants_lib.scripts.FleetEditingScript;
 import variants_lib.scripts.VariantsLibPostApplicationLoadScript;
 
 // loads settings for this mod
-public class SettingsData implements LunaSettingsListener {
+public class SettingsData {
     private static final Logger log = Global.getLogger(variants_lib.data.SettingsData.class);
     static {
         log.setLevel(Level.ALL);
@@ -193,21 +193,12 @@ public class SettingsData implements LunaSettingsListener {
         }
     }
 
-    @Override
-    public void settingsChanged(String modId) {
-        if(modId.equals(CommonStrings.MOD_ID)) {
-            log.debug(CommonStrings.MOD_ID + ": settings changed");
-            loadVariantsLibSettingsFromLunaLib();
-        }
-    }
-
     public void loadSettings() throws Exception {
         loadStarSectorSettings();
         loadVariantsLibSettingsFromFile();
         // overwrite settings with LunaLib ones if it is enabled
         if (Global.getSettings().getModManager().isModEnabled("lunalib")) {
             loadVariantsLibSettingsFromLunaLib();
-            LunaSettings.addSettingsListener(this);
         }
     }
 

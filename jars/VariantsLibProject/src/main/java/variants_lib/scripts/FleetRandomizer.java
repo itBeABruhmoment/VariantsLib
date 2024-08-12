@@ -96,53 +96,52 @@ public class FleetRandomizer {
             useToEdit.editFleet(fleet, params);
             fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, useToEdit.id);
             log.debug("fleet edited to " + useToEdit.id);
-        } else if(SettingsData.getInstance().noAutofitFeaturesEnabled()){
-            if(FactionData.FACTION_DATA.get(params.faction).hasTag(CommonStrings.NO_AUTOFIT_TAG)) {
-                log.debug("applying no autofit features");
-                fleet.setInflated(true);
+        } else if(SettingsData.getInstance().noAutofitFeaturesEnabled()
+                && FactionData.FACTION_DATA.get(params.faction).hasTag(CommonStrings.NO_AUTOFIT_TAG)){
+            log.debug("applying no autofit features");
+            fleet.setInflated(true);
 
-                // edit officers
-                final String faction = fleet.getFaction().getId();
-                final OfficerFactory officerFactory = new OfficerFactory();
-                for(final FleetMemberAPI memberAPI : fleet.getMembersWithFightersCopy()) {
-                    final ShipVariantAPI originalVariant = ModdedVariantsData.getVariant(memberAPI.getVariant().getHullVariantId());
+            // edit officers
+            final String faction = fleet.getFaction().getId();
+            final OfficerFactory officerFactory = new OfficerFactory();
+            for(final FleetMemberAPI memberAPI : fleet.getMembersWithFightersCopy()) {
+                final ShipVariantAPI originalVariant = ModdedVariantsData.getVariant(memberAPI.getVariant().getHullVariantId());
+                if(originalVariant != null) {
+                    memberAPI.setVariant(originalVariant, false, true);
+                }
+
+                final PersonAPI officer = memberAPI.getCaptain();
+                if(Util.isOfficer(officer)) {
+                    final String variant = memberAPI.getVariant().getOriginalVariant();
+                    final OfficerFactoryParams officerFactoryParams = new OfficerFactoryParams(
+                            variant,
+                            faction,
+                            rand,
+                            5
+                    );
+
                     if(originalVariant != null) {
-                        memberAPI.setVariant(originalVariant, false, true);
-                    }
-
-                    final PersonAPI officer = memberAPI.getCaptain();
-                    if(Util.isOfficer(officer)) {
-                        final String variant = memberAPI.getVariant().getOriginalVariant();
-                        final OfficerFactoryParams officerFactoryParams = new OfficerFactoryParams(
-                                variant,
-                                faction,
-                                rand,
-                                5
-                        );
-
-                        if(originalVariant != null) {
-                            VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(originalVariant.getHullVariantId());
-                            if(variantData != null) {
-                                officerFactoryParams.skillsToAdd.addAll(variantData.getSkills());
-                            }
+                        VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(originalVariant.getHullVariantId());
+                        if(variantData != null) {
+                            officerFactoryParams.skillsToAdd.addAll(variantData.getSkills());
                         }
-                        officerFactoryParams.level = officer.getStats().getLevel();
-                        officerFactory.editOfficer(officer, officerFactoryParams);
                     }
+                    officerFactoryParams.level = officer.getStats().getLevel();
+                    officerFactory.editOfficer(officer, officerFactoryParams);
                 }
-
-                // add an inflater that just adds smods and dmods
-                final VariantsLibFleetInflater inflater = createInflater(fleet, rand.nextLong());
-                if(inflater != null) {
-                    fleet.setInflater(inflater);
-                    fleet.inflateIfNeeded();
-                } else {
-                    log.info("inflater not created");
-                }
-
-                fleetMemory.set(CommonStrings.NO_AUTOFIT_APPLIED, true);
-                log.debug("finished applying");
             }
+
+            // add an inflater that just adds smods and dmods
+            final VariantsLibFleetInflater inflater = createInflater(fleet, rand.nextLong());
+            if(inflater != null) {
+                fleet.setInflater(inflater);
+                fleet.inflateIfNeeded();
+            } else {
+                log.info("inflater not created");
+            }
+
+            fleetMemory.set(CommonStrings.NO_AUTOFIT_APPLIED, true);
+            log.debug("finished applying");
         }
     }
 
