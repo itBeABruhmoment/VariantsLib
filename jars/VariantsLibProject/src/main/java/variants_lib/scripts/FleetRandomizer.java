@@ -99,7 +99,6 @@ public class FleetRandomizer {
         } else if(SettingsData.getInstance().noAutofitFeaturesEnabled()
                 && FactionData.FACTION_DATA.get(params.faction).hasTag(CommonStrings.NO_AUTOFIT_TAG)){
             log.debug("applying no autofit features");
-            fleet.setInflated(true);
 
             // edit officers
             final String faction = fleet.getFaction().getId();
@@ -135,7 +134,8 @@ public class FleetRandomizer {
             final VariantsLibFleetInflater inflater = createInflater(fleet, rand.nextLong());
             if(inflater != null) {
                 fleet.setInflater(inflater);
-                fleet.inflateIfNeeded();
+                inflater.inflate(fleet);
+                fleet.setInflated(true);
             } else {
                 log.info("inflater not created");
             }
@@ -158,7 +158,6 @@ public class FleetRandomizer {
             }
 
             float quality = inflater.getQuality();
-            fleet.setInflated(true);
 
             DefaultFleetInflaterParams inflaterParams = null;
             final Object tempInflaterParams = inflater.getParams();
@@ -169,12 +168,14 @@ public class FleetRandomizer {
                 inflaterParams.factionId = fleet.getFaction().getId();
                 inflaterParams.seed = seed;
             }
+            log.info("" + quality + " " + averageSMods);
             return new VariantsLibFleetInflater(inflaterParams, quality, averageSMods);
         } else if(unknownFleetInflater == null) {
             final DefaultFleetInflaterParams inflaterParams = new DefaultFleetInflaterParams();
             inflaterParams.factionId = fleet.getFaction().getId();
             inflaterParams.seed = seed;
             fleet.setInflater(new VariantsLibFleetInflater(inflaterParams, 1.0f, 0.0f));
+            log.info("inflater null");
         }
         return null;
     }
