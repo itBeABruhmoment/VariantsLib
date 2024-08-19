@@ -203,6 +203,8 @@ public class SettingsData {
         return enablePersonalitySet;
     }
 
+    public boolean universalNoAutofitEnabled() { return universalNoAutofit; }
+
     public HashMap<String, FleetEditingScript> getUniversalPostModificationScripts() {
         return universalPostModificationScripts;
     }
