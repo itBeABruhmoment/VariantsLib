@@ -90,10 +90,21 @@ public class CommonStrings {
 
     public static final String DO_NOT_EDIT_OFFICER = "no";
 
+    // settings
+    public static final String SETTING_UNIVERSAL_PRE_MODIFICATION_SCRIPTS = "universalPreModificationScripts";
+    public static final String SETTING_UNIVERSAL_POST_MODIFICATION_SCRIPTS = "universalPostModificationScripts";
+    public static final String SETTING_POST_VARIANTS_LIB_APPLICATION_LOAD_SCRIPT = "postVariantsLibApplicationLoadScript";
+    public static final String SETTING_NO_AUTOFIT = "enableNoAutofitFeatures";
+    public static final String SETTING_SPECIAL_FLEET_SPAWN_MULT = "specialFleetSpawnMult";
+    public static final String SETTING_UNIVERSAL_NO_AUTOFIT = "universalNoAutofit";
+    public static final String SETTING_ENABLE_FLEET_EDITING = "enableFleetEditing";
+    public static final String SETTING_ENABLE_PERSONALITY_SET = "enablePersonalitySet";
+
     // Luna Settings
     public static final String LUNA_NO_AUTOFIT =  "variants_lib_enableNoAutofitFeatures";
     public static final String LUNA_FLEET_EDITING =  "variants_lib_enableFleetEditing";
     public static final String LUNA_PERSONALITY_SET =  "variants_lib_enablePersonalitySet";
     public static final String LUNA_SPECIAL_FLEET_MULT =  "variants_lib_specialFleetSpawnMult";
+    public static final String LUNA_UNIVERSAL_NO_AUTOFIT =  "variants_lib_universalNoAutofit";
     private CommonStrings() {}
 }

@@ -36,6 +36,7 @@ public class SettingsData {
     private float specialFleetSpawnMult = 1.0f;
     private boolean enableFleetEditing = true;
     private boolean enablePersonalitySet = true;
+    private boolean universalNoAutofit = false;
     private HashMap<String, FleetEditingScript> universalPreModificationScripts = new HashMap<>();
     private HashMap<String, FleetEditingScript> universalPostModificationScripts = new HashMap<>();
     private HashMap<String, VariantsLibPostApplicationLoadScript> postVariantsLibApplicationLoadScript = new HashMap<>();
@@ -67,20 +68,14 @@ public class SettingsData {
             throw new Exception(CommonStrings.MOD_ID + ": failed to read " + CommonStrings.SETTINGS_FILE_NAME);
         }
 
-        try {
-            enableNoAutofit = settings.getBoolean("enableNoAutofitFeatures");
-        } catch(Exception e) {
-            throw new Exception(CommonStrings.MOD_ID + "failed to read \"enableNoAutofitFeatures\" in " + CommonStrings.SETTINGS_FILE_NAME);
-        }
-
-        try {
-            specialFleetSpawnMult = (float) settings.getDouble("specialFleetSpawnMult");
-        } catch(Exception e) {
-            throw new Exception(CommonStrings.MOD_ID + "failed to read \"specialFleetSpawnMult\" in " + CommonStrings.SETTINGS_FILE_NAME);
-        }
+        enableNoAutofit = JsonUtils.getBool(settings, CommonStrings.SETTING_NO_AUTOFIT, enableNoAutofit);
+        specialFleetSpawnMult = JsonUtils.getFloat(settings, CommonStrings.SETTING_SPECIAL_FLEET_SPAWN_MULT, specialFleetSpawnMult);
         if(specialFleetSpawnMult < 0.0f) {
             throw new Exception(CommonStrings.MOD_ID + "\"specialFleetSpawnMult\" from " + CommonStrings.SETTINGS_FILE_NAME + "has a negative value");
         }
+        enableFleetEditing = JsonUtils.getBool(settings, CommonStrings.SETTING_ENABLE_FLEET_EDITING, enableFleetEditing);
+        enablePersonalitySet = JsonUtils.getBool(settings, CommonStrings.SETTING_ENABLE_PERSONALITY_SET, enablePersonalitySet);
+        universalNoAutofit = JsonUtils.getBool(settings, CommonStrings.SETTING_UNIVERSAL_NO_AUTOFIT, universalNoAutofit);
 
         // merge settings with other mods, generally turning a feature off turns it off for everyone and script fields are appended
         for(ModSpecAPI mod : Global.getSettings().getModManager().getEnabledModsCopy()) {
@@ -98,38 +93,17 @@ public class SettingsData {
                 continue;
             }
 
-            boolean noAuto = true;
-            try {
-                noAuto = settingsJson.getBoolean("enableNoAutofitFeatures");
-            } catch(Exception e) {
-                noAuto = true;
-                log.debug("enableNoAutofitFeatures field could not be read setting to default");
-            }
-            // merge so that one mod disabling it disables the feature
-            enableNoAutofit = enableNoAutofit && noAuto;
+            // if one mod sets it to false it stays false
+            enableNoAutofit = enableNoAutofit && JsonUtils.getBool(settings, CommonStrings.SETTING_NO_AUTOFIT, enableNoAutofit);
+            enableFleetEditing = enableFleetEditing && JsonUtils.getBool(settings, CommonStrings.SETTING_ENABLE_FLEET_EDITING, enableFleetEditing);
+            enablePersonalitySet = enablePersonalitySet && JsonUtils.getBool(settings, CommonStrings.SETTING_ENABLE_PERSONALITY_SET, enablePersonalitySet);
+            universalNoAutofit = universalNoAutofit && JsonUtils.getBool(settings, CommonStrings.SETTING_UNIVERSAL_NO_AUTOFIT, universalNoAutofit);
 
-            boolean fleetEdit = true;
-            try {
-                fleetEdit = settingsJson.getBoolean("enableFleetEditing");
-            } catch(Exception e) {
-                fleetEdit = true;
-                log.debug("enableFleetEditing field could not be read setting to default");
-            }
-            enableFleetEditing = enableFleetEditing && fleetEdit;
-
-            boolean personalitySet = true;
-            try {
-                personalitySet = settingsJson.getBoolean("enableDefaultPersonalitySetting");
-            } catch(Exception e) {
-                personalitySet = true;
-                log.debug("enableDefaultPersonalitySetting field could not be read setting to default");
-            }
-            enablePersonalitySet = enablePersonalitySet && personalitySet;
-
-            loadScripts("universalPreModificationScripts", universalPreModificationScripts, settingsJson, modId);
-            loadScripts("universalPostModificationScripts", universalPostModificationScripts, settingsJson, modId);
-            loadScripts("postVariantsLibApplicationLoadScript", postVariantsLibApplicationLoadScript, settingsJson, modId);
+            loadScripts(CommonStrings.SETTING_UNIVERSAL_PRE_MODIFICATION_SCRIPTS, universalPreModificationScripts, settingsJson, modId);
+            loadScripts(CommonStrings.SETTING_UNIVERSAL_POST_MODIFICATION_SCRIPTS, universalPostModificationScripts, settingsJson, modId);
+            loadScripts(CommonStrings.SETTING_POST_VARIANTS_LIB_APPLICATION_LOAD_SCRIPT, postVariantsLibApplicationLoadScript, settingsJson, modId);
         }
+        log.info(CommonStrings.MOD_ID + ":finished loading settings\n" + this.toString());
     }
 
     private void loadVariantsLibSettingsFromLunaLib() {
@@ -137,28 +111,35 @@ public class SettingsData {
         if(temp1 != null) {
             enableNoAutofit = temp1;
         } else {
-            log.debug(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_NO_AUTOFIT + "\" LunaLib setting null");
+            log.error(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_NO_AUTOFIT + "\" LunaLib setting null");
         }
 
         Boolean temp2 = LunaSettings.getBoolean(CommonStrings.MOD_ID, CommonStrings.LUNA_FLEET_EDITING);
         if(temp2 != null) {
             enableFleetEditing = temp2;
         } else {
-            log.debug(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_FLEET_EDITING + "\" LunaLib setting null");
+            log.error(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_FLEET_EDITING + "\" LunaLib setting null");
         }
 
         Boolean temp3 = LunaSettings.getBoolean(CommonStrings.MOD_ID, CommonStrings.LUNA_PERSONALITY_SET);
         if(temp3 != null) {
             enablePersonalitySet = temp3;
         } else {
-            log.debug(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_PERSONALITY_SET + "\" LunaLib setting null");
+            log.error(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_PERSONALITY_SET + "\" LunaLib setting null");
         }
 
         Double temp4 = LunaSettings.getDouble(CommonStrings.MOD_ID, CommonStrings.LUNA_SPECIAL_FLEET_MULT);
         if(temp4 != null) {
             specialFleetSpawnMult = temp4.floatValue();
         } else {
-            log.debug(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_SPECIAL_FLEET_MULT + "\" LunaLib setting null");
+            log.error(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_SPECIAL_FLEET_MULT + "\" LunaLib setting null");
+        }
+
+        Boolean temp5 = LunaSettings.getBoolean(CommonStrings.MOD_ID, CommonStrings.LUNA_UNIVERSAL_NO_AUTOFIT);
+        if(temp5 != null) {
+            universalNoAutofit = temp5;
+        } else {
+            log.error(CommonStrings.MOD_ID + ": \"" + CommonStrings.LUNA_UNIVERSAL_NO_AUTOFIT + "\" LunaLib setting null");
         }
     }
 
@@ -232,6 +213,21 @@ public class SettingsData {
 
     public HashMap<String, VariantsLibPostApplicationLoadScript> getPostVariantsLibApplicationLoadScript() {
         return postVariantsLibApplicationLoadScript;
+    }
+
+    @Override
+    public String toString() {
+        return "SettingsData{" +
+                "maxShipsInAIFleet=" + maxShipsInAIFleet +
+                ", enableNoAutofit=" + enableNoAutofit +
+                ", specialFleetSpawnMult=" + specialFleetSpawnMult +
+                ", enableFleetEditing=" + enableFleetEditing +
+                ", enablePersonalitySet=" + enablePersonalitySet +
+                ", universalNoAutofit=" + universalNoAutofit +
+                ", universalPreModificationScripts=" + universalPreModificationScripts +
+                ", universalPostModificationScripts=" + universalPostModificationScripts +
+                ", postVariantsLibApplicationLoadScript=" + postVariantsLibApplicationLoadScript +
+                '}';
     }
 
     SettingsData() {} // do nothing
