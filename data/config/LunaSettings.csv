@@ -3,3 +3,4 @@ variants_lib_enableNoAutofitFeatures,No Autofit,Boolean,true,,Toggles autofit fo
 variants_lib_enableFleetEditing,Fleet Editing,Boolean,true,,Toggles fleet editing features for AI fleets,,,
 variants_lib_enablePersonalitySet,Default Personality Setting,Boolean,true,,Toggles this mod’s combat plugin that changes personalities of ships during battle,,,
 variants_lib_specialFleetSpawnMult,Special Fleet Spawn Multiplier,Double,1,,Multiplies the rate that special fleets spawn at,0,,
+variants_lib_universalNoAutofit,Universal No Autofit,Boolean,false,,Turns off autofit for all AI fleets within some constraints. There is no grantee this won’t break something when fleets from other mods are edited. Use at your own risk.,,,

@@ -3,6 +3,7 @@
 	"enableNoAutofitFeatures":true,
 	"enableFleetEditing":true,
 	"enableDefaultPersonalitySetting":true,
+	"universalNoAutofit":false,
 	# "universalPreModificationScripts":["variants_lib.scripts.FleetEditingScriptTest"],
 	# "universalPostModificationScripts":["variants_lib.scripts.FleetEditingScriptTest"]
 }

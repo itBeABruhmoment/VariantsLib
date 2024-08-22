@@ -84,12 +84,12 @@ public class SettingsData {
             JSONObject settingsJson = null;
             try {
                 settingsJson = Global.getSettings().loadJSON(CommonStrings.SETTINGS_FILE_NAME, modId);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 log.debug(CommonStrings.MOD_ID + ": mod " + modId + " could not have the file " + CommonStrings.SETTINGS_FILE_NAME + " opened, skipped");
                 settingsJson = null;
             }
 
-            if(settingsJson == null) {
+            if (settingsJson == null) {
                 continue;
             }
 
@@ -103,7 +103,6 @@ public class SettingsData {
             loadScripts(CommonStrings.SETTING_UNIVERSAL_POST_MODIFICATION_SCRIPTS, universalPostModificationScripts, settingsJson, modId);
             loadScripts(CommonStrings.SETTING_POST_VARIANTS_LIB_APPLICATION_LOAD_SCRIPT, postVariantsLibApplicationLoadScript, settingsJson, modId);
         }
-        log.info(CommonStrings.MOD_ID + ":finished loading settings\n" + this.toString());
     }
 
     private void loadVariantsLibSettingsFromLunaLib() {
@@ -177,9 +176,11 @@ public class SettingsData {
     public void loadSettings() throws Exception {
         loadStarSectorSettings();
         loadVariantsLibSettingsFromFile();
+        log.info(CommonStrings.MOD_ID + ":finished loading settings from file \n" + this.toString());
         // overwrite settings with LunaLib ones if it is enabled
         if (Global.getSettings().getModManager().isModEnabled("lunalib")) {
             loadVariantsLibSettingsFromLunaLib();
+            log.info(CommonStrings.MOD_ID + ":finished loading settings from luna lib\n" + this.toString());
         }
     }
 

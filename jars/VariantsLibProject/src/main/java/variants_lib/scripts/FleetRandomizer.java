@@ -46,7 +46,7 @@ public class FleetRandomizer {
         }
 
         // don't modify fleets from unregistered factions
-        if(!FactionData.FACTION_DATA.containsKey(fleet.getFaction().getId())) {
+        if(!FactionData.FACTION_DATA.containsKey(fleet.getFaction().getId()) && !SettingsData.getInstance().universalNoAutofitEnabled()) {
             log.debug("refused to modify fleet because faction is not registered");
             return false;
         }
@@ -78,26 +78,41 @@ public class FleetRandomizer {
         }
         fleetMemory.set(CommonStrings.FLEET_EDITED_MEMKEY, true);
 
+        // randomly edit to custom fleet type
         final VariantsLibFleetParams params = new VariantsLibFleetParams(fleet);
-        final VariantsLibFleetFactory useToEdit = VariantsLibFleetFactory.pickFleetFactory(params);
+        final Random rand = new Random(params.seed);
+        boolean fleetEdited = false;
+        final boolean factionRegistered = FactionData.FACTION_DATA.get(params.faction) != null;
+        if(factionRegistered) {
+            final VariantsLibFleetFactory useToEdit = VariantsLibFleetFactory.pickFleetFactory(params);
 
-        // get correct special fleet spawn rate
-        double specialFleetSpawnRate = 0.0;
-        final FactionData.FactionConfig config = FactionData.FACTION_DATA.get(params.faction);
-        if(config.specialFleetSpawnRateOverrides.containsKey(params.fleetType)) {
-            specialFleetSpawnRate = config.specialFleetSpawnRateOverrides.get(params.fleetType) * SettingsData.getInstance().getSpecialFleetSpawnMult();
-        } else {
-            specialFleetSpawnRate = config.specialFleetSpawnRate * SettingsData.getInstance().getSpecialFleetSpawnMult();
+            // get correct special fleet spawn rate
+            double specialFleetSpawnRate = 0.0;
+            final FactionData.FactionConfig config = FactionData.FACTION_DATA.get(params.faction);
+            if(config.specialFleetSpawnRateOverrides.containsKey(params.fleetType)) {
+                specialFleetSpawnRate = config.specialFleetSpawnRateOverrides.get(params.fleetType) * SettingsData.getInstance().getSpecialFleetSpawnMult();
+            } else {
+                specialFleetSpawnRate = config.specialFleetSpawnRate * SettingsData.getInstance().getSpecialFleetSpawnMult();
+            }
+
+//            final Random rand = new Random(params.seed);
+            if(useToEdit != null && rand.nextDouble() < specialFleetSpawnRate) {
+                log.debug("editing fleet to " + useToEdit.id);
+                useToEdit.editFleet(fleet, params);
+                fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, useToEdit.id);
+                log.debug("fleet edited to " + useToEdit.id);
+                fleetEdited = true;
+            }
         }
 
-        final Random rand = new Random(params.seed);
-        if(useToEdit != null && rand.nextDouble() < specialFleetSpawnRate) {
-            log.debug("editing fleet to " + useToEdit.id);
-            useToEdit.editFleet(fleet, params);
-            fleetMemory.set(CommonStrings.FLEET_VARIANT_KEY, useToEdit.id);
-            log.debug("fleet edited to " + useToEdit.id);
-        } else if(SettingsData.getInstance().noAutofitFeaturesEnabled()
-                && FactionData.FACTION_DATA.get(params.faction).hasTag(CommonStrings.NO_AUTOFIT_TAG)){
+        // apply no autofit, variant based officers
+        // ie when universal no autofit is not on
+        final boolean noAutofitRegularly = SettingsData.getInstance().noAutofitFeaturesEnabled()
+                && factionRegistered
+                && FactionData.FACTION_DATA.get(params.faction).hasTag(CommonStrings.NO_AUTOFIT_TAG);
+        if(!fleetEdited
+                && (noAutofitRegularly || SettingsData.getInstance().universalNoAutofitEnabled())) {
+
             log.debug("applying no autofit features");
 
             // edit officers
@@ -123,10 +138,12 @@ public class FleetRandomizer {
                         VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(originalVariant.getHullVariantId());
                         if(variantData != null) {
                             officerFactoryParams.skillsToAdd.addAll(variantData.getSkills());
+                            officerFactoryParams.level = officer.getStats().getLevel();
+                            officerFactory.editOfficer(officer, officerFactoryParams);
                         }
                     }
-                    officerFactoryParams.level = officer.getStats().getLevel();
-                    officerFactory.editOfficer(officer, officerFactoryParams);
+//                    officerFactoryParams.level = officer.getStats().getLevel();
+//                    officerFactory.editOfficer(officer, officerFactoryParams);
                 }
             }
 
