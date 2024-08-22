@@ -25,6 +25,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import variants_lib.scripts.FleetBuildingUtils;
 import variants_lib.scripts.HasHeavyIndustryTracker;
 
 import java.util.*;
@@ -869,31 +870,7 @@ public class VariantsLibFleetFactory  {
     }
 
     protected void addDMods(final CampaignFleetAPI fleet, final VariantsLibFleetParams params, final Random rand) {
-        // add dmods
-        final float quality = params.quality + (0.05f * params.quality); // noticed an abnormal amount dmods in factions such as diktat
-        for(final FleetMemberAPI ship : fleet.getMembersWithFightersCopy()) {
-            if(!ship.isFighterWing() && !ship.isStation()) {
-                final int numExistingDmods = DModManager.getNumDMods(ship.getVariant());
-                if(quality <= 0.0f) {
-                    final int numDmods = 5 - numExistingDmods;
-                    if(numDmods > 0) {
-                        DModManager.addDMods(ship, true, numDmods, rand);
-                    } // otherwise do nothing
-                } else if(quality <= 1.0f) {
-                    int numDmods = Math.round(5.0f - (quality + (rand.nextFloat() / 5.0f - 0.1f)) * 5.0f);
-                    if(numDmods < 0) {
-                        numDmods = 0;
-                    }
-                    if(numDmods > 5) {
-                        numDmods = 5;
-                    }
-                    numDmods = numDmods - numExistingDmods;
-                    if(numDmods > 0) {
-                        DModManager.addDMods(ship, true, numDmods, rand);
-                    }
-                }
-            }
-        }
+        FleetBuildingUtils.addDMods(fleet, rand, params.quality);
     }
 
     protected static int getDPInt(String variantId) {
