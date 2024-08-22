@@ -121,7 +121,7 @@ public class FleetRandomizer {
             for(final FleetMemberAPI memberAPI : fleet.getMembersWithFightersCopy()) {
                 final ShipVariantAPI originalVariant = ModdedVariantsData.getVariant(memberAPI.getVariant().getHullVariantId());
                 if(originalVariant != null) {
-                    memberAPI.setVariant(originalVariant, false, true);
+                    memberAPI.setVariant(originalVariant.clone(), false, true);
                 }
 
                 final PersonAPI officer = memberAPI.getCaptain();
