@@ -4,6 +4,7 @@
 	"enableFleetEditing":true,
 	"enableDefaultPersonalitySetting":true,
 	"universalNoAutofit":false,
+	"enablePersonalitySet":true,
 	# "universalPreModificationScripts":["variants_lib.scripts.FleetEditingScriptTest"],
 	# "universalPostModificationScripts":["variants_lib.scripts.FleetEditingScriptTest"]
 }
