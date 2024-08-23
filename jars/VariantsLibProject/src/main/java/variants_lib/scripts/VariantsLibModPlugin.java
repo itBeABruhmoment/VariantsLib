@@ -17,7 +17,7 @@ import org.json.JSONException;
 
 
 // note to self, when disabling the mod fleets spawned with edited from this mod get converted to nebulas for some reason
-public class VariantsLibModPlugin extends BaseModPlugin implements LunaSettingsListener {
+public class VariantsLibModPlugin extends BaseModPlugin  {
     private static final Logger log = Global.getLogger(variants_lib.scripts.VariantsLibModPlugin.class);
     static {
         log.setLevel(Level.ALL);
@@ -26,10 +26,12 @@ public class VariantsLibModPlugin extends BaseModPlugin implements LunaSettingsL
     @Override
     public void onApplicationLoad() throws Exception {
         clearAndLoadData();
-        LunaSettings.addSettingsListener(this);
+        if(Global.getSettings().getModManager().isModEnabled("lunalib")) {
+            LunaSettings.addSettingsListener(new VariantsLibLunaListener(this));
+        }
     }
 
-    private void clearAndLoadData() throws Exception {
+    public void clearAndLoadData() throws Exception {
         FleetBuildData.SCRIPTS.clear();
         FleetBuildData.FLEET_DATA.clear();
         FactionData.FACTION_DATA.clear();
@@ -69,26 +71,5 @@ public class VariantsLibModPlugin extends BaseModPlugin implements LunaSettingsL
         log.debug(CommonStrings.MOD_ID + ": initializing HasHeavyIndustryTracker");
         HasHeavyIndustryTracker.refreshHasHeavyIndustry();
         HasHeavyIndustryTracker.printEntries();
-    }
-
-
-    @Override
-    public void settingsChanged(String modId) {
-
-        boolean reloadData = false;
-        for(VariantsLibPostApplicationLoadScript script : SettingsData.getInstance().getPostVariantsLibApplicationLoadScript().values()) {
-            if(script.getOriginMod().equals(modId) && script.reloadWhenLunaSettingsForOriginModChanged()) {
-                reloadData = true;
-            }
-        }
-        if(reloadData) {
-            log.info(CommonStrings.MOD_ID + ": settings changed, reloading data");
-            try {
-                clearAndLoadData();
-            } catch (Exception e) {
-                log.error("exception during loading variants lib related data");
-                log.error(e);
-            }
-        }
     }
 }
