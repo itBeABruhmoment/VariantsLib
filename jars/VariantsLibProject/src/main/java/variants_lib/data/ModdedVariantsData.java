@@ -170,7 +170,7 @@ public class ModdedVariantsData {
                 }
             }
         } catch (Exception e) {
-            log.info("could not load ship variant from" + modId + " at " + path);
+            log.info("could not load ship variant from " + modId + " at " + path);
             variant = null;
         }
         
