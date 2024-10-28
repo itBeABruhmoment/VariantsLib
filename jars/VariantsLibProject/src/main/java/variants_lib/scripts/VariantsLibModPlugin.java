@@ -36,6 +36,7 @@ public class VariantsLibModPlugin extends BaseModPlugin  {
         FleetBuildData.FLEET_DATA.clear();
         FactionData.FACTION_DATA.clear();
         VariantData.VARIANT_DATA.clear();
+        ModdedVariantsData.VARIANTS.clear();
 
         log.debug(CommonStrings.MOD_ID + ": loading settings");
         SettingsData.getInstance().loadSettings();
