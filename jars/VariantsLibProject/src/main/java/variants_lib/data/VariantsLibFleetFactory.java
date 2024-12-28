@@ -587,24 +587,16 @@ public class VariantsLibFleetFactory  {
             final ArrayList<FleetMemberAPI> shipsToOfficer,
             final Random rand
     ) {
-        if(shipsToOfficer.size() < 1) {
+        if(shipsToOfficer.isEmpty()) {
             return;
         }
-
-        String personalityToUse = defaultFleetWidePersonality;
-        if(!defaultFleetWidePersonalitySet) {
-            final int aggressionVal = Global.getSector().getFaction(params.faction).getDoctrine().getAggression();
-            personalityToUse = AGGRESSION_TO_PERSONALITY[aggressionVal];
-        }
-
 
         final OfficerFactory officerFactory = createOfficerFactory(params);
         final PersonAPI commander = createCommander(
                 officerFactory,
                 params,
                 rand,
-                shipsToOfficer.get(0).getVariant().getOriginalVariant(),
-                personalityToUse
+                shipsToOfficer.get(0).getVariant().getOriginalVariant()
         );
         shipsToOfficer.get(0).setCaptain(commander);
 
@@ -615,8 +607,7 @@ public class VariantsLibFleetFactory  {
                     officerFactory,
                     params,
                     rand,
-                    toOfficer.getVariant().getOriginalVariant(),
-                    personalityToUse
+                    toOfficer.getVariant().getOriginalVariant()
             ));
         }
     }
@@ -625,20 +616,19 @@ public class VariantsLibFleetFactory  {
             final OfficerFactory officerFactory,
             final VariantsLibFleetParams fleetParams,
             final Random rand,
-            final String variantId,
-            final String defaultPersonality
+            final String variantId
     ) {
         OfficerFactoryParams officerFactoryParams = new OfficerFactoryParams(
                 variantId,
                 fleetParams.faction,
                 rand,
-                fleetParams.averageOfficerLevel + 2.0f
+                fleetParams.averageOfficerLevel + 2.0f,
+                defaultFleetWidePersonalitySet ? defaultFleetWidePersonality : null
         );
         if(officerFactoryParams.level > 10) {
             officerFactoryParams.level = 10;
         }
         officerFactoryParams.skillsToAdd.addAll(commanderSkills);
-        officerFactoryParams.personality = defaultPersonality;
         return officerFactory.createOfficer(officerFactoryParams);
     }
 
@@ -646,18 +636,15 @@ public class VariantsLibFleetFactory  {
             final OfficerFactory officerFactory,
             final VariantsLibFleetParams fleetParams,
             final Random rand,
-            final String variantId,
-            final String defaultPersonality
+            final String variantId
     ) {
-
-
         OfficerFactoryParams officerFactoryParams = new OfficerFactoryParams(
                 variantId,
                 fleetParams.faction,
                 rand,
-                fleetParams.averageOfficerLevel
+                fleetParams.averageOfficerLevel,
+                defaultFleetWidePersonalitySet ? defaultFleetWidePersonality : null
         );
-        officerFactoryParams.personality = defaultPersonality;
         return officerFactory.createOfficer(officerFactoryParams);
     }
 

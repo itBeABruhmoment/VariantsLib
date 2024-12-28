@@ -36,27 +36,37 @@ public class OfficerFactoryParams {
      * @param faction
      * @param rand
      * @param targetLevel
+     * @param defaultPersonality Can be null
      */
     public OfficerFactoryParams(
             final String variantId,
             final String faction,
             final Random rand,
-            final float targetLevel
+            final float targetLevel,
+            final String defaultPersonality
     ) {
         this.level = Math.round(targetLevel + 2 * rand.nextFloat() - 1.0f);
         if (this.level < 1) {
             this.level = 1;
         }
 
-        final int aggressionVal = Global.getSector().getFaction(faction).getDoctrine().getAggression();
-        personality = AGGRESSION_TO_PERSONALITY[aggressionVal - 1];
-
         final VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(variantId);
-        if (variantData != null) {
+        boolean variantHasPersonality = false;
+        if(variantData != null) {
             this.skillsToAdd.addAll(variantData.skills);
-            if(!variantData.getPersonality().equals(VariantData.VariantDataMember.NO_PERSONALITY_SET)) {
-                this.personality = variantData.getPersonality();
-            }
+            variantHasPersonality = !variantData.getPersonality().equals(VariantData.VariantDataMember.NO_PERSONALITY_SET);
+        }
+
+        if(defaultPersonality == null && !variantHasPersonality) {
+            // give personality based on faction
+            final int aggressionVal = Global.getSector().getFaction(faction).getDoctrine().getAggression();
+            personality = AGGRESSION_TO_PERSONALITY[aggressionVal - 1];
+        } else if(defaultPersonality != null && !variantHasPersonality){
+            // give personality based on default passed in
+            personality = defaultPersonality;
+        } else {
+            // variantData != null, so give personality based on variant tag
+            this.personality = variantData.getPersonality();
         }
     }
 }

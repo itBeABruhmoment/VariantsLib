@@ -131,7 +131,8 @@ public class FleetRandomizer {
                             variant,
                             faction,
                             rand,
-                            5
+                            5,
+                            null
                     );
 
                     if(originalVariant != null) {
