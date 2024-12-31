@@ -577,6 +577,49 @@ public class VariantsLibFleetFactory  {
     }
 
     /**
+     * Gives priority for giving a variant an officer. Less priority for ships under 5 dp and civilian ships
+     * @param vars
+     * @return
+     */
+    protected ArrayList<ShipAndPriority> calculateOfficerPriorities(final CreateFleetVariables vars) {
+        final ArrayList<ShipAndPriority> priorities = new ArrayList<>();
+        for(final FleetMemberAPI ship : vars.combatShips) {
+            final VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(ship.getVariant().getOriginalVariant());
+            if(variantData != null && variantData.officerPriority != VariantData.OFFICER_PRIORITY_UNSET) {
+                priorities.add(new ShipAndPriority(variantData.officerPriority, ship));
+            } else {
+                priorities.add(new ShipAndPriority(defaultPriority(ship), ship));
+            }
+        }
+
+        for(final FleetMemberAPI ship : vars.combatShips) {
+            final VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(ship.getVariant().getOriginalVariant());
+            if(variantData != null && variantData.officerPriority != VariantData.OFFICER_PRIORITY_UNSET) {
+                priorities.add(new ShipAndPriority(variantData.officerPriority, ship));
+            } else {
+                priorities.add(new ShipAndPriority(defaultPriority(ship), ship));
+            }
+        }
+
+        return priorities;
+    }
+
+    protected int defaultPriority(final FleetMemberAPI ship) {
+        final ShipVariantAPI variant = ship.getVariant();
+        int priority = 50;
+
+        if(variant.getHullSpec().getSuppliesToRecover() < 5) {
+            priority -= 10;
+        }
+
+        if(variant.isCivilian()) {
+            priority -= 20;
+        }
+        return priority;
+    }
+
+
+    /**
      * Create officers for the list of FleetMemberAPIs passed in, with the first in the list containing the fleet's commander
      * @param params params used to make fleet
      * @param shipsToOfficer ships to generate officers for
@@ -885,5 +928,15 @@ public class VariantsLibFleetFactory  {
         ArrayList<FleetMemberAPI> civilianShips = new ArrayList<>(30);
         int numShipsThatCanBeAdded = 0;
         int totalDPRemaining = 0;
+    }
+
+    protected static class ShipAndPriority {
+        int priority;
+        FleetMemberAPI ship;
+
+        ShipAndPriority(int priority, FleetMemberAPI ship) {
+            this.priority = priority;
+            this.ship = ship;
+        }
     }
 }

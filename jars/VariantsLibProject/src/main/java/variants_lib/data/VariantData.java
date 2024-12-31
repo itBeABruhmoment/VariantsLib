@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.io.IOException;
 import java.util.Vector;
 
+import com.fs.starfarer.api.combat.ShipVariantAPI;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,9 +25,13 @@ public class VariantData {
     }
 
     public static final HashMap<String, VariantDataMember> VARIANT_DATA = new HashMap<String, VariantDataMember>();
+    public static final int OFFICER_PRIORITY_UNSET = -1;
+    public static final int OFFICER_PRIORITY_MIN = 0;
+    public static final int OFFICER_PRIORITY_MAX = 100;
     private static final String CSV_FIRST_COLUMN_NAME = "variantID";
     private static final String CSV_SECOND_COLUMN_NAME = "officerInfo";
     private static final String CSV_THIRD_COLUMN_NAME = "smods";
+    private static final String CSV_FOURTH_COLUMN_NAME = "officerPriority";
 
     // if the variant is registered return the variantId, if not return null
     public static String isRegisteredVariant(FleetMemberAPI ship)
@@ -139,9 +144,10 @@ public class VariantData {
                         throw new Exception(CommonStrings.MOD_ID + ": the variant \"" + variantId + 
                         "\" appears twice in " + CommonStrings.VARIANT_TAGS_CSV_PATH);
                     }
-    
+
+                    // modded variants should have all been loaded before this is run
                     if(Global.getSettings().getVariant(variantId) == null && !ModdedVariantsData.VARIANTS.containsKey(variantId)) {
-                        log.debug(CommonStrings.MOD_ID + ": WARNING, the variant \"" + variantId + 
+                        throw new Exception(CommonStrings.MOD_ID + ": the variant \"" + variantId +
                         "\" listed in the file " + CommonStrings.VARIANT_TAGS_CSV_PATH + " is not loaded");
                     }
 
@@ -185,10 +191,19 @@ public class VariantData {
                     invalidTag = hasInvalidSmodTags(smods);
                     if(invalidTag != null) {
                         throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
-                        " has the unrecognised tag \"" + invalidTag + "\" in "+ CommonStrings.VARIANT_TAGS_CSV_PATH);
+                        " has the unrecognised tag \"" + invalidTag + "\" in " + CommonStrings.VARIANT_TAGS_CSV_PATH);
                     }
 
                     variantData.smods = smods;
+
+                    variantData.officerPriority = row.optInt(CSV_FOURTH_COLUMN_NAME, OFFICER_PRIORITY_UNSET);
+                    if((variantData.officerPriority < OFFICER_PRIORITY_MIN || variantData.officerPriority > OFFICER_PRIORITY_MAX)
+                            && variantData.officerPriority != OFFICER_PRIORITY_UNSET
+                    ) {
+                        throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId +
+                                " has the invalid officerPriority \"" + variantData.officerPriority + "\" in "
+                                + CommonStrings.VARIANT_TAGS_CSV_PATH);
+                    }
     
                     VARIANT_DATA.put(variantId, variantData);
                 }
@@ -202,6 +217,12 @@ public class VariantData {
         protected String personality = NO_PERSONALITY_SET;
         protected ArrayList<String> skills =  new ArrayList<>();
         protected ArrayList<String> smods = new ArrayList<>();
+        /**
+         * value in range [-1, 100]. 1 is highest priority, 100 is lowest
+         * -1, the mod calculates an appropriate priority
+         * not -1, it gets set
+         */
+        protected int officerPriority = -1;
 
         public VariantDataMember(final String variantId) {
             this.variantId = variantId;
@@ -221,6 +242,10 @@ public class VariantData {
 
         public ArrayList<String> getSmods() {
             return smods;
+        }
+
+        public int getOfficerPriority() {
+            return officerPriority;
         }
     }
 
