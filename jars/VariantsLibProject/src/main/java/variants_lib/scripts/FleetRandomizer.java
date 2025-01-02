@@ -143,8 +143,6 @@ public class FleetRandomizer {
                             officerFactory.editOfficer(officer, officerFactoryParams);
                         }
                     }
-//                    officerFactoryParams.level = officer.getStats().getLevel();
-//                    officerFactory.editOfficer(officer, officerFactoryParams);
                 }
             }
 

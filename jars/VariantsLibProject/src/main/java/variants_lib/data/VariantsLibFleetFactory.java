@@ -46,6 +46,13 @@ public class VariantsLibFleetFactory  {
     protected static final String[] FALLBACK_HULLMODS = {"hardenedshieldemitter", "fluxdistributor",
             "fluxbreakers", "reinforcedhull", "targetingunit", "solar_shielding"};
 
+    public static final int BASE_OFFICER_PRIORITY = 50;
+    public static final int CIVILIAN_OFFICER_PRIORITY_DEC = 20;
+    public static final int LOW_DP_FOR_OFFICER = 3;
+    public static final int LOW_DP_OFFICER_PRIORITY_DEC = 10;
+    public static final int HIGH_DP_FOR_OFFICER = 35;
+    public static final int HIGH_DP_OFFICER_PRIORITY_INC = 10;
+
     // aggression is from 1 to 5
     private static final String[] AGGRESSION_TO_PERSONALITY = {null, Personalities.CAUTIOUS, Personalities.TIMID,
             Personalities.STEADY, Personalities.AGGRESSIVE, Personalities.RECKLESS};
@@ -370,14 +377,8 @@ public class VariantsLibFleetFactory  {
         addAlwaysIncludeMembers(vars, params);
         addAutoLogistics(vars, params);
         addPartitionShips(vars, params, rand);
-        final ArrayList<FleetMemberAPI> shipsToOfficer = chooseShipsToOfficer(vars, params);
-        createOfficers(params, shipsToOfficer, rand);
-        if(shipsToOfficer.size() > 0) {
-            fleetAPI.setCommander(shipsToOfficer.get(0).getCaptain());
-        } else {
-            fleetAPI.setCommander(Global.getFactory().createPerson());
-        }
-
+        final ArrayList<FleetMemberAPI> shipsToOfficer = chooseShipsToOfficer(vars, params, rand);
+        createOfficers(params, shipsToOfficer, fleetAPI, rand);
 
         Collections.sort(vars.combatShips, new SortByDP());
         Collections.sort(vars.civilianShips, new SortByDP());
@@ -521,67 +522,13 @@ public class VariantsLibFleetFactory  {
     }
 
     /**
-     * Choose fleet members to give officers, with the first in the list being the flagship
+     * Choose fleet members to give officers
      * @param vars vars for providing selection of fleet members to officer
      * @param params params used to generate fleet
      * @return list of fleet members to give officers with first being the flagship
      */
-    protected ArrayList<FleetMemberAPI> chooseShipsToOfficer(final CreateFleetVariables vars, final VariantsLibFleetParams params) {
-        if(vars.civilianShips.size() + vars.combatShips.size() < 1 || params.numOfficers < 1) {
-            return new ArrayList<>();
-        }
-        int numShipsToOfficer = params.numOfficers;
-        final ArrayList<FleetMemberAPI> shipsToOfficer = new ArrayList<>(numShipsToOfficer);
-
-        // find ship to use as flagship
-        FleetMemberAPI flagShip = null;
-        if(vars.combatShips.size() > 0) {
-            int maxIndex = 0;
-            for(int i = 1; i < vars.combatShips.size(); i++) {
-                if(vars.combatShips.get(i).getBaseDeploymentCostSupplies() > vars.combatShips.get(maxIndex).getBaseDeploymentCostSupplies()) {
-                    maxIndex = i;
-                }
-            }
-            flagShip = vars.combatShips.get(maxIndex);
-        } else {
-            int maxIndex = 0;
-            for(int i = 1; i < vars.civilianShips.size(); i++) {
-                if(vars.civilianShips.get(i).getBaseDeploymentCostSupplies() > vars.civilianShips.get(maxIndex).getBaseDeploymentCostSupplies()) {
-                    maxIndex = i;
-                }
-            }
-            flagShip = vars.civilianShips.get(maxIndex);
-        }
-        numShipsToOfficer--;
-        shipsToOfficer.add(flagShip);
-
-        // choose the rest of the ships to officer
-        Collections.shuffle(vars.combatShips);
-        Collections.shuffle(vars.civilianShips);
-
-        for(int i = 0; i < vars.combatShips.size() && numShipsToOfficer > 0; i++) {
-            final FleetMemberAPI member = vars.combatShips.get(i);
-            if(member != flagShip) {
-                shipsToOfficer.add(member);
-                numShipsToOfficer--;
-            }
-        }
-        for(int i = 0; i < vars.civilianShips.size() && numShipsToOfficer > 0; i++) {
-            final FleetMemberAPI member = vars.civilianShips.get(i);
-            if(member != flagShip) {
-                shipsToOfficer.add(member);
-                numShipsToOfficer--;
-            }
-        }
-        return shipsToOfficer;
-    }
-
-    /**
-     * Gives priority for giving a variant an officer. Less priority for ships under 5 dp and civilian ships
-     * @param vars
-     * @return
-     */
-    protected ArrayList<ShipAndPriority> calculateOfficerPriorities(final CreateFleetVariables vars) {
+    protected ArrayList<FleetMemberAPI> chooseShipsToOfficer(final CreateFleetVariables vars, final VariantsLibFleetParams params, final Random rand) {
+        // get officer priorities for each ship
         final ArrayList<ShipAndPriority> priorities = new ArrayList<>();
         for(final FleetMemberAPI ship : vars.combatShips) {
             final VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(ship.getVariant().getOriginalVariant());
@@ -592,7 +539,7 @@ public class VariantsLibFleetFactory  {
             }
         }
 
-        for(final FleetMemberAPI ship : vars.combatShips) {
+        for(final FleetMemberAPI ship : vars.civilianShips) {
             final VariantData.VariantDataMember variantData = VariantData.VARIANT_DATA.get(ship.getVariant().getOriginalVariant());
             if(variantData != null && variantData.officerPriority != VariantData.OFFICER_PRIORITY_UNSET) {
                 priorities.add(new ShipAndPriority(variantData.officerPriority, ship));
@@ -601,26 +548,40 @@ public class VariantsLibFleetFactory  {
             }
         }
 
-        return priorities;
+        // higher priority ships get officers before lower priority ships, the order of ships with equal priority is random
+        Collections.shuffle(priorities, rand);
+        Collections.sort(priorities);
+
+        final ArrayList<FleetMemberAPI> toOfficer = new ArrayList<>();
+        for(final ShipAndPriority shipPriority : priorities) {
+            toOfficer.add(shipPriority.ship);
+        }
+        return toOfficer;
     }
 
     protected int defaultPriority(final FleetMemberAPI ship) {
         final ShipVariantAPI variant = ship.getVariant();
-        int priority = 50;
+        int priority = BASE_OFFICER_PRIORITY;
 
-        if(variant.getHullSpec().getSuppliesToRecover() < 5) {
-            priority -= 10;
+        if(ship.getBaseDeploymentCostSupplies() <= LOW_DP_FOR_OFFICER) {
+            priority -= LOW_DP_OFFICER_PRIORITY_DEC;
+        }
+
+        if(ship.getBaseDeploymentCostSupplies() >= HIGH_DP_FOR_OFFICER) {
+            priority += HIGH_DP_OFFICER_PRIORITY_INC;
         }
 
         if(variant.isCivilian()) {
-            priority -= 20;
+            priority -= CIVILIAN_OFFICER_PRIORITY_DEC;
         }
+
+
         return priority;
     }
 
 
     /**
-     * Create officers for the list of FleetMemberAPIs passed in, with the first in the list containing the fleet's commander
+     * Create officers for the first params.numOfficers FleetMemberAPIs passed in. The first ship in shipsToOfficer will be the flagship
      * @param params params used to make fleet
      * @param shipsToOfficer ships to generate officers for
      * @param rand random number generator used
@@ -628,30 +589,35 @@ public class VariantsLibFleetFactory  {
     protected void createOfficers(
             final VariantsLibFleetParams params,
             final ArrayList<FleetMemberAPI> shipsToOfficer,
+            final CampaignFleetAPI fleet,
             final Random rand
     ) {
         if(shipsToOfficer.isEmpty()) {
             return;
         }
 
+        // highest priority ships gets commander
         final OfficerFactory officerFactory = createOfficerFactory(params);
+        final int flagshipIndex = 0;
         final PersonAPI commander = createCommander(
                 officerFactory,
                 params,
                 rand,
-                shipsToOfficer.get(0).getVariant().getOriginalVariant()
+                shipsToOfficer.get(flagshipIndex).getVariant().getOriginalVariant()
         );
-        shipsToOfficer.get(0).setCaptain(commander);
-
-        // make other officers
-        for(int i = 1; i < shipsToOfficer.size(); i++) {
-            final FleetMemberAPI toOfficer = shipsToOfficer.get(i);
-            toOfficer.setCaptain(createOfficer(
-                    officerFactory,
-                    params,
-                    rand,
-                    toOfficer.getVariant().getOriginalVariant()
-            ));
+        shipsToOfficer.get(flagshipIndex).setCaptain(commander);
+        fleet.setCommander(commander);
+        
+        for(int i = 0; i < Math.min(shipsToOfficer.size(), params.numOfficers); i++) {
+            if(i != flagshipIndex) {
+                final FleetMemberAPI toOfficer = shipsToOfficer.get(i);
+                toOfficer.setCaptain(createOfficer(
+                        officerFactory,
+                        params,
+                        rand,
+                        toOfficer.getVariant().getOriginalVariant()
+                ));
+            }
         }
     }
 
@@ -930,13 +896,18 @@ public class VariantsLibFleetFactory  {
         int totalDPRemaining = 0;
     }
 
-    protected static class ShipAndPriority {
+    protected static class ShipAndPriority implements Comparable<ShipAndPriority> {
         int priority;
         FleetMemberAPI ship;
 
         ShipAndPriority(int priority, FleetMemberAPI ship) {
             this.priority = priority;
             this.ship = ship;
+        }
+
+        @Override
+        public int compareTo(ShipAndPriority other) {
+            return -Integer.compare(this.priority, other.priority);
         }
     }
 }

@@ -218,11 +218,11 @@ public class VariantData {
         protected ArrayList<String> skills =  new ArrayList<>();
         protected ArrayList<String> smods = new ArrayList<>();
         /**
-         * value in range [-1, 100]. 1 is highest priority, 100 is lowest
+         * value in range [-1, 100]. 100 is highest priority, 0 is lowest
          * -1, the mod calculates an appropriate priority
          * not -1, it gets set
          */
-        protected int officerPriority = -1;
+        protected int officerPriority = OFFICER_PRIORITY_UNSET;
 
         public VariantDataMember(final String variantId) {
             this.variantId = variantId;
