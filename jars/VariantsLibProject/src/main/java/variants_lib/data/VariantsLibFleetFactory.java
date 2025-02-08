@@ -51,7 +51,7 @@ public class VariantsLibFleetFactory  {
     public static final int LOW_DP_FOR_OFFICER = 3;
     public static final int LOW_DP_OFFICER_PRIORITY_DEC = 10;
     public static final int HIGH_DP_FOR_OFFICER = 35;
-    public static final int HIGH_DP_OFFICER_PRIORITY_INC = 10;
+    public static final int HIGH_DP_OFFICER_PRIORITY_INC = 20;
 
     // aggression is from 1 to 5
     private static final String[] AGGRESSION_TO_PERSONALITY = {null, Personalities.CAUTIOUS, Personalities.TIMID,
@@ -574,7 +574,6 @@ public class VariantsLibFleetFactory  {
         if(variant.isCivilian()) {
             priority -= CIVILIAN_OFFICER_PRIORITY_DEC;
         }
-
 
         return priority;
     }
