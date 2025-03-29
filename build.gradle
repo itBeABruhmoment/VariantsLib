@@ -2,7 +2,14 @@ plugins {
     id 'java'
 }
 
-sourceCompatibility = 1.7
+//java.sourceCompatibility = JavaVersion.VERSION_17
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 
 repositories {
     mavenCentral()
@@ -37,6 +44,16 @@ dependencies {
 }
 
 jar {
-    destinationDirectory.set(file("$buildDir/../../"))
+    destinationDirectory.set(file("$rootDir/jars"))
     archiveBaseName.set('VariantsLib')
+}
+
+task printJavaInfo {
+    doLast {
+        println "Java Version: ${System.getProperty('java.version')}"
+        println "Java Home: ${System.getProperty('java.home')}"
+        println "JVM Version: ${System.getProperty('java.vm.version')}"
+        println "JVM Name: ${System.getProperty('java.vm.name')}"
+        println "Gradle Java Version: ${JavaVersion.current()}"
+    }
 }
