@@ -24,6 +24,7 @@ ext {
     consoleCommandsDir = localProps.getProperty('consoleCommandDir')
     lazyLibDir = localProps.getProperty('lazyLibDir')
     lunaLibDir = localProps.getProperty('lunaLibDir')
+    modsDir = localProps.getProperty('modsDir') + "/VariantsLib"
 }
 
 dependencies {
@@ -46,6 +47,25 @@ dependencies {
 jar {
     destinationDirectory.set(file("$rootDir/jars"))
     archiveBaseName.set('VariantsLib')
+}
+
+task copyModFiles(type: Copy) {
+    dependsOn jar
+    doFirst {
+        delete fileTree(modsDir)
+    }
+
+    from("$rootDir") {
+        include 'mod_info.json'
+        include 'data/**'
+        include 'graphics/**'
+        include 'sounds/**'
+        include 'jars/**'
+        include 'variants_lib.version'
+        include 'LICENSE'
+    }
+
+    into modsDir
 }
 
 task printJavaInfo {
