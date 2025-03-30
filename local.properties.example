@@ -1,3 +1,5 @@
-starSectorInstallDir=/path/to/starsector/install/folder
-consoleCommandDir=/path/to/consolecommands/install/folder
-lunaLibDir=/fill/me/in
+starSectorInstallDir=your/install/starsector-core
+modsDir=your/install/mods
+consoleCommandDir=your/install/mods/ConsoleCommands
+lazyLibDir=your/install/mods/LazyLib
+lunaLibDir=your/install/mods/LunaLib
