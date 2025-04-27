@@ -184,7 +184,7 @@ public class FleetRandomizer {
                 inflaterParams.factionId = fleet.getFaction().getId();
                 inflaterParams.seed = seed;
             }
-            log.info("" + quality + " " + averageSMods);
+
             return new VariantsLibFleetInflater(inflaterParams, quality, averageSMods);
         } else if(unknownFleetInflater == null) {
             final DefaultFleetInflaterParams inflaterParams = new DefaultFleetInflaterParams();

@@ -161,13 +161,13 @@ public class VariantData {
     
                     if(hasDuplicateTags(officerSpec)) {
                         throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
-                        " has duplicate officer spec in" + CommonStrings.VARIANT_TAGS_CSV_PATH + ". Remove them");
+                        " has duplicate officerInfo tags in " + CommonStrings.VARIANT_TAGS_CSV_PATH + ". Remove them");
                     }
     
                     String invalidTag = hasInvalidOfficerSpecTags(officerSpec);
                     if(invalidTag != null) {
                         throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
-                        " has the unrecognised tag \"" + invalidTag + "\" in "+ CommonStrings.VARIANT_TAGS_CSV_PATH);
+                        " has the unrecognised officerInfo tag \"" + invalidTag + "\" in "+ CommonStrings.VARIANT_TAGS_CSV_PATH);
                     }
 
                     // put loaded data into VariantDataMember
@@ -191,7 +191,7 @@ public class VariantData {
                     invalidTag = hasInvalidSmodTags(smods);
                     if(invalidTag != null) {
                         throw new Exception(CommonStrings.MOD_ID + ": the variant " + variantId + 
-                        " has the unrecognised tag \"" + invalidTag + "\" in " + CommonStrings.VARIANT_TAGS_CSV_PATH);
+                        " has the unrecognised smod \"" + invalidTag + "\" in " + CommonStrings.VARIANT_TAGS_CSV_PATH);
                     }
 
                     variantData.smods = smods;
